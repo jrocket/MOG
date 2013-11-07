@@ -1,0 +1,53 @@
+﻿<div class="container" id="dynamicContent">
+    <div class="row">
+        <form role="form" method="GET" action="/Project/detail/1">
+            <div class="form-group col-lg-4">
+                <label for="input1">Nom</label>
+                <input type="text" name="contact_name" class="form-control" id="input1">
+            </div>
+            <div class="form-group col-lg-4">
+                <label for="input2">Type</label>
+                <select class="form-control">
+                    <option>Public</option>
+                    <option>Privé</option>
+                </select>
+            </div>
+            <div class="form-group col-lg-4">
+                <label for="input3">Licence</label>
+                <select class="form-control">
+                    <option>CC BY</option>
+                    <option>CC BY-ND</option>
+                    <option>CC BY-ND-NC</option>
+                </select>
+            </div>
+            <div class="clearfix"></div>
+            <div class="form-group col-lg-12">
+                <label for="input4">Description</label>
+                <textarea name="description" class="form-control" rows="6" id="input4"></textarea>
+            </div>
+         
+            <div class="form-group col-lg-6">
+
+                <label for="Status">Description</label>
+                <select id="Status" class="form-control">
+
+                    <option>In progress</option>
+                    <option>Finished</option>
+                    <option>Abandonned</option>
+                </select>
+            </div>
+            <div class="form-group col-lg-12">
+                <label for="input4">Pochette</label>
+                <input type="file" class="form-control" id="imageUpload" />
+
+            </div>
+            <div class="form-group col-lg-12">
+                <button type="button" class="btn btn-danger">Supprimer le projet</button>
+            </div>
+            <div class="form-group col-lg-12">
+                <input type="hidden" name="save" value="contact">
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </div>
+        </form>
+    </div>
+</div>

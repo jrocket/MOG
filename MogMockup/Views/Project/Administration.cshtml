@@ -1,0 +1,113 @@
+﻿@{
+    ViewBag.Title = "Administration";
+}
+
+<div class="container">
+
+
+
+    @*<div class="col-lg-12">
+            <ol class="breadcrumb">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="projects.html">Projects</a></li>
+                <li class="active">nom du projet</li>
+            </ol>
+        </div>*@
+    <div class="row">
+        <div class="col-lg-8">
+            <h1 class="page-header">Nom du projet <small>nom de l'owner</small></h1>
+        </div>
+        <div class="col-lg-4">
+
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <ul class="nav nav-tabs">
+                <li><a href="@Url.Action("detail",new { id=1})">Général</a></li>
+                <li><a href="@Url.Action("activity",new { id=1})">Activité</a></li>
+                <li><a href="@Url.Action("tracks",new { id=1})">Tracks</a></li>
+                <li class="active"><a href="@Url.Action("administration",new { id=1})">Administration</a></li>
+            </ul>
+        </div>
+    </div>
+    <style>
+        .btn:not(.btn-block) {
+            width: 120px;
+            margin-bottom: 10px;
+        }
+
+        .adminSection {
+        padding-top : 10px;
+        }
+
+    </style>
+    <div class="row adminSection">
+        <div class="col-md-3">
+            <div class="row">
+                <div class="col-xs-6 col-md-6">
+                    <a href="javascript:goTo('AdminSettings')" class="btn btn-danger btn-lg" role="button"><span class="glyphicon glyphicon-list-alt"></span> <br />Parametres</a>
+                    <a href="javascript:goTo('AdminTracking')" class="btn btn-warning btn-lg" role="button"><span class="glyphicon glyphicon-eye-open"></span> <br />Suivi</a>
+                    <a href="javascript:goTo('AdminReports')" class="btn btn-primary btn-lg" role="button"><span class="glyphicon glyphicon-signal"></span> <br />Reports</a>
+                    <a href="javascript:goTo('AdminComments')" class="btn btn-primary btn-lg" role="button"><span class="glyphicon glyphicon-comment"></span> <br />Comments</a>
+                </div>
+                <div class="col-xs-6 col-md-6">
+                    <a href="javascript:goTo('AdminCollabs')" class="btn btn-success btn-lg" role="button"><span class="glyphicon glyphicon-user"></span> <br />Collabs</a>
+                    <a href="javascript:goTo('AdminNotes')" class="btn btn-info btn-lg" role="button"><span class="glyphicon glyphicon-file"></span> <br />Notes</a>
+                    <a href="javascript:goTo('AdminArtwork')" class="btn btn-primary btn-lg" role="button"><span class="glyphicon glyphicon-picture"></span> <br />Artwork</a>
+                    <a href="javascript:goTo('AdminTags')" class="btn btn-primary btn-lg" role="button"><span class="glyphicon glyphicon-tag"></span> <br />Tags</a>
+                </div>
+            </div>
+            @*<a href="http://www.jquery2dotnet.com/" class="btn btn-success btn-lg btn-block" role="button"><span class="glyphicon glyphicon-globe"></span> Website</a>*@
+        </div>
+
+        <div class="col-md-9">
+            <div id="dynamicContent"></div>
+        </div>
+    </div>
+
+    @section scripts
+    {
+        <script>
+            function goTo(action) {
+                var url = "";
+                switch (action) {
+                    case "AdminSettings":
+                        url = '@Url.Action("AdminSettings","Project", new { id = 1 } )';
+                        break;
+                    case "AdminTracking":
+                        url = '@Url.Action("AdminTracking", "Project", new { id = 1 })';
+                        break;
+                    case "AdminReports":
+                        url = '@Url.Action("AdminReports", "Project", new { id = 1 })';
+                        break;
+                    case "AdminComments":
+                        url = '@Url.Action("AdminComments", "Project", new { id = 1 })';
+                        break;
+
+                    case "AdminCollabs":
+                        url = '@Url.Action("AdminCollabs", "Project", new { id = 1 })';
+                        break;
+                    case "AdminNotes":
+                        url = '@Url.Action("AdminNotes", "Project", new { id = 1 })';
+                        break;
+                    case "AdminArtwork":
+                        url = '@Url.Action("AdminArtwork", "Project", new { id = 1 })';
+                        break;
+                    case "AdminTags":
+                        url = '@Url.Action("AdminTags", "Project", new { id = 1 })';
+                        break;
+                }
+                $.get(url, function (data) {
+                    $('#dynamicContent').replaceWith(data);
+                });
+                return false;
+            }
+
+        </script>
+    }
+
+
+
+   
+</div>

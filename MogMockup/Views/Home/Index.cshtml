@@ -1,0 +1,64 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+<div id="myCarousel" class="carousel slide">
+    <!-- Indicators -->
+    <ol class="carousel-indicators">
+        <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+        <li data-target="#myCarousel" data-slide-to="1"></li>
+        <li data-target="#myCarousel" data-slide-to="2"></li>
+    </ol>
+
+    <!-- Wrapper for slides -->
+    <div class="carousel-inner">
+        <div class="item active">
+            <div class="fill" style="background-image:url('http://placehold.it/1900x1080&text=Slide One');"></div>
+            <div class="carousel-caption">
+                <h1>Trouver un truc à dire</h1>
+            </div>
+        </div>
+        <div class="item">
+            <div class="fill" style="background-image:url('http://placehold.it/1900x1080&text=Slide Two');"></div>
+            <div class="carousel-caption">
+                <h1>Encore un autre truc</h1>
+            </div>
+        </div>
+        <div class="item">
+            <div class="fill" style="background-image:url('http://placehold.it/1900x1080&text=Slide Three');"></div>
+            <div class="carousel-caption">
+                <h1>Et un troisieme truc qui est trop d'la balle</h1>
+            </div>
+        </div>
+    </div>
+
+    <!-- Controls -->
+    <a class="left carousel-control" href="#myCarousel" data-slide="prev">
+        <span class="icon-prev"></span>
+    </a>
+    <a class="right carousel-control" href="#myCarousel" data-slide="next">
+        <span class="icon-next"></span>
+    </a>
+</div>
+
+
+
+<div class="section">
+
+    <div class="container">
+
+        <div class="row">
+
+            <div class="col-lg-4 col-md-4 col-sm-6">
+                <a href="@Url.Action("My","Project")"><img class="img-responsive img-home-portfolio" src="http://placehold.it/700x450&text=Mes+projets"></a>
+            </div>
+            <div class="col-lg-4 col-md-4 col-sm-6">
+                <a href="@Url.Action("Index","Message")"><img class="img-responsive img-home-portfolio" src="http://placehold.it/700x450&text=Mes+messages"></a>
+            </div>
+            <div class="col-lg-4 col-md-4 col-sm-6">
+                <a href="@Url.Action("Index","Profile")"><img class="img-responsive img-home-portfolio" src="http://placehold.it/700x450&text=Mon+profil"></a>
+            </div>
+        </div><!-- /.row -->
+
+    </div><!-- /.container -->
+
+</div><!-- /.section -->
