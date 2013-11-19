@@ -1,0 +1,63 @@
+﻿@{
+    ViewBag.Title = "Profile";
+    var culture = System.Threading.Thread.CurrentThread.CurrentUICulture.Name.ToLowerInvariant();
+}
+
+@helper selected(string c, string culture)
+{
+    if (c == culture)
+    {
+        @:checked="checked"
+    }
+}
+
+
+<div class="row">
+    <div class="col-md-12">
+
+        <h1 class="page-header">@Resource.Profile</h1>
+
+    </div>
+</div>
+
+
+<div class="row">
+    @Html.Partial("_LeftMenu")
+
+    <div class="col-lg-10">
+        @using (Html.BeginForm("SetLanguage", "Profile"))
+        {
+            <fieldset>
+                <div class="control-group">
+                    <div class="controls">
+                        <label for="en-us">
+                            <input name="culture" id="en-us" value="en-us" type="radio" @selected("en-us", culture) /> English
+                        </label>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <div class="controls">
+                        <label for="fr">
+                            <input name="culture" id="fr" value="fr" type="radio" @selected("fr", culture) /> Français
+                        </label>
+                    </div>
+                </div>
+            </fieldset>
+
+
+
+        }
+    </div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script type="text/javascript">
+        (function ($) {
+            $("input[type = 'radio']").click(function () {
+                $(this).parents("form").submit(); // post form
+            });
+
+        })(jQuery);
+    </script>
+}

@@ -1,0 +1,96 @@
+﻿@{
+    ViewBag.Title = "Fichiers";
+}
+
+<div class="container">
+
+
+    <div class="row">
+        <div class="col-lg-8">
+            <h1 class="page-header">Nom du projet <small>nom de l'owner</small></h1>
+        </div>
+        <div class="col-lg-4">
+            <p>
+                &nbsp;<br />
+                <a href="create-project.html" class="btn btn-primary btn-lg btn-block btn-success">Uploader un fichier</a>
+            </p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <ul class="nav nav-tabs">
+                <li><a href="@Url.Action("detail",new { id=1})">Général</a></li>
+                <li><a href="@Url.Action("activity",new { id=1})">Activité</a></li>
+                <li class="active"><a href="@Url.Action("files",new { id=1})">Tracks</a></li>
+                <li><a href="@Url.Action("administration",new { id=1})">Administration</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            &nbsp;
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-2 col-sm-4">
+            <div class="bs-sidebar affix">
+                <!-- sidebar -->
+                <ul class="nav bs-sidenav">
+                    <li class="disabled"><a href="#">Status</a></li>
+                    <ul>
+                        <li><a href="about.html">Accepted</a></li>
+                        <li><a href="services.html">Draft</a></li>
+                    </ul>
+                    <li class="disabled"><a href="#">Type</a></li>
+                    <ul>
+                        <li><a href="portfolio-1-col.html">Basse</a></li>
+                        <li><a href="portfolio-2-col.html">Guitare</a></li>
+                        <li><a href="portfolio-3-col.html">Batterie</a></li>
+                        <li><a href="portfolio-4-col.html">...</a></li>
+
+                    </ul>
+
+
+                    <li class="disabled"><a href="#">Proprietaire</a></li>
+                    <ul>
+                        <li><a href="blog-home-1.html">JOhn Doe</a></li>
+                        <li><a href="blog-home-2.html">Jane Doe</a></li>
+                        <li><a href="track-detail.html">Richar Doe</a></li>
+                    </ul>
+
+                    <li><a href="#">Reset</a></li>
+                </ul>
+
+
+            </div>
+
+        </div><!-- endof sidebar -->
+        <div class="col-md-10">
+            @for (int i = 0; i < 5; i++)
+            {
+                <div class="row">
+                    <div class="col-md-1">
+                        <p><i class="icon-camera icon-2x"></i></p>
+                        <p>May 24, 2013</p>
+                    </div>
+                    <div class="col-md-2">
+                        <a href="track-detail.html"><img src="http://placehold.it/100x100" class="img-responsive"></a>
+                    </div>
+                    <div class="col-md-4">
+                        <h3><a href="@Url.Action("Detail","Track",new { id=i})">Nom de la piste</a></h3>
+                        <p>---------------PLAYER ----------- <i class="icon-cloud-download"></i>&nbsp;<i class="icon-trash"></i>&nbsp;<i class="icon-heart"></i></p>
+
+                    </div>
+                    <div class="col-md-1">data1</div>
+                    <div class="col-md-1">data2</div>
+                    <div class="col-md-1">data3</div>
+                    <div class="col-md-1">data4</div>
+                    <div class="col-md-1">data5</div>
+                </div>
+
+                <hr>
+            }
+        </div>
+    </div><!-- /.container -->
+</div>

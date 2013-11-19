@@ -1,0 +1,158 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Three Column Portfolio - Modern Business - Start Bootstrap Template</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="css/bootstrap.css" rel="stylesheet">
+
+    <!-- Add custom CSS here -->
+    <link href="css/modern-business.css" rel="stylesheet">
+    <link href="font-awesome/css/font-awesome.min.css" rel="stylesheet">
+    <link href="css/tags/bootstrap-tagsinput.css" rel="stylesheet">
+    
+  </head>
+
+  <body>
+
+      <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <!-- You'll want to use a responsive image option so this logo looks good on devices - I recommend using something like retina.js (do a quick Google search for it and you'll find it) -->
+          <a class="navbar-brand" href="index.html">MyCube</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="projects.html">Projects</a></li>
+            <li><a href="messages.html">Messages</a></li>
+            <li><a href="profile.php">Profile</a></li>
+            
+            <li class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown">My<b class="caret"></b></a>
+              <ul class="dropdown-menu">
+                <li><a href="blog-home-1.html">Projects</a></li>
+                <li><a href="blog-home-2.html">Friends</a></li>
+                <li><a href="blog-home-2.html">Invites</a></li>
+              </ul>
+            </li>
+          </ul>
+        </div><!-- /.navbar-collapse -->
+      </div><!-- /.container -->
+    </nav>
+    <!-- Page Content -->
+
+    <div class="container">
+        
+      <div class="row">
+      
+        <div class="col-lg-12">
+          <ol class="breadcrumb">
+            <li><a href="index.html">Home</a></li>
+            <li class="active">Nouveau projet</li>
+          </ol>
+        </div>
+    
+      </div><!-- /.row -->
+      <div class="row">
+        <div class="col-lg-12">
+          <h1 class="page-header">Créer un projet </h1>
+        </div>
+      </div><!-- /.row -->
+      <div class="row">
+
+        <div class="col-sm-8">
+          <h4>Trouver un titre</h4>
+          <p>Lid est laborum dolo rumes fugats untras. Etharums ser quidem rerum facilis dolores nemis omnis fugats vitaes nemo minima rerums unsers sadips amets. Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.</p>
+            <form role="form" method="GET" action="project-item.html">
+              <div class="form-group col-lg-4">
+                <label for="input1">Nom</label>
+                <input type="text" name="contact_name" class="form-control" id="input1">
+              </div>
+              <div class="form-group col-lg-4">
+                <label for="input2">Type</label>
+                <select  class="form-control" >
+                    <option>Public</option>
+                    <option>Privé</option>
+                </select>
+              </div>
+              <div class="form-group col-lg-4">
+                <label for="input3">Licence</label>
+                <select  class="form-control" >
+                    <option>CC BY</option>
+                    <option>CC BY-ND</option>
+                    <option>CC BY-ND-NC</option>
+                </select>
+              </div>
+              <div class="clearfix"></div>
+              <div class="form-group col-lg-12">
+                <label for="input4">Description</label>
+                <textarea name="description" class="form-control" rows="6" id="input4"></textarea>
+              </div>
+              <div class="form-group col-lg-12">
+                  <input type="text" value="Rock,Punk,Detroit,Sydney#,Oslo" data-role="tagsinput"  class="form-control"/>
+              </div>
+              <div class="form-group col-lg-12">
+                <input type="hidden" name="save" value="contact">
+                <button type="submit" class="btn btn-primary">Submit</button>
+              </div>
+            </form>
+        </div>
+
+        <div class="col-sm-4">
+          <h3>Licences</h3>
+          <h4>Ci-dessous l'explication de la licence que vous avez choisie</h4>
+          <p>
+           <br>
+
+          </p>
+          <p><i class="icon-phone"></i> <abbr title="Phone">BY</abbr>Attribution — Vous devez attribuer l’œuvre de la manière indiquée par l’auteur de l’œuvre ou le titulaire des droits (mais pas d’une manière qui suggérerait qu’ils vous approuvent, vous ou votre utilisation de l’œuvre).</p>
+          <p><i class="icon-envelope-alt"></i> <abbr title="Email">NC</abbr>Pas d’Utilisation Commerciale — Vous n’avez pas le droit d’utiliser cette œuvre à des fins commerciales.</p>
+          <p><i class="icon-time"></i> <abbr title="Hours">ND</abbr>Pas d’œuvres dérivées — Vous n’avez pas le droit de modifier, de transformer ou d’adapter cette œuvre.</p>
+        <!--  <ul class="list-unstyled list-inline list-social-icons">
+            <li class="tooltip-social facebook-link"><a href="#facebook-page" data-toggle="tooltip" data-placement="top" title="Facebook"><i class="icon-facebook-sign icon-2x"></i></a></li>
+            <li class="tooltip-social linkedin-link"><a href="#linkedin-company-page" data-toggle="tooltip" data-placement="top" title="LinkedIn"><i class="icon-linkedin-sign icon-2x"></i></a></li>
+            <li class="tooltip-social twitter-link"><a href="#twitter-profile" data-toggle="tooltip" data-placement="top" title="Twitter"><i class="icon-twitter-sign icon-2x"></i></a></li>
+            <li class="tooltip-social google-plus-link"><a href="#google-plus-page" data-toggle="tooltip" data-placement="top" title="Google+"><i class="icon-google-plus-sign icon-2x"></i></a></li>
+          </ul>-->
+        </div>
+
+      </div><!-- /.row -->
+
+    </div><!-- /.container -->
+
+    <div class="container">
+
+      <hr>
+
+      <footer>
+        <div class="row">
+          <div class="col-lg-12">
+            <p>Copyright &copy; Company 2013</p>
+          </div>
+        </div>
+      </footer>
+
+    </div><!-- /.container -->
+    <!-- Bootstrap core JavaScript -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="js/jquery.js"></script>
+    <script src="js/bootstrap.js"></script>
+    <script src="js/modern-business.js"></script>
+    <script src="js/tags/bootstrap-tagsinput.js"></script>
+    
+    
+  </body>
+</html>

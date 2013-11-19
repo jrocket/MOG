@@ -1,0 +1,79 @@
+﻿@model MoG.Domain.Models.Project
+@{
+    ViewBag.Title = "Detail";
+}
+<div class="container">
+
+
+    @*<div class="col-lg-12">
+            <ol class="breadcrumb">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="projects.html">Projects</a></li>
+                <li class="active">nom du projet</li>
+            </ol>
+        </div>*@
+    <div class="row">
+        <div class="col-lg-8">
+            <h1 class="page-header">@Html.DisplayFor(model => model.Name) <small>@Html.DisplayFor(model => model.Creator.DisplayName)</small></h1>
+        </div>
+        <div class="col-lg-4">
+            <p>
+                &nbsp;<br />
+                <a href="create-project.html" class="btn btn-primary btn-lg btn-block btn-success">Uploader un fichier</a>
+            </p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <ul class="nav nav-tabs">
+                <li class="active"><a href="@Url.Action("detail",new { id=1})">Général</a></li>
+                <li><a href="@Url.Action("activity",new { id=1})">Activité</a></li>
+                <li><a href="@Url.Action("files",new { id=1})">Tracks</a></li>
+                <li><a href="@Url.Action("administration",new { id=1})">Administration</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <hr>
+            <p><i class="icon-time"></i> Posted on @Html.DisplayFor(m => m.CreatedOn, "LongDateString")</p>
+            <hr>
+        </div>
+    </div>
+    <div class="row">
+
+        <div class="col-md-12">
+
+        </div>
+        <div class="col-md-4">
+            <img class="img-responsive" src="@Model.ImageUrlThumb1">
+            ----------------- PLAYER  --------------
+        </div>
+        <div class="col-md-4">
+            <h3>Project Description</h3>
+            <p>@Model.Description</p>
+
+        </div>
+
+        <div class="col-md-4">
+            <h3>Project Details</h3>
+            <ul>
+                <li>Licence : @Model.LicenceType</li>
+                <li>Last Modification  @Html.DisplayFor(m => m.ModifiedOn, "ShortDateString") </li>
+                <li>Likes : @Model.Likes</li>
+                <li></li>
+            </ul>
+        </div>
+
+    </div>
+
+    <div class="row">
+        <div class="form-group col-lg-12">
+        @Html.TagsLabelFor(@Model.Tags, "form-control")           
+        </div>
+    </div>
+
+
+
+</div><!-- /.container -->

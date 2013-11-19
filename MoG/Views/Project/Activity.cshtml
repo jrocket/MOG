@@ -1,0 +1,75 @@
+﻿@model MoG.Domain.Models.VMProjectActivity
+@{
+    ViewBag.Title = "Activity";
+}
+<div class="container">
+
+
+    <div class="row">
+        <div class="col-lg-8">
+            <h1 class="page-header">@Model.Project.Name <small>@Model.Project.Creator</small></h1>
+        </div>
+        <div class="col-lg-4">
+
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <ul class="nav nav-tabs">
+                <li><a href="@Url.Action("detail",new { id=1})">Général</a></li>
+                <li class="active"><a href="@Url.Action("activity",new { id=1})">Activité</a></li>
+                <li><a href="@Url.Action("files",new { id=1})">Files</a></li>
+                <li><a href="@Url.Action("administration",new { id=1})">Administration</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <table class="table  table-striped">
+                <thead>
+                    <tr>
+                        <th class="myspan">Quand</th>
+                        <th>Qui</th>
+                        <th>Quoi</th>
+                        <th>Lien</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var activity in @Model.Activities)
+                    {
+                        <tr>
+                            <td>@activity.When</td>
+                            <td>@activity.Who</td>
+                            <td>@activity.What</td>
+                            <td><a href="track-detail.html">TODO</a></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+        </div>
+        <div class="col-md-4">
+
+            <ul class="pagination">
+                <li><a href="#">Prev</a></li>
+                <li class="active"><a href="#">1</a></li>
+                <li><a href="#">2</a></li>
+                <li><a href="#">3</a></li>
+                <li><a href="#">4</a></li>
+                <li><a href="#">5</a></li>
+                <li><a href="#">Next</a></li>
+            </ul>
+
+        </div>
+        <div class="col-md-4">
+        </div>
+        <div class="row">
+
+
+        </div><!-- /.container -->
+    </div>
+</div>

@@ -1,0 +1,14 @@
+C:\Users\tberst\Documents\Visual Studio 2013\Projects\Project3\Mog.Domain\bin\Debug\Mog.Domain.dll.config
+C:\Users\tberst\Documents\Visual Studio 2013\Projects\Project3\Mog.Domain\bin\Debug\Mog.Domain.dll
+C:\Users\tberst\Documents\Visual Studio 2013\Projects\Project3\Mog.Domain\bin\Debug\Mog.Domain.pdb
+C:\Users\tberst\Documents\Visual Studio 2013\Projects\Project3\Mog.Domain\bin\Debug\EntityFramework.dll
+C:\Users\tberst\Documents\Visual Studio 2013\Projects\Project3\Mog.Domain\bin\Debug\EntityFramework.SqlServer.dll
+C:\Users\tberst\Documents\Visual Studio 2013\Projects\Project3\Mog.Domain\bin\Debug\Microsoft.AspNet.Identity.Core.dll
+C:\Users\tberst\Documents\Visual Studio 2013\Projects\Project3\Mog.Domain\bin\Debug\Microsoft.AspNet.Identity.EntityFramework.dll
+C:\Users\tberst\Documents\Visual Studio 2013\Projects\Project3\Mog.Domain\bin\Debug\EntityFramework.xml
+C:\Users\tberst\Documents\Visual Studio 2013\Projects\Project3\Mog.Domain\bin\Debug\EntityFramework.SqlServer.xml
+C:\Users\tberst\Documents\Visual Studio 2013\Projects\Project3\Mog.Domain\bin\Debug\Microsoft.AspNet.Identity.Core.xml
+C:\Users\tberst\Documents\Visual Studio 2013\Projects\Project3\Mog.Domain\bin\Debug\Microsoft.AspNet.Identity.EntityFramework.xml
+C:\Users\tberst\Documents\Visual Studio 2013\Projects\Project3\Mog.Domain\obj\Debug\Mog.Domain.dll
+C:\Users\tberst\Documents\Visual Studio 2013\Projects\Project3\Mog.Domain\obj\Debug\Mog.Domain.pdb
+C:\Users\tberst\Documents\Visual Studio 2013\Projects\Project3\Mog.Domain\obj\Debug\Mog.Domain.csprojResolveAssemblyReference.cache
