@@ -39,5 +39,7 @@ namespace MoG.Domain.Models
         public Licence LicenceType { get; set; }
 
         public virtual UserProfile Creator { get; set; }
+
+        public virtual ICollection<MoGFile> Files { get; set; }
     }
 }

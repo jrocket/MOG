@@ -316,6 +316,7 @@
     <Content Include="Views\Social\Invits.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\LongDateString.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\ShortDateString.cshtml" />
+    <Content Include="Views\Project\_trackRefinementPanel.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

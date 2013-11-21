@@ -162,5 +162,69 @@ namespace MoG.Test.Service
             Assert.IsTrue(files.Count > 0);
 
         }
+        [TestMethod]
+        public void ProjectService_GetProjectFiles2()
+        {
+            var project = serviceProject.GetById(1);
+
+            ICollection<MoGFile> files = project.Files;
+
+            Assert.IsNotNull(files);
+            Assert.IsTrue(files.Count > 0);
+
+        }
+        [TestMethod]
+        public void ProjectService_GetFileStatus()
+        {
+            var project = serviceProject.GetById(1);
+            var statuses = serviceProject.GetFileStatuses(project);
+
+            Assert.IsNotNull(statuses);
+            Assert.IsTrue(statuses.Count > 0);
+        }
+        [TestMethod]
+        public void ProjectService_GetFileAuthors()
+        {
+            var project = serviceProject.GetById(1);
+            var authors = serviceProject.GetFileAuthors(project);
+
+            Assert.IsNotNull(authors);
+            Assert.IsTrue(authors.Count > 0);
+        }
+        [TestMethod]
+        public void ProjectService_GetFileTypes()
+        {
+            var project = serviceProject.GetById(1);
+            var types = serviceProject.GetFileTypes(project);
+
+            Assert.IsNotNull(types);
+            Assert.IsTrue(types.Count > 0);
+        }
+
+        [TestMethod]
+        public void ProjectService_GetFilesFilteredByType()
+        {
+            var project = serviceProject.GetById(1);
+            var files = serviceProject.GetFilteredFiles(project, "", "", FileType.Bass.ToString());
+
+            Assert.IsNotNull(files);
+            Assert.IsNotNull(project);
+            Assert.IsNotNull(project.Files);
+
+            Assert.IsTrue(files.Count < project.Files.Count);
+        }
+
+        [TestMethod]
+        public void ProjectService_GetFilesFilteredByStatus()
+        {
+            var project = serviceProject.GetById(1);
+            var files = serviceProject.GetFilteredFiles(project, "", FileStatus.Accepted.ToString(),"");
+
+            Assert.IsNotNull(files);
+            Assert.IsNotNull(project);
+            Assert.IsNotNull(project.Files);
+
+            Assert.IsTrue(files.Count < project.Files.Count);
+        }
     }
 }

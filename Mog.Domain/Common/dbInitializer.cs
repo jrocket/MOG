@@ -63,6 +63,9 @@ namespace MoG
 
         private void addFilesToProject(Project project, UserProfile jrocket, MogDbContext context)
         {
+            List<FileType> filetypes = new List<FileType>() { FileType.Bass, FileType.Drums, FileType.Guitar, FileType.Idea, FileType.Mixdown };
+            List<FileStatus> filestatus = new List<FileStatus>() { FileStatus.Accepted, FileStatus.Draft, FileStatus.Rejected, FileStatus.Submitted };
+
             for (int j = 0; j < 20; j++)
             {
                 MoGFile file = new MoGFile()
@@ -71,8 +74,8 @@ namespace MoG
                    Creator = jrocket,
                    Description = "Lorem Ipsum",
                    DownloadCount = 42,
-                   FileStatus = FileStatus.Accepted,
-                   FileType = FileType.Bass,
+                   FileStatus = filestatus[j % 4],
+                   FileType = filetypes[j%5],
                    Likes = 12,
                    ModifiedOn = DateTime.Now,
                    Name = "Track name",

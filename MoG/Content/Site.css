@@ -46,6 +46,9 @@ input[type="checkbox"].input-validation-error {
 /*COLORS*/
 .color_good {
 background-color : #e01313;
+}
 
+.color_selected {
+    color : #e01313;
 }
 /*ENDOF COLORS*/

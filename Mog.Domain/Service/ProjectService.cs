@@ -89,6 +89,57 @@ namespace MoG.Domain.Service
         {
             return fileRepo.GetByProjectId(projectId).ToList();
         }
+
+
+        public ICollection<string> GetFileStatuses(Project project)
+        {
+           if (project!=null && project.Files!=null && project.Files.Count>0)
+           {
+               return project.Files.Select(file => file.FileStatus.ToString()).Distinct().ToList();
+           }
+           return null;
+        }
+
+        public ICollection<string> GetFileAuthors(Project project)
+        {
+            if (project != null && project.Files != null && project.Files.Count > 0)
+            {
+                return project.Files.Select(file => file.Creator.DisplayName).Distinct().ToList();
+            }
+            return null;
+        }
+
+        public ICollection<string> GetFileTypes(Project project)
+        {
+            if (project != null && project.Files != null && project.Files.Count > 0)
+            {
+                return project.Files.Select(file => file.FileType.ToString()).Distinct().ToList();
+            }
+            return null;
+        }
+
+
+        public IList<MoGFile> GetFilteredFiles(Project project, string filterByAuthor, string filterByStatus, string filterByType)
+        {
+            var files = project.Files;
+            IEnumerable<MoGFile> result = files.Where(f => true);
+            if (!String.IsNullOrEmpty(filterByAuthor))
+            {
+                result = result.Where(f => f.Creator.DisplayName == filterByAuthor);
+            }
+            if (!String.IsNullOrEmpty(filterByStatus))
+            {
+                FileStatus testStatus = (FileStatus)Enum.Parse(typeof(FileStatus), filterByStatus);
+                result = result.Where(f => f.FileStatus == testStatus);
+            }
+            if (!String.IsNullOrEmpty(filterByType))
+            {
+                FileType testType = (FileType)Enum.Parse(typeof(FileType), filterByType);
+                result = result.Where(f => f.FileType == testType);
+            }
+
+            return result.ToList();
+        }
     }
 
     public interface IProjectService
@@ -109,5 +160,13 @@ namespace MoG.Domain.Service
         List<Activity> GetProjectActivity(int projectId);
 
         List<MoGFile> GetProjectFile(int p);
+
+        ICollection<string> GetFileStatuses(Project project);
+
+        ICollection<string> GetFileAuthors(Project project);
+
+        ICollection<string> GetFileTypes(Project project);
+
+        IList<MoGFile> GetFilteredFiles(Project projet, string filterByAuthor, string filterByStatus, string filterByType);
     }
 }

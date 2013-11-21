@@ -1,0 +1,64 @@
+﻿@model MoG.Domain.Models.VMProjectFiles
+
+<ul class="nav bs-sidenav">
+    <li class="disabled"><a href="#">Status</a></li>
+    <li>
+        <ul>
+            @foreach (var status in Model.Statuses)
+            {
+                <li>
+                    @{ string cssClass = "";
+                     if (status == Model.filterByStatus)
+                     {
+                         cssClass = "color_selected";
+                     }
+                    <a href="@Url.Action("Files", new { filterByStatus = status, filterByAuthor = Model.filterByAuthor, filterByType = Model.filterByType })" class="@cssClass">@status</a>
+                    }
+                </li>
+            }
+
+        </ul>
+    </li>
+    <li class="disabled"><a href="#">Type</a></li>
+    <li>
+        <ul>
+            @foreach (var type in Model.Types)
+            {
+                <li>
+                    @{ string cssClass = "";
+                     if (type == Model.filterByType)
+                     {
+                         cssClass = "color_selected";
+                     }
+                    <a href="@Url.Action("Files", new { filterByType = type, filterByStatus = Model.filterByStatus, c = Model.filterByAuthor })" class="@cssClass">@type</a>
+                    }
+                </li>
+            }
+
+        </ul>
+
+    </li>
+
+
+    <li class="disabled"><a href="#">Proprietaire</a></li>
+    <li>
+        <ul>
+            @foreach (var author in Model.Authors)
+            {
+                <li>
+                    @{ string cssClass = "";
+                     if (author == Model.filterByAuthor)
+                     {
+                         cssClass = "color_selected";
+                     }
+                    <a href="@Url.Action("Files", new { filterByAuthor = author, filterByStatus = Model.filterByStatus, filterByType = Model.filterByType})" class="@cssClass">@author</a>
+                    }
+                </li>
+            }
+
+        </ul>
+
+    </li>
+
+    <li><a href="@Url.Action("Files")">Reset</a></li>
+</ul>

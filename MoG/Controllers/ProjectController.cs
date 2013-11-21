@@ -42,7 +42,7 @@ namespace MoG.Controllers
         {
             var user = userService.GetCurrentUser();
             var projects = this.serviceProject.GetByUserLogin(user.Login);
-          //  var viewModel = MogAutomapper.Map(projects);
+            //  var viewModel = MogAutomapper.Map(projects);
             VMProjectList vm = new VMProjectList();
             vm.Projects = projects;
             ViewBag.Title = "Mes Projets";
@@ -71,24 +71,24 @@ namespace MoG.Controllers
             return View("ProjectList", vmodel);
         }
 
-        #endregion 
+        #endregion
 
         public ActionResult Detail(int id = -1)
         {
             Project project = serviceProject.GetById(id);
-           
 
-            if (id<0)
+
+            if (id < 0)
             {
-               // return RedirectToErrorPage("project not found");
+                // return RedirectToErrorPage("project not found");
             }
 
 
             return View(project);
         }
 
-      
-     
+
+
         public ActionResult Create()
         {
             return View();
@@ -115,20 +115,38 @@ namespace MoG.Controllers
 
 
         public ActionResult Activity(int id = 1)
-        {VMProjectActivity model  = new VMProjectActivity();
-            if (id>0)
+        {
+            VMProjectActivity model = new VMProjectActivity();
+            if (id > 0)
             {
                 model.Project = serviceProject.GetById(id);
-                model.Activities   = serviceProject.GetProjectActivity(id);
+                model.Activities = serviceProject.GetProjectActivity(id);
             }
-           
-          
+
+
             return View(model);
         }
 
-        public ActionResult Files(int id = 1)
+        public ActionResult Files(int id = 1, string filterByType = "", string filterByStatus = "",string  filterByAuthor= "")
         {
-            return View();
+            if (id < 0)
+            {
+                this.DisplayErrorMessage("Project not found...");
+                return View();
+
+            }
+            VMProjectFiles model = new VMProjectFiles();
+            var project = serviceProject.GetById(id);
+            model.FilteredFiles = serviceProject.GetFilteredFiles(project, filterByAuthor, filterByStatus, filterByType);
+            model.Project = project;
+            model.Statuses = serviceProject.GetFileStatuses(project);
+            model.Authors = serviceProject.GetFileAuthors(project);
+            model.Types = serviceProject.GetFileTypes(project);
+            model.filterByAuthor = filterByAuthor;
+            model.filterByStatus = filterByStatus;
+            model.filterByType = filterByType;
+
+            return View(model);
         }
 
         public ActionResult Administration(int id = 1)
@@ -136,7 +154,7 @@ namespace MoG.Controllers
             return View();
         }
 
-      
+
 
         public ActionResult AdminSettings(int id)
         {
