@@ -7,16 +7,14 @@ using System.Web;
 
 namespace MoG.Domain.Repository
 {
-    public class ProjectRepository : IProjectRepository, IDisposable
+    public class ProjectRepository : BaseRepository, IProjectRepository, IDisposable
     {
-        private MogDbContext dbContext = null;
-        IdbContextProvider contextProvider = null;
 
 
         public ProjectRepository(IdbContextProvider provider)
+            : base(provider)
         {
-            contextProvider = provider;
-            dbContext = contextProvider.GetCurrent();
+          
         }
 
         public bool Create(Project p)
@@ -92,7 +90,6 @@ namespace MoG.Domain.Repository
             }
             return result;
         }
-
 
 
 

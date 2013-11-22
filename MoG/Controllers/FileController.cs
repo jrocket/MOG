@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MoG.Domain.Service;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -8,9 +9,16 @@ namespace MoG.Controllers
 {
     public class FileController : MogController
     {
+        private IFileService serviceFile = null;
+        public FileController(IFileService _fileService)
+        {
+            serviceFile = _fileService;
+        }
         public ActionResult Detail(int id=1)
         {
-            return View();
+            var file = serviceFile.GetById(id);
+            ViewBag.Comments = serviceFile.GetFileComments(id);
+            return View(file);
         }
 	}
 }

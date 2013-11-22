@@ -22,5 +22,7 @@ namespace MoG.Domain.Repository
         public DbSet<Activity> Activities { get; set; }
 
         public DbSet<MoGFile> Files { get; set; }
+
+        public DbSet<Comment> Comments { get; set; }
     }
 }

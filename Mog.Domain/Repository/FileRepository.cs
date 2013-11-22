@@ -29,6 +29,12 @@ namespace MoG.Domain.Repository
         {
             return dbContext.Files.Where(p => p.Creator.Id == creatorId);
         }
+
+
+        public MoGFile GetById(int id)
+        {
+            return dbContext.Files.Find(id);
+        }
     }
     public interface IFileRepository
     {
@@ -37,5 +43,7 @@ namespace MoG.Domain.Repository
 
         IQueryable<MoGFile> GetByCreatorId(int creatorId);
 
+
+        MoGFile GetById(int id);
     }
 }

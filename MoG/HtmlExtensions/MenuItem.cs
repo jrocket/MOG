@@ -14,7 +14,8 @@ namespace MoG
             string text,
             string action,
             string controller,
-            string liCssClass = null
+            string liCssClass = null,
+            object routevalues = null
         )
         {
             var li = new TagBuilder("li");
@@ -31,7 +32,7 @@ namespace MoG
                 li.AddCssClass("active");
             }
             li.InnerHtml = String.Format("<a href=\"{0}\">{1}</a>",
-               new UrlHelper(htmlHelper.ViewContext.RequestContext).Action(action, controller).ToString()
+               new UrlHelper(htmlHelper.ViewContext.RequestContext).Action(action, controller,routevalues).ToString()
                 , text);
             return MvcHtmlString.Create(li.ToString());
         }

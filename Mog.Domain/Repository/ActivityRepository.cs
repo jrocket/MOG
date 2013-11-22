@@ -8,16 +8,12 @@ using System.Threading.Tasks;
 
 namespace MoG.Domain.Repository
 {
-    public class ActivityRepository : IActivityRepository
+    public class ActivityRepository : BaseRepository , IActivityRepository
     {
-        private MogDbContext dbContext = null;
-        IdbContextProvider contextProvider = null;
-
-
-        public ActivityRepository(IdbContextProvider provider)
+      
+        public ActivityRepository(IdbContextProvider provider) : base(provider)
         {
-            contextProvider = provider;
-            dbContext = contextProvider.GetCurrent();
+          
         }
 
 

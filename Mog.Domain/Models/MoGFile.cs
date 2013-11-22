@@ -27,7 +27,6 @@ namespace MoG.Domain.Models
         [DisplayName("Tags")]
         public String Tags { get; set; }
 
-
         public virtual UserProfile Creator { get; set; }
 
         public int PlayCount { get; set; }
@@ -40,5 +39,7 @@ namespace MoG.Domain.Models
 
 
         public int ProjectId { get; set; }
+
+        public virtual Project Project { get; set; }
     }
 }

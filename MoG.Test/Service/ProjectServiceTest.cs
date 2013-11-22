@@ -153,15 +153,7 @@ namespace MoG.Test.Service
 
         }
 
-        [TestMethod]
-        public void ProjectService_GetProjectFiles()
-        {
-            List<MoGFile> files = serviceProject.GetProjectFile(1);
-
-            Assert.IsNotNull(files);
-            Assert.IsTrue(files.Count > 0);
-
-        }
+    
         [TestMethod]
         public void ProjectService_GetProjectFiles2()
         {

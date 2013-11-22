@@ -85,10 +85,7 @@ namespace MoG.Domain.Service
         }
 
 
-        public List<MoGFile> GetProjectFile(int projectId)
-        {
-            return fileRepo.GetByProjectId(projectId).ToList();
-        }
+       
 
 
         public ICollection<string> GetFileStatuses(Project project)
@@ -159,8 +156,7 @@ namespace MoG.Domain.Service
 
         List<Activity> GetProjectActivity(int projectId);
 
-        List<MoGFile> GetProjectFile(int p);
-
+        
         ICollection<string> GetFileStatuses(Project project);
 
         ICollection<string> GetFileAuthors(Project project);

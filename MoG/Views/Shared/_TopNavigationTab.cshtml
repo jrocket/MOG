@@ -1,0 +1,25 @@
+﻿@model MoG.Domain.Models.Project
+
+<div class="row">
+    <div class="col-lg-8">
+        <h1 class="page-header">@Html.DisplayFor(model => model.Name) <small>@Html.DisplayFor(model => model.Creator.DisplayName)</small></h1>
+    </div>
+    <div class="col-lg-4">
+        <p>
+            &nbsp;<br />
+            <a href="create-project.html" class="btn btn-primary btn-lg btn-block btn-success">Uploader un fichier</a>
+        </p>
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-12">
+        <ul class="nav nav-tabs">
+            @Html.MenuItem("Général", "Detail", "Project", null, new { id=Model.Id})
+            @Html.MenuItem("Activité", "Activity", "Project", null, new { id = Model.Id })
+            @Html.MenuItem("Fichiers", "Files", "Project", null, new { id = Model.Id })
+            @Html.MenuItem("Administration", "Administration", "Project", null, new { id = Model.Id })
+        </ul>
+    </div>
+</div>
+
+

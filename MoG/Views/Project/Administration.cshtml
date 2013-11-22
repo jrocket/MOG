@@ -1,37 +1,14 @@
-﻿@{
+﻿@model MoG.Domain.Models.Project
+@{
     ViewBag.Title = "Administration";
 }
 
 <div class="container">
 
+    @Html.Partial("_TopNavigationTab", Model)
 
 
-    @*<div class="col-lg-12">
-            <ol class="breadcrumb">
-                <li><a href="index.html">Home</a></li>
-                <li><a href="projects.html">Projects</a></li>
-                <li class="active">nom du projet</li>
-            </ol>
-        </div>*@
-    <div class="row">
-        <div class="col-lg-8">
-            <h1 class="page-header">Nom du projet <small>nom de l'owner</small></h1>
-        </div>
-        <div class="col-lg-4">
-
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-lg-12">
-            <ul class="nav nav-tabs">
-                <li><a href="@Url.Action("detail",new { id=1})">Général</a></li>
-                <li><a href="@Url.Action("activity",new { id=1})">Activité</a></li>
-                <li><a href="@Url.Action("files",new { id=1})">Tracks</a></li>
-                <li class="active"><a href="@Url.Action("administration",new { id=1})">Administration</a></li>
-            </ul>
-        </div>
-    </div>
-    <style>
+<style>
         .btn:not(.btn-block) {
             width: 120px;
             margin-bottom: 10px;

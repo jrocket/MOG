@@ -83,7 +83,24 @@ namespace MoG
                    ProjectId = project.Id
 
                 };
-                context.Files.Add(file);
+                file = context.Files.Add(file);
+                addCommentToFile(file,jrocket,context);
+            }
+        }
+
+        private void addCommentToFile(MoGFile file, UserProfile jrocket, MogDbContext context)
+        {
+            for (int i=0;i<5;i++)
+            {
+                Comment comment = new Comment()
+                {
+                    Body = "Lorem Ipsums.... ",
+                    CreatedOn = DateTime.Now,
+                    Creator = jrocket,
+                    FileId = file.Id
+                };
+                context.Comments.Add(comment);
+
             }
         }
     }

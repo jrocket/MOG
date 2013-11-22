@@ -6,27 +6,8 @@
 <div class="container">
 
 
-    <div class="row">
-        <div class="col-lg-8">
-            <h1 class="page-header">Nom du projet <small>nom de l'owner</small></h1>
-        </div>
-        <div class="col-lg-4">
-            <p>
-                &nbsp;<br />
-                <a href="create-project.html" class="btn btn-primary btn-lg btn-block btn-success">Uploader un fichier</a>
-            </p>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-lg-12">
-            <ul class="nav nav-tabs">
-                <li><a href="@Url.Action("detail",new { id=1})">Général</a></li>
-                <li><a href="@Url.Action("activity",new { id=1})">Activité</a></li>
-                <li class="active"><a href="@Url.Action("files",new { id=1})">Tracks</a></li>
-                <li><a href="@Url.Action("administration",new { id=1})">Administration</a></li>
-            </ul>
-        </div>
-    </div>
+    @Html.Partial("_TopNavigationTab", Model.Project)
+
 
     <div class="row">
         <div class="col-md-12">
@@ -50,13 +31,13 @@
                     <div class="row">
                         <div class="col-md-1">
                             <p><i class="icon-camera icon-2x"></i></p>
-                            <p>@Html.DisplayFor(model => model.FilteredFiles[counter].CreatedOn, "LongDateString") </p>
+                            <p>@Html.DisplayFor(model => model.FilteredFiles[counter].CreatedOn) </p>
                         </div>
                         <div class="col-md-2">
                             <a href="track-detail.html"><img src="http://placehold.it/100x100" class="img-responsive"></a>
                         </div>
                         <div class="col-md-4">
-                            <h3><a href="@Url.Action("Detail","Track",new { id=file.Id})">@file.Name</a></h3>
+                            <h3><a href="@Url.Action("Detail","File",new { id=file.Id})">@file.Name</a></h3>
                             <p>---------------PLAYER ----------- <i class="icon-cloud-download"></i>&nbsp;<i class="icon-trash"></i>&nbsp;<i class="icon-heart"></i></p>
 
                         </div>

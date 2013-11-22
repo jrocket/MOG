@@ -68,6 +68,7 @@
     <Compile Include="Initializer.cs" />
     <Compile Include="Service\ProjectServiceTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Service\FileServiceTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config">

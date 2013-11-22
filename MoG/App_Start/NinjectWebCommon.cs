@@ -75,11 +75,14 @@ namespace MoG.App_Start
         private static void RegisterServices(IKernel kernel)
         {
             kernel.Bind<IProjectService>().To<ProjectService>();
+            kernel.Bind<IFileService>().To<FileService>();
             kernel.Bind<IUserService>().To<UserService>();
 
             kernel.Bind<IProjectRepository>().To<ProjectRepository>();
             kernel.Bind<IActivityRepository>().To<ActivityRepository>();
             kernel.Bind<IFileRepository>().To<FileRepository>();
+            kernel.Bind<ICommentRepository>().To<CommentRepository>();
+
             kernel.Bind<IdbContextProvider>().To<dbContextProvider>();
 
 

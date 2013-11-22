@@ -151,7 +151,8 @@ namespace MoG.Controllers
 
         public ActionResult Administration(int id = 1)
         {
-            return View();
+            var project = serviceProject.GetById(id);
+            return View(project);
         }
 
 

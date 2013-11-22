@@ -5,25 +5,7 @@
 <div class="container">
 
 
-    <div class="row">
-        <div class="col-lg-8">
-            <h1 class="page-header">@Model.Project.Name <small>@Model.Project.Creator</small></h1>
-        </div>
-        <div class="col-lg-4">
-
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-lg-12">
-            <ul class="nav nav-tabs">
-                <li><a href="@Url.Action("detail",new { id=1})">Général</a></li>
-                <li class="active"><a href="@Url.Action("activity",new { id=1})">Activité</a></li>
-                <li><a href="@Url.Action("files",new { id=1})">Files</a></li>
-                <li><a href="@Url.Action("administration",new { id=1})">Administration</a></li>
-            </ul>
-        </div>
-    </div>
-
+    @Html.Partial("_TopNavigationTab", Model.Project)
     <div class="row">
         <div class="col-md-12">
             <table class="table  table-striped">
