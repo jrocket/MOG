@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MoG.Domain.Repository
 {
-    public class BaseRepository
+    public class BaseRepository : IDisposable
     {
         public MogDbContext dbContext = null;
         IdbContextProvider contextProvider = null;
@@ -15,6 +15,12 @@ namespace MoG.Domain.Repository
         {
             contextProvider = provider;
             dbContext = contextProvider.GetCurrent();
+        }
+
+        public void Dispose()
+        {
+            if (dbContext != null)
+                dbContext.Dispose();
         }
     }
 }

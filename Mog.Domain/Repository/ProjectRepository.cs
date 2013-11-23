@@ -7,7 +7,7 @@ using System.Web;
 
 namespace MoG.Domain.Repository
 {
-    public class ProjectRepository : BaseRepository, IProjectRepository, IDisposable
+    public class ProjectRepository : BaseRepository, IProjectRepository
     {
 
 
@@ -25,11 +25,6 @@ namespace MoG.Domain.Repository
         }
 
 
-
-        public void Dispose()
-        {
-            dbContext.Dispose();
-        }
 
 
         public IQueryable<Project> GetByUserLogin(string login)

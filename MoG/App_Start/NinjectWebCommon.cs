@@ -77,11 +77,13 @@ namespace MoG.App_Start
             kernel.Bind<IProjectService>().To<ProjectService>();
             kernel.Bind<IFileService>().To<FileService>();
             kernel.Bind<IUserService>().To<UserService>();
+            kernel.Bind<ICommentService>().To<CommentService>();
 
             kernel.Bind<IProjectRepository>().To<ProjectRepository>();
             kernel.Bind<IActivityRepository>().To<ActivityRepository>();
             kernel.Bind<IFileRepository>().To<FileRepository>();
             kernel.Bind<ICommentRepository>().To<CommentRepository>();
+            kernel.Bind<IUserRepository>().To<UserRepository>();
 
             kernel.Bind<IdbContextProvider>().To<dbContextProvider>();
 

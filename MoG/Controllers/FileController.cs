@@ -14,11 +14,19 @@ namespace MoG.Controllers
         {
             serviceFile = _fileService;
         }
-        public ActionResult Detail(int id=1)
+        public ActionResult Detail(int id=-1)
         {
             var file = serviceFile.GetById(id);
             ViewBag.Comments = serviceFile.GetFileComments(id);
             return View(file);
+        }
+
+        public JsonResult GetComments(int id=1)
+        {
+            var comments = serviceFile.GetFileComments(id);
+            var result = new JsonResult() { Data = comments, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
+            return result;
+
         }
 	}
 }

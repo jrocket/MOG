@@ -76,6 +76,7 @@
     <Compile Include="Repository\FileRepository.cs" />
     <Compile Include="Repository\ProjectRepository.cs" />
     <Compile Include="Repository\UserRepository.cs" />
+    <Compile Include="Service\CommentService.cs" />
     <Compile Include="Service\FileService.cs" />
     <Compile Include="Service\ProjectService.cs" />
     <Compile Include="Service\UserService.cs" />

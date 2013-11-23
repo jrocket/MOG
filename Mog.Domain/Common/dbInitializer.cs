@@ -90,7 +90,7 @@ namespace MoG
 
         private void addCommentToFile(MoGFile file, UserProfile jrocket, MogDbContext context)
         {
-            for (int i=0;i<5;i++)
+            for (int i=0;i<1;i++)
             {
                 Comment comment = new Comment()
                 {

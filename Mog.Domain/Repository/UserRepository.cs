@@ -6,9 +6,13 @@ using System.Web;
 
 namespace MoG.Domain.Repository
 {
-    public class UserRepository : IUserRepository, IDisposable
+    public class UserRepository : BaseRepository, IUserRepository
     {
-        private MogDbContext dbContext = new MogDbContext();
+        public UserRepository(IdbContextProvider provider)
+            : base(provider)
+        {
+
+        }
 
         public bool Create(UserProfile usr)
         {
@@ -17,9 +21,10 @@ namespace MoG.Domain.Repository
             return (result > 0);
         }
 
-        public void Dispose()
+
+        public UserProfile GetById(int id)
         {
-            dbContext.Dispose();
+            return dbContext.Users.Find(id);
         }
     }
 
@@ -27,5 +32,7 @@ namespace MoG.Domain.Repository
     {
         bool Create(UserProfile usr);
 
+
+        UserProfile GetById(int p);
     }
 }
