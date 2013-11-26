@@ -24,5 +24,8 @@ namespace MoG.Domain.Repository
         public DbSet<MoGFile> Files { get; set; }
 
         public DbSet<Comment> Comments { get; set; }
+
+        public DbSet<Message> Messages { get; set; }
+        public DbSet<MessageDestination> MessagesDestinations { get; set; }
     }
 }

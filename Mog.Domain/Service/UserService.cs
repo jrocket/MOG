@@ -27,6 +27,12 @@ namespace MoG.Domain.Service
             }
             return result;
         }
+
+
+        public IQueryable<UserProfile> GetAll()
+        {
+            return repo.GetAll();
+        }
     }
 
 
@@ -34,5 +40,7 @@ namespace MoG.Domain.Service
     {
         UserProfile GetCurrentUser();
 
+
+        IQueryable<UserProfile> GetAll();
     }
 }

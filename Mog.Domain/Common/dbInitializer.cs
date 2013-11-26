@@ -13,8 +13,11 @@ namespace MoG
         protected override void Seed(MogDbContext context)
         {
             context.Users.Add(new UserProfile() { DisplayName = "Johnny ROCKET", Login = "jrocket" });
+            context.Users.Add(new UserProfile() { DisplayName = "Mike VEGAS", Login = "mvegas" });
             context.SaveChanges();
             UserProfile jrocket = context.Users.Where(p => p.Login == "jrocket").First();
+            UserProfile mvegas = context.Users.Where(p => p.Login == "mvegas").First();
+
 
             DateTime initialDate = DateTime.Now;
             for (int i = 0; i < 20; i++)
@@ -36,13 +39,35 @@ namespace MoG
                 addActivityToProjec(project, jrocket, context);
 
                 addFilesToProject(project, jrocket, context);
+
+             
                 
             }
 
 
+            addMessages(jrocket, mvegas, context);
 
 
+        }
 
+        private void addMessages(UserProfile jrocket, UserProfile mvegas, MogDbContext context)
+        {
+            Message message = new Message();
+            message.CreatedBy = jrocket;
+            message.Body = "Lorem Ipsmus du message";
+            message.CreatedOn = DateTime.Now;
+            //message.DestinationIds = new List<int> { jrocket.Id, mvegas.Id };
+            message.Title = "Title Lorem";
+
+            message = context.Messages.Add(message);
+            context.SaveChanges();
+
+            MessageDestination md = new MessageDestination() { MessageId = message.Id, UserId = jrocket.Id };
+            context.MessagesDestinations.Add(md);
+            context.SaveChanges();
+            md = new MessageDestination() { MessageId = message.Id, UserId = mvegas.Id };
+            context.MessagesDestinations.Add(md);
+            context.SaveChanges();
         }
 
         private void addActivityToProjec(Project project, UserProfile jrocket, MogDbContext context)

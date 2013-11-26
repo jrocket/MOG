@@ -321,6 +321,7 @@
     <Content Include="Views\Shared\DisplayTemplates\ShortDateString.cshtml" />
     <Content Include="Views\Project\_trackRefinementPanel.cshtml" />
     <Content Include="Views\Shared\_TopNavigationTab.cshtml" />
+    <Content Include="Views\Message\Messages.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

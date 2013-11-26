@@ -26,6 +26,12 @@ namespace MoG.Domain.Repository
         {
             return dbContext.Users.Find(id);
         }
+
+
+        public IQueryable<UserProfile> GetAll()
+        {
+            return dbContext.Users;
+        }
     }
 
     public interface IUserRepository
@@ -34,5 +40,7 @@ namespace MoG.Domain.Repository
 
 
         UserProfile GetById(int p);
+
+        IQueryable<UserProfile> GetAll();
     }
 }
