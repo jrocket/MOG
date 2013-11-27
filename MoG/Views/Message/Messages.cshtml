@@ -10,40 +10,55 @@
     </div>
 </div>
 <div class="row">
-    @Html.Partial("_LeftMenu")
+    <div class="col-md-2">
+        <ul class="nav nav-pills nav-stacked" data-bind="foreach: folders">
+            <li data-bind="
+                   css: { active: $data == $root.chosenFolderId() },
+                   click: $root.goToFolder"><a href="#" data-bind="text: $data"></a></li>
+        </ul>
+    </div>
+
+    @*@Html.Partial("_LeftMenu")*@
     <div class="col-lg-10">
         <div>
             <button type="button" class="btn btn-default  btn-block" onclick="showMsgForm()" id="btnNewMessage">Ecrire un nouveau message</button>
         </div>
+
         <div class="panel panel-default hidden" id="pnlNewMessage">
             <div class="panel-body">
                 <button type="button" class="close" aria-hidden="true" onclick="hideMsgForm()">&times;</button>
                 <div class="row">
-                    <form role="form" class="form-horizontal">
+                    <form role="form" class="form-horizontal" data-bind="submit: sendMail">
                         <div class="form-group">
-
                             <label for="to" class="col-sm-2 control-label">Pour</label>
                             <div class="col-sm-9">
-                                <input type="text" class="form-control" name="to" />
+                                <input type="text" class="form-control"  data-bind="value: to" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="to" class="col-sm-2 control-label">TItre</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control"  data-bind="value: title" />
                             </div>
                         </div>
                         <div class="form-group">
                             <label for="message" class="col-sm-2 control-label">Message</label>
                             <div class="col-sm-9">
-                                <textarea class="form-control" rows="3" name="message"></textarea>
+                                <textarea class="form-control" rows="3" data-bind="value: body"></textarea>
                             </div>
                         </div>
                         <div class="form-group">
                             <div class="col-sm-offset-2 col-sm-10">
-                                <button type="submit" class="btn btn-default">Envoyer</button>
+                                <button class="btn btn-default" type="submit">Envoyer</button>
                             </div>
                         </div>
                     </form>
+                   
                 </div>
 
             </div>
         </div>
-        <div data-bind="foreach : messages">
+        <div data-bind="foreach : chosenFolderData">
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <div class="row">
@@ -58,7 +73,8 @@
                     </div>
                 </div>
                 <div class="panel-body">
-                    <p><strong><span data-bind="text :Title"></span></strong><br />
+                    <p>
+                        <strong><span data-bind="text :Title"></span></strong><br />
                         <span data-bind="text :Body"></span>
                     </p>
                 </div>
@@ -84,68 +100,100 @@
             return false;
         }
 
-        // Class to represent a row in the seat reservations grid
-        function Message(from, to, createdOn, title, body) {
-            var self = this;
-            self.from = from;
-            self.to = to;
-            self.createdOn = createdOn;
-            self.title = title;
-            self.body = body;
-            self.bodyAbstract = ko.computed(function () {
-                var bodyabstract = body.substring(1, 4);
-                return bodyabstract;
-            });
-        }
+        //// Class to represent a message
+        //function Message(From, To, CreatedOn, Title, Body) {
+        //    var self = this;
+        //    self.from = From;
+        //    self.to = To;
+        //    self.createdOn = CreatedOn;
+        //    self.title = Title;
+        //    self.body = Body;
+           
+
+          
+        //}
 
 
         function MessageVM() {
 
             var self = this;
 
-            this.messages = new ko.observableArray();
+
+            self.folders = ['Recus', 'Envoyé', 'Archives', 'Recherche','Live CHat'];
+
+            //self.folders = new Object();
+            //self.folders['Recus'] = 'Inbox';
+            //self.folders['Envoyé'] = 'Outbox';
+            //self.folders['Archives'] = 'Archives';
+            self.controllerParam = new Object();
+            self.controllerParam[self.folders[0]] = 'Inbox';
+            self.controllerParam[self.folders[1]] = 'Outbox';
+            self.controllerParam[self.folders[2]] = 'Archives';
+            self.controllerParam[self.folders[3]] = 'Search';
+            self.controllerParam[self.folders[4]] = 'LiveChat';
 
 
+            self.chosenFolderId = ko.observable();
+            self.chosenFolderData = ko.observable();
 
-            $(document).ready(function () {
-              
+            //var emptyMessage = { title: "", to: "", body: "" };
+            //self.message = ko.observable(emptyMessage);
+
+            self.to = ko.observable();
+            self.title = ko.observable();
+            self.body = ko.observable();
+
+            // Behaviours
+            self.goToFolder = function (folder) {
+                self.chosenFolderId(folder);
+
                 $.ajax({
-                    url: '/Message/GetInbox',
+                    url: '/Message/GetFolder',
                     dataType: 'json',
-                    data: { "_nocache": new Date().getMilliseconds() },
+                    contentType: 'application/json',
+                    data: { "folderName": self.controllerParam[folder], "_nocache": new Date().getMilliseconds() },
                     success: function (data) {
-                        self.messages(data);
+                        self.chosenFolderData(data);
                     }
                 });
-            });
 
 
-            //this.btnCreateComment = function () {
-            //    console.dir(self.fileId());
-            //    $.ajax({
-            //        url: '/Comment/Create',
-            //        type: 'post',
-            //        dataType: 'json',
-            //        data:  ko.toJSON({"fileId" : self.fileId(),  "body" : self.newBody() }),
-            //        contentType: 'application/json',
-            //        success: function (result) {
-            //            self.comments.push(result);
-            //            self.newBody("");
-            //            //                window.location.href = urlPath + '/';
-            //        },
-            //        error: function (err) {
-            //            if (err.responseText == "success")
-            //            { window.location.href = urlPath + '/'; }
-            //            else {
-            //                alert(err.responseText);
-            //            }
-            //        },
-            //        complete: function () {
-            //        }
-            //    });
-            //    return false;
 
-            //};
+            };
+
+            self.sendMail = function () {
+                var jsonPost = { "to": self.to(), "title": self.title(), "body": self.body() };
+                
+                $.ajax({
+                    type: "POST",
+                    url: '/Message/Send',
+                    //dataType: 'json',
+                    //contentType: 'application/json',
+                    data: jsonPost,
+                    cache: false,
+                    success: function (data) {
+                        self.to("");
+                        self.title("");
+                        self.body("");
+
+                        $.ajax({
+                            url: '/Message/GetFolder',
+                            dataType: 'json',
+                            contentType: 'application/json',
+                            data: { "folderName": "Inbox", "_nocache": new Date().getMilliseconds() },
+                            success: function (data) {
+                                self.chosenFolderData(data);
+                            }
+                        });
+
+                    }
+                });
+            }
+
+
+            //initialization
+            self.goToFolder(self.folders[0]);
+
 
 
 

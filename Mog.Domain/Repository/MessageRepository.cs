@@ -24,7 +24,7 @@ namespace MoG.Domain.Repository
             string sql = @"
 SELECT * FROM messages 
 LEFT JOIN  MessageDestinations on MessageDestinations.MessageId = messages.id
-WHERE messageDestinations.UserId = @UserId
+WHERE messageDestinations.UserId = @UserId ORDER BY CreatedOn DESC
 ";
             return dbContext.Messages.SqlQuery(sql,
                 new SqlParameter("@UserId",userId)
@@ -44,7 +44,8 @@ WHERE messageDestinations.UserId = @UserId
         {
             return dbContext.Messages
                 .Where(m => !m.Deleted)
-                .Where(m => m.CreatedBy.Id == userId);
+                .Where(m => m.CreatedBy.Id == userId)
+                .OrderByDescending(m => m.CreatedOn);
         }
 
 
@@ -55,7 +56,9 @@ WHERE messageDestinations.UserId = @UserId
             {
                 MessageDestination md = new MessageDestination() { MessageId = newMessage.Id, UserId = destinationId };
                 md = dbContext.MessagesDestinations.Add(md);
+              
             }
+            dbContext.SaveChanges();
             return result;
         }
     }

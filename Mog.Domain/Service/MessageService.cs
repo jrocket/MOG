@@ -1,4 +1,5 @@
-﻿using MoG.Domain.Repository;
+﻿using MoG.Domain.Models;
+using MoG.Domain.Repository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -39,6 +40,20 @@ namespace MoG.Domain.Service
         }
 
 
+
+        public IEnumerable<int> GetDestinationIds(string to)
+        {
+            List<int> result = new List<int>();
+            string[] destinationsLogins = to.Split(';');
+            foreach(var login in destinationsLogins)
+            {
+                UserProfile user = this.serviceUser.GetByLogin(login);
+                if (user != null)
+                    result.Add(user.Id);
+            }
+            return result;
+
+        }
     }
 
     public interface IMessageService
@@ -50,5 +65,7 @@ namespace MoG.Domain.Service
         IQueryable<Models.Message> GetSent(int userId);
 
         bool Send(Models.Message newMessage);
+
+        IEnumerable<int> GetDestinationIds(string to);
     }
 }

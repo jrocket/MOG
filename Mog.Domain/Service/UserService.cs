@@ -33,6 +33,12 @@ namespace MoG.Domain.Service
         {
             return repo.GetAll();
         }
+
+
+        public UserProfile GetByLogin(string login)
+        {
+            return repo.GetByLogin(login);
+        }
     }
 
 
@@ -42,5 +48,7 @@ namespace MoG.Domain.Service
 
 
         IQueryable<UserProfile> GetAll();
+
+        UserProfile GetByLogin(string login);
     }
 }

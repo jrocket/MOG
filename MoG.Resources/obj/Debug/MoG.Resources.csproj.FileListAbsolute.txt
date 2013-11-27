@@ -7,3 +7,4 @@ C:\Users\tberst\Documents\Visual Studio 2013\Projects\Project3\MoG.Resources\obj
 C:\Users\tberst\Documents\Visual Studio 2013\Projects\Project3\MoG.Resources\obj\Debug\fr\MoG.Resources.resources.dll
 C:\Users\tberst\Documents\Visual Studio 2013\Projects\Project3\MoG.Resources\obj\Debug\MoG.Resources.dll
 C:\Users\tberst\Documents\Visual Studio 2013\Projects\Project3\MoG.Resources\obj\Debug\MoG.Resources.pdb
+C:\Users\tberst\Documents\Visual Studio 2013\Projects\Project3\MoG.Resources\obj\Debug\MoG.Resources.csprojResolveAssemblyReference.cache

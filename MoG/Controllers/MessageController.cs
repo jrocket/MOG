@@ -21,12 +21,22 @@ namespace MoG.Controllers
         }
         public ActionResult Index()
         {
-            return View("Messages") ;
+            return View("Messages");
 
         }
 
+        [HttpPost]
+        public JsonResult Send(string to, string body, string title)
+        {
+            var currentUser = serviceUser.GetCurrentUser();
+            IEnumerable<int> destinationIds = this.serviceMessage.GetDestinationIds(to);
+            Message m = new Message() { Body = body, Title = title, DestinationIds = destinationIds };
+            this.serviceMessage.Send(m);
 
-        public JsonResult GetInbox()
+            var result = new JsonResult() { Data = "OK", JsonRequestBehavior = JsonRequestBehavior.AllowGet };
+            return result;
+        }
+        public JsonResult GetFolder(string folderName)
         {
             var currentUser = serviceUser.GetCurrentUser();
             var inbox = serviceMessage.GetInbox(currentUser.Id);
@@ -39,7 +49,7 @@ namespace MoG.Controllers
                     Body = message.Body,
                     Sender = message.CreatedBy.DisplayName,
                     SentOn = message.CreatedOn.ToString("dd-MMM-yyyy hh:mm"),
-                    Title = message.Title
+                    Title = message.Title + folderName
                 });
 
             }
@@ -76,5 +86,5 @@ namespace MoG.Controllers
         {
             return View();
         }
-	}
+    }
 }

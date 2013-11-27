@@ -32,6 +32,12 @@ namespace MoG.Domain.Repository
         {
             return dbContext.Users;
         }
+
+
+        public UserProfile GetByLogin(string login)
+        {
+            return dbContext.Users.Where(u => u.Login == login).FirstOrDefault();
+        }
     }
 
     public interface IUserRepository
@@ -42,5 +48,7 @@ namespace MoG.Domain.Repository
         UserProfile GetById(int p);
 
         IQueryable<UserProfile> GetAll();
+
+        UserProfile GetByLogin(string login);
     }
 }
