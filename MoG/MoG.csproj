@@ -213,6 +213,7 @@
     <Content Include="Content\font-awesome\css\font-awesome.css" />
     <Content Include="Content\font-awesome\css\font-awesome.min.css" />
     <Content Include="Content\font-awesome\font\fontawesome-webfont.svg" />
+    <Content Include="Content\Images\loading.gif" />
     <Content Include="Content\modern-business.css" />
     <Content Include="Content\tags\bootstrap-tagsinput.css" />
     <Content Include="favicon.ico" />

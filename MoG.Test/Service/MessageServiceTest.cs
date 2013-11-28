@@ -35,7 +35,7 @@ namespace MoG.Test.Service
             //act
            var result = serviceMessage.Send(test);
 
-           Assert.IsTrue(result);
+           Assert.IsTrue(result.Id >0);
 
         }
 

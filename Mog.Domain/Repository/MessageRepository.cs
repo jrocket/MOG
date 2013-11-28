@@ -15,7 +15,7 @@ namespace MoG.Domain.Repository
         public MessageRepository(IdbContextProvider provider)
             : base(provider)
         {
-           
+
         }
 
 
@@ -27,7 +27,7 @@ LEFT JOIN  MessageDestinations on MessageDestinations.MessageId = messages.id
 WHERE messageDestinations.UserId = @UserId ORDER BY CreatedOn DESC
 ";
             return dbContext.Messages.SqlQuery(sql,
-                new SqlParameter("@UserId",userId)
+                new SqlParameter("@UserId", userId)
                 ).ToList<Message>();
         }
 
@@ -45,6 +45,7 @@ WHERE messageDestinations.UserId = @UserId ORDER BY CreatedOn DESC
             return dbContext.Messages
                 .Where(m => !m.Deleted)
                 .Where(m => m.CreatedBy.Id == userId)
+                .Where(m => !m.Archived )
                 .OrderByDescending(m => m.CreatedOn);
         }
 
@@ -56,11 +57,47 @@ WHERE messageDestinations.UserId = @UserId ORDER BY CreatedOn DESC
             {
                 MessageDestination md = new MessageDestination() { MessageId = newMessage.Id, UserId = destinationId };
                 md = dbContext.MessagesDestinations.Add(md);
-              
+
             }
             dbContext.SaveChanges();
             return result;
         }
+
+
+        public Message GetById(int id)
+        {
+            return this.dbContext.Messages.Find(id);
+        }
+
+
+       
+
+
+
+
+        public Message ArchiveInbox(Message message, int userId)
+        {
+           
+            var md = dbContext.MessagesDestinations.Where(x => x.MessageId == message.Id && x.UserId == userId).FirstOrDefault();
+            if (md != null)
+            {
+                dbContext.MessagesDestinations.Remove(md);
+            }
+
+            dbContext.SaveChanges();
+
+            return message;
+        }
+
+
+        public Message ArchiveSent(Message message)
+        {
+            message.Archived = true;
+            dbContext.SaveChanges();
+            return message;
+        }
+
+
     }
 
     public interface IMessageRepository
@@ -73,5 +110,13 @@ WHERE messageDestinations.UserId = @UserId ORDER BY CreatedOn DESC
         bool Create(Models.Message newMessage);
 
         bool Send(Models.Message newMessage);
+
+        Message GetById(int id);
+
+
+
+        Message ArchiveSent(Message message);
+
+        Message ArchiveInbox(Message message, int p);
     }
 }

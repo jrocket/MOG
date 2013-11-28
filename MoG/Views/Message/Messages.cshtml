@@ -58,24 +58,29 @@
 
             </div>
         </div>
+        <div class="row">
+            <div class="col-md-12"><div data-bind="visible: Loading" class="text-center"><img src="/Content/Images/loading.gif" /></div></div>
+        </div>
+       
         <div data-bind="foreach : chosenFolderData">
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <div class="row">
-                        <div class="col-sm-6"><span data-bind="text: Sender"></span> | <span data-bind="text: SentOn"></span>... (TODO : Replyed on )</div>
+                        <div class="col-sm-7"><span data-bind="text: Sender"></span> ->  <span data-bind="text: To"></span>| <span data-bind="text: SentOn"></span>... (TODO : Replyed on )</div>
                         <div class="col-sm-offset-1 col-sm-2">
                             <span class="glyphicon glyphicon-comment"></span>
                             <span class="glyphicon glyphicon-zoom-in"></span>
                         </div>
-                        <div class="col-sm-offset-2 col-sm-1">
-                            <span class="glyphicon glyphicon-trash"></span>
+                        <div class="col-sm-offset-1 col-sm-1">
+                            <a href="#" data-bind="click : $root.btnArchiveClicked"><span class="glyphicon glyphicon-trash"></span></a>
                         </div>
                     </div>
                 </div>
                 <div class="panel-body">
                     <p>
                         <strong><span data-bind="text :Title"></span></strong><br />
-                        <span data-bind="text :Body"></span>
+                        <span data-bind="text :Body"></span><br/>
+                        <small><span data-bind="text :Id"></span></small>
                     </p>
                 </div>
             </div>
@@ -100,19 +105,7 @@
             return false;
         }
 
-        //// Class to represent a message
-        //function Message(From, To, CreatedOn, Title, Body) {
-        //    var self = this;
-        //    self.from = From;
-        //    self.to = To;
-        //    self.createdOn = CreatedOn;
-        //    self.title = Title;
-        //    self.body = Body;
-           
-
-          
-        //}
-
+       
 
         function MessageVM() {
 
@@ -121,10 +114,6 @@
 
             self.folders = ['Recus', 'Envoyé', 'Archives', 'Recherche','Live CHat'];
 
-            //self.folders = new Object();
-            //self.folders['Recus'] = 'Inbox';
-            //self.folders['Envoyé'] = 'Outbox';
-            //self.folders['Archives'] = 'Archives';
             self.controllerParam = new Object();
             self.controllerParam[self.folders[0]] = 'Inbox';
             self.controllerParam[self.folders[1]] = 'Outbox';
@@ -132,60 +121,80 @@
             self.controllerParam[self.folders[3]] = 'Search';
             self.controllerParam[self.folders[4]] = 'LiveChat';
 
-
             self.chosenFolderId = ko.observable();
-            self.chosenFolderData = ko.observable();
-
-            //var emptyMessage = { title: "", to: "", body: "" };
-            //self.message = ko.observable(emptyMessage);
+            self.chosenFolderData = ko.observableArray();
 
             self.to = ko.observable();
             self.title = ko.observable();
             self.body = ko.observable();
+            self.Loading = ko.observable(false);
 
             // Behaviours
             self.goToFolder = function (folder) {
                 self.chosenFolderId(folder);
-
+                self.Loading(true);
                 $.ajax({
                     url: '/Message/GetFolder',
                     dataType: 'json',
                     contentType: 'application/json',
                     data: { "folderName": self.controllerParam[folder], "_nocache": new Date().getMilliseconds() },
                     success: function (data) {
+                        self.Loading(false);
                         self.chosenFolderData(data);
+                       
+                    }
+
+                });
+            };
+
+            self.btnArchiveClicked = function (data) {
+                self.Loading(true);
+                console.log(self.chosenFolderId());
+                console.log(self.controllerParam[self.chosenFolderId()]);
+                var jsonPost = { "id" : data.Id , "folder" :   self.controllerParam[self.chosenFolderId()]};
+                $.ajax({
+                    type: "POST",
+                    url: '/Message/Archive',
+                 
+                    data: jsonPost,
+                    cache: false,
+                    success: function (data) {
+                        self.Loading(false);
+                        self.chosenFolderData.remove(function (item) { return item.Id == data.Id })
+                        console.log(data);
                     }
                 });
-
-
 
             };
 
             self.sendMail = function () {
+                self.Loading(true);
                 var jsonPost = { "to": self.to(), "title": self.title(), "body": self.body() };
                 
                 $.ajax({
                     type: "POST",
                     url: '/Message/Send',
-                    //dataType: 'json',
-                    //contentType: 'application/json',
+                   
                     data: jsonPost,
                     cache: false,
                     success: function (data) {
+                        self.Loading(false);
                         self.to("");
                         self.title("");
                         self.body("");
-
+                        //self.chosenFolderData.unshift(data);
                         $.ajax({
                             url: '/Message/GetFolder',
                             dataType: 'json',
                             contentType: 'application/json',
                             data: { "folderName": "Inbox", "_nocache": new Date().getMilliseconds() },
                             success: function (data) {
+                                self.Loading(false);
                                 self.chosenFolderData(data);
+                               
                             }
                         });
-
+                    
                     }
                 });
             }

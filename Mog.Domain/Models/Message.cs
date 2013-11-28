@@ -29,6 +29,8 @@ namespace MoG.Domain.Models
 
         public bool Deleted { get; set; }
 
+        public bool Archived { get; set; }
+
         public DateTime? DeletedOn { get; set; }
     }
 

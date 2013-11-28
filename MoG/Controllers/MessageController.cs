@@ -30,33 +30,62 @@ namespace MoG.Controllers
         {
             var currentUser = serviceUser.GetCurrentUser();
             IEnumerable<int> destinationIds = this.serviceMessage.GetDestinationIds(to);
-            Message m = new Message() { Body = body, Title = title, DestinationIds = destinationIds };
-            this.serviceMessage.Send(m);
-
-            var result = new JsonResult() { Data = "OK", JsonRequestBehavior = JsonRequestBehavior.AllowGet };
+            Message message = new Message() { Body = body, Title = title, DestinationIds = destinationIds };
+            message = this.serviceMessage.Send(message);
+            //todo  : use automapper
+            VMMessage vm = new VMMessage()
+            {
+                Body = message.Body,
+                Sender = message.CreatedBy.DisplayName,
+                SentOn = message.CreatedOn.ToString("dd-MMM-yyyy hh:mm"),
+                Title = message.Title,
+                Id = message.Id
+            };
+            var result = new JsonResult() { Data = vm, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
             return result;
         }
         public JsonResult GetFolder(string folderName)
         {
             var currentUser = serviceUser.GetCurrentUser();
-            var inbox = serviceMessage.GetInbox(currentUser.Id);
+            var folder = serviceMessage.GetFolder(currentUser.Id,folderName);
+
             //todo  : use automapper
             List<VMMessage> vm = new List<VMMessage>();
-            foreach (var message in inbox)
+            foreach (var message in folder)
             {
                 vm.Add(new VMMessage()
                 {
                     Body = message.Body,
                     Sender = message.CreatedBy.DisplayName,
+                    To = currentUser.DisplayName,
                     SentOn = message.CreatedOn.ToString("dd-MMM-yyyy hh:mm"),
-                    Title = message.Title + folderName
+                    Title = message.Title,
+                    Id = message.Id
                 });
 
             }
 
             var result = new JsonResult() { Data = vm, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
             return result;
+        }
 
+        [HttpPost]
+        public JsonResult Archive(int id, string folder)
+        {
+
+            var currentUser = serviceUser.GetCurrentUser();
+
+            Message message = serviceMessage.Archive(id, currentUser,folder);
+            var data = new VMMessage()
+                {
+                    Body = message.Body,
+                    Sender = message.CreatedBy.DisplayName,
+                    SentOn = message.CreatedOn.ToString("dd-MMM-yyyy hh:mm"),
+                    Title = message.Title,
+                    Id = message.Id
+                };
+            var result = new JsonResult() { Data = data };
+            return result;
         }
 
         //
