@@ -19,16 +19,14 @@ namespace MoG.Domain.Repository
         }
 
 
-        public IList<Message> GetInbox(int userId)
+        public IOrderedQueryable<Inbox> GetInbox(int userId)
         {
-            string sql = @"
-SELECT * FROM messages 
-LEFT JOIN  MessageDestinations on MessageDestinations.MessageId = messages.id
-WHERE messageDestinations.UserId = @UserId ORDER BY CreatedOn DESC
-";
-            return dbContext.Messages.SqlQuery(sql,
-                new SqlParameter("@UserId", userId)
-                ).ToList<Message>();
+           
+            return dbContext.Inbox
+                .Where(box => box.UserId == userId)
+                .Where(box => !box.Archived )
+                .Where(box => !box.Deleted)
+                .OrderByDescending(box => box.Message.CreatedOn);
         }
 
 
@@ -40,25 +38,41 @@ WHERE messageDestinations.UserId = @UserId ORDER BY CreatedOn DESC
         }
 
 
-        public IQueryable<Message> GetSent(int userId)
+        public IOrderedQueryable<Outbox> GetOutbox(int userId)
         {
-            return dbContext.Messages
+            return dbContext.Outbox
                 .Where(m => !m.Deleted)
-                .Where(m => m.CreatedBy.Id == userId)
-                .Where(m => !m.Archived )
-                .OrderByDescending(m => m.CreatedOn);
+                .Where(m => m.UserId == userId)
+                .Where(m => !m.Archived)
+                .OrderByDescending(m => m.Message.CreatedOn);
         }
 
 
-        public bool Send(Models.Message newMessage)
+        public bool Send(Message newMessage, IEnumerable<UserProfile> destinations)
         {
             bool result = true;
-            foreach (int destinationId in newMessage.DestinationIds)
+            string Tos = destinations.Select(u => u.DisplayName).Aggregate((current, next) => current + ", " + next);
+            foreach (var sendTo in destinations)
             {
-                MessageDestination md = new MessageDestination() { MessageId = newMessage.Id, UserId = destinationId };
-                md = dbContext.MessagesDestinations.Add(md);
+                Inbox received = new Inbox() 
+                { 
+                    MessageId = newMessage.Id, 
+                    UserId = sendTo.Id,
+                    From = newMessage.CreatedBy.DisplayName,
+                    To = Tos
+                };
+                dbContext.Inbox.Add(received);
 
             }
+            Outbox sent = new Outbox() 
+            { 
+                MessageId = newMessage.Id, 
+                UserId = newMessage.CreatedBy.Id,
+                From = newMessage.CreatedBy.DisplayName,
+                    To = Tos
+            };
+            dbContext.Outbox.Add(sent);
+
             dbContext.SaveChanges();
             return result;
         }
@@ -68,34 +82,37 @@ WHERE messageDestinations.UserId = @UserId ORDER BY CreatedOn DESC
         {
             return this.dbContext.Messages.Find(id);
         }
-
-
-       
-
-
-
+        private bool archiveMessage(MessageBox messageInBox)
+        {
+            bool result = false;
+            if (messageInBox != null)
+            {
+                messageInBox.Archived = true;
+            }
+            dbContext.SaveChanges();
+            result = true;
+            return result;
+        }
 
         public Message ArchiveInbox(Message message, int userId)
         {
-           
-            var md = dbContext.MessagesDestinations.Where(x => x.MessageId == message.Id && x.UserId == userId).FirstOrDefault();
-            if (md != null)
-            {
-                dbContext.MessagesDestinations.Remove(md);
-            }
 
-            dbContext.SaveChanges();
+            var md = dbContext.Inbox.Where(x => x.MessageId == message.Id && x.UserId == userId).FirstOrDefault();
+
+            bool flag = archiveMessage(md);
 
             return message;
         }
 
 
-        public Message ArchiveSent(Message message)
+        public Message ArchiveOutBox(Message message, int userId)
         {
-            message.Archived = true;
-            dbContext.SaveChanges();
+            var md = dbContext.Outbox.Where(x => x.MessageId == message.Id && x.UserId == userId).FirstOrDefault();
+            bool flag = archiveMessage(md);
             return message;
         }
+
+
 
 
     }
@@ -103,20 +120,23 @@ WHERE messageDestinations.UserId = @UserId ORDER BY CreatedOn DESC
     public interface IMessageRepository
     {
 
-        IList<Models.Message> GetInbox(int userId);
+        IOrderedQueryable<Inbox> GetInbox(int userId);
 
-        IQueryable<Models.Message> GetSent(int userId);
+        IOrderedQueryable<Outbox> GetOutbox(int userId);
 
         bool Create(Models.Message newMessage);
 
-        bool Send(Models.Message newMessage);
+       
+        bool Send(Message newMessage, IEnumerable<UserProfile> destinations);
 
         Message GetById(int id);
 
 
 
-        Message ArchiveSent(Message message);
+        Message ArchiveOutBox(Message message, int userId);
 
         Message ArchiveInbox(Message message, int p);
+
+      
     }
 }

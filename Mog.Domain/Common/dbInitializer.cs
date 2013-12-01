@@ -56,17 +56,17 @@ namespace MoG
             message.CreatedBy = jrocket;
             message.Body = "Lorem Ipsmus du message";
             message.CreatedOn = DateTime.Now;
-            //message.DestinationIds = new List<int> { jrocket.Id, mvegas.Id };
+          
             message.Title = "Title Lorem";
 
             message = context.Messages.Add(message);
             context.SaveChanges();
 
-            MessageDestination md = new MessageDestination() { MessageId = message.Id, UserId = jrocket.Id };
-            context.MessagesDestinations.Add(md);
+            Inbox md = new Inbox() { MessageId = message.Id, UserId = jrocket.Id };
+            context.Inbox.Add(md);
             context.SaveChanges();
-            md = new MessageDestination() { MessageId = message.Id, UserId = mvegas.Id };
-            context.MessagesDestinations.Add(md);
+            Outbox sent = new Outbox() { MessageId = message.Id, UserId = jrocket.Id };
+            context.Outbox.Add(sent);
             context.SaveChanges();
         }
 

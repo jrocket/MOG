@@ -10,12 +10,13 @@ namespace MoG.Controllers
 {
     public class MessageController : MogController
     {
-        private IUserService serviceUser;
+      
         private IMessageService serviceMessage;
 
-        public MessageController(IUserService _userService, IMessageService _messageService)
+        public MessageController(IMessageService _messageService, IUserService userService)
+            : base(userService)
         {
-            serviceUser = _userService;
+          
             serviceMessage = _messageService;
 
         }
@@ -28,10 +29,10 @@ namespace MoG.Controllers
         [HttpPost]
         public JsonResult Send(string to, string body, string title)
         {
-            var currentUser = serviceUser.GetCurrentUser();
+          
             IEnumerable<int> destinationIds = this.serviceMessage.GetDestinationIds(to);
-            Message message = new Message() { Body = body, Title = title, DestinationIds = destinationIds };
-            message = this.serviceMessage.Send(message);
+            Message message = new Message() { Body = body, Title = title };
+            message = this.serviceMessage.Send(message,destinationIds);
             //todo  : use automapper
             VMMessage vm = new VMMessage()
             {
@@ -46,26 +47,12 @@ namespace MoG.Controllers
         }
         public JsonResult GetFolder(string folderName)
         {
-            var currentUser = serviceUser.GetCurrentUser();
-            var folder = serviceMessage.GetFolder(currentUser.Id,folderName);
+         
+            var folder = serviceMessage.GetFolder(CurrentUser.Id,folderName);
 
-            //todo  : use automapper
-            List<VMMessage> vm = new List<VMMessage>();
-            foreach (var message in folder)
-            {
-                vm.Add(new VMMessage()
-                {
-                    Body = message.Body,
-                    Sender = message.CreatedBy.DisplayName,
-                    To = currentUser.DisplayName,
-                    SentOn = message.CreatedOn.ToString("dd-MMM-yyyy hh:mm"),
-                    Title = message.Title,
-                    Id = message.Id
-                });
+         
 
-            }
-
-            var result = new JsonResult() { Data = vm, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
+            var result = new JsonResult() { Data = folder, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
             return result;
         }
 
@@ -73,9 +60,9 @@ namespace MoG.Controllers
         public JsonResult Archive(int id, string folder)
         {
 
-            var currentUser = serviceUser.GetCurrentUser();
+          
 
-            Message message = serviceMessage.Archive(id, currentUser,folder);
+            Message message = serviceMessage.Archive(id, CurrentUser,folder);
             var data = new VMMessage()
                 {
                     Body = message.Body,

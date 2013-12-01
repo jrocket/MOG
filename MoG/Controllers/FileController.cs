@@ -10,7 +10,8 @@ namespace MoG.Controllers
     public class FileController : MogController
     {
         private IFileService serviceFile = null;
-        public FileController(IFileService _fileService)
+        public FileController(IFileService _fileService, IUserService userService)
+            : base(userService)
         {
             serviceFile = _fileService;
         }

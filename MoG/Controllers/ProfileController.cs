@@ -1,4 +1,5 @@
-﻿using MoG.Helpers;
+﻿using MoG.Domain.Service;
+using MoG.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,6 +11,9 @@ namespace MoG.Controllers
 {
     public class ProfileController : MogController
     {
+        public ProfileController(IUserService userService)
+            : base(userService)
+        { }
         //
         // GET: /Profile/
         public ActionResult Index()

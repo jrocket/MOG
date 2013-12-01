@@ -20,26 +20,30 @@ namespace MoG.Domain.Service
             repositoryMessage = _messageRepo;
             System.Threading.Thread.Sleep(1000);
         }
-        public IList<Models.Message> GetInbox(int userId)
+        public List<Inbox> GetInbox(int userId)
         {
-            var messages =  repositoryMessage.GetInbox(userId);
+            var messages = repositoryMessage.GetInbox(userId);
 
-            return messages;
+            return messages.ToList<Inbox>();
         }
 
-        public IQueryable<Models.Message> GetSent(int userId)
+        public List<Outbox> GetOutbox(int userId)
         {
-            return repositoryMessage.GetSent(userId);
+            var messages = repositoryMessage.GetOutbox(userId);
+            return messages.ToList<Outbox>();
         }
 
-        public Message Send(Message newMessage)
+        public Message Send(Message newMessage, IEnumerable<int> destinationIds)
         {
             bool result = true;
             newMessage.CreatedBy = serviceUser.GetCurrentUser();
             newMessage.CreatedOn = DateTime.Now;
             result &= repositoryMessage.Create(newMessage);
 
-            result &= repositoryMessage.Send(newMessage);
+            IEnumerable<UserProfile> destinations = serviceUser.GetByIds(destinationIds);
+
+
+            result &= repositoryMessage.Send(newMessage, destinations);
             return newMessage;
         }
 
@@ -61,18 +65,35 @@ namespace MoG.Domain.Service
 
 
 
-        public IEnumerable<Message> GetFolder(int userId, string folderName)
+        public IEnumerable<VMMessage> GetFolder(int userId, string folderName)
         {
-            IEnumerable<Message> result = null;
+            List<VMMessage> result = new List<VMMessage>();
+            List<MessageBox> messages = null;
             switch (folderName.ToLower())
             {
-                case "inbox" : 
-                    result = GetInbox(userId);
+                case "inbox":
+                    messages = GetInbox(userId).Cast<MessageBox>().ToList();
+
                     break;
-                case "outbox" :
-                    result = GetSent(userId);
+                case "outbox":
+                    messages = GetOutbox(userId).Cast<MessageBox>().ToList();
                     break;
             }
+
+            foreach (MessageBox boxMessage in messages)
+            {
+                VMMessage msg = new VMMessage()
+                {
+                    Body = boxMessage.Message.Body,
+                    Id = boxMessage.Message.Id,
+                    Sender = boxMessage.From,
+                    SentOn = boxMessage.Message.CreatedOn.ToUniversalTime().ToString(),
+                    Title = boxMessage.Message.Title,
+                    To = boxMessage.To
+                };
+                result.Add(msg);
+            }
+
             return result;
         }
 
@@ -84,17 +105,17 @@ namespace MoG.Domain.Service
 
 
 
-        public Message Archive(int id, UserProfile currentUser,string folder)
+        public Message Archive(int id, UserProfile currentUser, string folder)
         {
             var message = GetById(id);
             Message result = null;
             switch (folder.ToLower())
             {
                 case "inbox":
-                    result = repositoryMessage.ArchiveInbox(message,currentUser.Id);
+                    result = repositoryMessage.ArchiveInbox(message, currentUser.Id);
                     break;
                 case "outbox":
-                    result = repositoryMessage.ArchiveSent(message);
+                    result = repositoryMessage.ArchiveOutBox(message, currentUser.Id);
                     break;
 
             }
@@ -108,20 +129,20 @@ namespace MoG.Domain.Service
     {
 
 
-        IList<Models.Message> GetInbox(int userId);
+        //IList<Outbox> GetInbox(int userId);
 
-        IQueryable<Models.Message> GetSent(int userId);
+        //IList<Outbox> GetOutbox(int userId);
 
-        Message Send(Models.Message newMessage);
+        Message Send(Models.Message newMessage, IEnumerable<int> destinationIds);
 
         IEnumerable<int> GetDestinationIds(string to);
 
-        IEnumerable<Message> GetFolder(int userId, string folderName);
+        IEnumerable<VMMessage> GetFolder(int userId, string folderName);
 
         Message GetById(int id);
 
         Message Archive(int id, UserProfile currentUser, string folder);
 
-      
+
     }
 }

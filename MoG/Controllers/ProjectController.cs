@@ -12,12 +12,13 @@ namespace MoG.Controllers
     public class ProjectController : MogController
     {
         private IProjectService serviceProject = null;
-        private IUserService userService = null;
-        public ProjectController(IProjectService project, IUserService user)
+
+        public ProjectController(IProjectService project, IUserService userService)
+            : base(userService)
         {
 
             serviceProject = project;
-            userService = user;
+          
         }
         //
         // GET: /Project/
@@ -40,7 +41,7 @@ namespace MoG.Controllers
 
         public ActionResult My()
         {
-            var user = userService.GetCurrentUser();
+            var user = CurrentUser;
             var projects = this.serviceProject.GetByUserLogin(user.Login);
             //  var viewModel = MogAutomapper.Map(projects);
             VMProjectList vm = new VMProjectList();
@@ -104,7 +105,7 @@ namespace MoG.Controllers
         {
             if (ModelState.IsValid)
             {
-                int newId = serviceProject.Create(project, userService.GetCurrentUser());
+                int newId = serviceProject.Create(project, CurrentUser);
 
 
                 return RedirectToAction("Detail", new { id = newId });

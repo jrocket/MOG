@@ -18,7 +18,16 @@ namespace MoG.Domain.Service
 
         public UserProfile GetCurrentUser()
         {
-            UserProfile result = repo.GetById(1);
+            int userId = 1;
+            if (HttpContext.Current != null && HttpContext.Current.Session != null)
+            {
+                if (HttpContext.Current.Session["CURRENTUSER"] != null)
+                {
+                    userId = (int)HttpContext.Current.Session["CURRENTUSER"];
+                }
+
+            }
+            UserProfile result = repo.GetById(userId);
             if (result == null)
             {
                 return new UserProfile() { Id = 1, Login = "jrocket", DisplayName = "Johnny Rocket" };
@@ -39,6 +48,12 @@ namespace MoG.Domain.Service
         {
             return repo.GetByLogin(login);
         }
+
+
+        public IEnumerable<UserProfile> GetByIds(IEnumerable<int> destinationIds)
+        {
+            return repo.GetAll().Where(u => destinationIds.Contains(u.Id));
+        }
     }
 
 
@@ -50,5 +65,7 @@ namespace MoG.Domain.Service
         IQueryable<UserProfile> GetAll();
 
         UserProfile GetByLogin(string login);
+
+        IEnumerable<UserProfile> GetByIds(IEnumerable<int> destinationIds);
     }
 }

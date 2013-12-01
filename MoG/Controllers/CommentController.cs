@@ -8,16 +8,17 @@ using System.Web.Mvc;
 
 namespace MoG.Controllers
 {
-    public class CommentController : Controller
+    public class CommentController : MogController
     {
 
-        private IUserService serviceUser = null;
+       
         private ICommentService serviceComment = null;
-        
+
         public CommentController(IUserService _userService, ICommentService _commentService)
+            : base(_userService)
         {
             serviceComment = _commentService;
-            serviceUser = _userService;
+          
         }
         
         //
@@ -31,7 +32,7 @@ namespace MoG.Controllers
         {
             Comment newComment = new Comment();
             newComment.Body = body;
-            newComment.Creator = serviceUser.GetCurrentUser();
+            newComment.Creator = CurrentUser;
             newComment.CreatedOn = DateTime.Now;
             newComment.FileId = fileId;
             newComment = serviceComment.Create(newComment);

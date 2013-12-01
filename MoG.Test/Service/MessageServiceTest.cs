@@ -23,42 +23,88 @@ namespace MoG.Test.Service
             serviceUser = kernel.Get<IUserService>();
         }
 
+        [TestMethod]
+        public void MessageService_TestArchiveInbox()
+        {
+            //Arrange
+            List<UserProfile> dummyUsers = serviceUser.GetAll().ToList();
+            Message test = new Message() { Body = "TEST MessageService_TestArchiveInbox", Title = "Title", Tag = "tag1#tag2" };
+            var destinationIds = dummyUsers.Select(x => x.Id).ToList();
+            serviceMessage.Send(test, destinationIds);
+            var currentUser = serviceUser.GetCurrentUser();
+            var inbox = serviceMessage.GetFolder(currentUser.Id, MogConstants.MESSAGE_INBOX).ToList();
+            var firstMessage = inbox[0];
+            int inboxCount = inbox.Count;
+
+            //Act
+            serviceMessage.Archive(firstMessage.Id, currentUser, MogConstants.MESSAGE_INBOX);
+
+            //Assert
+            inbox = serviceMessage.GetFolder(currentUser.Id, MogConstants.MESSAGE_INBOX).ToList();
+            Assert.IsTrue(inboxCount != inbox.Count);
+
+
+        }
+        [TestMethod]
+        public void MessageService_TestArchiveOutbox()
+        {
+            //Arrange
+            List<UserProfile> dummyUsers = serviceUser.GetAll().ToList();
+            Message test = new Message() { Body = "TEST MessageService_TestArchiveOutbox", Title = "Title", Tag = "tag1#tag2" };
+            var destinationIds = dummyUsers.Select(x => x.Id).ToList();
+            serviceMessage.Send(test, destinationIds);
+            var currentUser = serviceUser.GetCurrentUser();
+            var outbox = serviceMessage.GetFolder(currentUser.Id, MogConstants.MESSAGE_OUTBOX).ToList();
+            var firstMessage = outbox[0];
+            int inboxCount = outbox.Count;
+
+            //Act
+            serviceMessage.Archive(firstMessage.Id, currentUser, MogConstants.MESSAGE_OUTBOX);
+
+            //Assert
+            outbox = serviceMessage.GetFolder(currentUser.Id, MogConstants.MESSAGE_OUTBOX).ToList();
+            Assert.IsTrue(inboxCount != outbox.Count);
+
+
+        }
+
 
         [TestMethod]
         public void MessageService_Send()
         {
             //Arrange
-           List<UserProfile> dummyUsers = serviceUser.GetAll().ToList();
-           Message test = new Message() { Body = "TEST", Title = "Title", Tag = "tag1#tag2" };
-           test.DestinationIds = dummyUsers.Select(x => x.Id).ToList();
+            List<UserProfile> dummyUsers = serviceUser.GetAll().ToList();
+            Message test = new Message() { Body = "TEST", Title = "Title", Tag = "tag1#tag2" };
+            var destinationIds = dummyUsers.Select(x => x.Id).ToList();
 
             //act
-           var result = serviceMessage.Send(test);
+            var result = serviceMessage.Send(test, destinationIds);
 
-           Assert.IsTrue(result.Id >0);
+            Assert.IsTrue(result.Id > 0);
 
         }
 
-         [TestMethod]
+        [TestMethod]
         public void MessageService_GetInbox()
         {
             //act
-            var result = serviceMessage.GetInbox(1);
+            var result = serviceMessage.GetFolder(1, MogConstants.MESSAGE_INBOX).ToList();
 
             //assert
+
             Assert.IsTrue(result.Count > 0);
         }
 
-         [TestMethod]
+        [TestMethod]
         public void MessageService_GetSent()
         {
             //act
-            var result = serviceMessage.GetSent(1).ToList();
+            var result = serviceMessage.GetFolder(1, MogConstants.MESSAGE_OUTBOX).ToList();
 
             //assert
             Assert.IsTrue(result.Count > 0);
         }
 
-       
+
     }
 }

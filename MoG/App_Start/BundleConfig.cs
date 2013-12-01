@@ -31,7 +31,12 @@ namespace MoG
             bundles.Add(new ScriptBundle("~/bundles/knockout").Include(
     "~/Scripts/knockout-3.0.0.js"
     ));
+#if DEBUG
+            bundles.Add(new ScriptBundle("~/bundles/debug").Include(
+    "~/Scripts/MOG/DEBUGUser.js"
+    ));
 
+#endif 
         }
     }
 }

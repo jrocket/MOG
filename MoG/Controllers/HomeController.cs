@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MoG.Domain.Service;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -8,6 +9,9 @@ namespace MoG.Controllers
 {
     public class HomeController : MogController
     {
+       public HomeController( IUserService userService)
+            : base(userService)
+        { }
         public ActionResult Index()
         {
             return View();

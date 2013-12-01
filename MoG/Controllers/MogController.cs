@@ -1,4 +1,6 @@
-﻿using MoG.Helpers;
+﻿using MoG.Domain.Models;
+using MoG.Domain.Service;
+using MoG.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,6 +13,30 @@ namespace MoG.Controllers
 {
     public class MogController : Controller
     {
+        private IUserService serviceUser;
+        private UserProfile _currentUser;
+
+        public UserProfile CurrentUser
+        {
+            get
+            {
+                if (_currentUser == null)
+                {
+                    _currentUser = serviceUser.GetCurrentUser();
+                }
+                return _currentUser;
+            }
+
+        }
+
+
+        public MogController(IUserService _userService)
+        {
+            serviceUser = _userService;
+            ViewBag.CurrentUserDisplayName = CurrentUser.DisplayName; //TODO : remove this line once the identity management is done!
+        }
+
+
         protected void DisplayErrorMessage(string message)
         {
             ViewBag.ErrorMessage = message;
