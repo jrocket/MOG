@@ -19,16 +19,26 @@ namespace MoG.Domain.Repository
         }
 
 
-        public IOrderedQueryable<Inbox> GetInbox(int userId)
+        public IOrderedQueryable<MessageBox> GetBox(int userId,BoxType typeOfBox)
         {
-           
-            return dbContext.Inbox
+
+            return dbContext.MessageBoxes
                 .Where(box => box.UserId == userId)
                 .Where(box => !box.Archived )
                 .Where(box => !box.Deleted)
+                .Where(box => box.BoxType == typeOfBox)
                 .OrderByDescending(box => box.Message.CreatedOn);
         }
 
+
+        public IOrderedQueryable<MessageBox> GetArchived(int userId)
+        {
+            return dbContext.MessageBoxes
+                .Where(box => box.UserId == userId)
+                .Where(box => box.Archived)
+                .Where(box => !box.Deleted)
+                .OrderByDescending(box => box.Message.CreatedOn);
+        }
 
         public bool Create(Message newMessage)
         {
@@ -38,14 +48,14 @@ namespace MoG.Domain.Repository
         }
 
 
-        public IOrderedQueryable<Outbox> GetOutbox(int userId)
-        {
-            return dbContext.Outbox
-                .Where(m => !m.Deleted)
-                .Where(m => m.UserId == userId)
-                .Where(m => !m.Archived)
-                .OrderByDescending(m => m.Message.CreatedOn);
-        }
+        //public IOrderedQueryable<Outbox> GetOutbox(int userId)
+        //{
+        //    return dbContext.Outbox
+        //        .Where(m => !m.Deleted)
+        //        .Where(m => m.UserId == userId)
+        //        .Where(m => !m.Archived)
+        //        .OrderByDescending(m => m.Message.CreatedOn);
+        //}
 
 
         public bool Send(Message newMessage, IEnumerable<UserProfile> destinations)
@@ -54,24 +64,26 @@ namespace MoG.Domain.Repository
             string Tos = destinations.Select(u => u.DisplayName).Aggregate((current, next) => current + ", " + next);
             foreach (var sendTo in destinations)
             {
-                Inbox received = new Inbox() 
+                MessageBox received = new MessageBox() 
                 { 
                     MessageId = newMessage.Id, 
                     UserId = sendTo.Id,
+                    BoxType = BoxType.Inbox,
                     From = newMessage.CreatedBy.DisplayName,
                     To = Tos
                 };
-                dbContext.Inbox.Add(received);
+                dbContext.MessageBoxes.Add(received);
 
             }
-            Outbox sent = new Outbox() 
+            MessageBox sent = new MessageBox() 
             { 
                 MessageId = newMessage.Id, 
                 UserId = newMessage.CreatedBy.Id,
+                BoxType= BoxType.Outbox,
                 From = newMessage.CreatedBy.DisplayName,
                     To = Tos
             };
-            dbContext.Outbox.Add(sent);
+            dbContext.MessageBoxes.Add(sent);
 
             dbContext.SaveChanges();
             return result;
@@ -82,36 +94,22 @@ namespace MoG.Domain.Repository
         {
             return this.dbContext.Messages.Find(id);
         }
-        private bool archiveMessage(MessageBox messageInBox)
+        public  Message Archive(Message message, int userId, BoxType typeOfBox)
         {
-            bool result = false;
-            if (messageInBox != null)
+           
+            var md = dbContext.MessageBoxes.Where(x => x.MessageId == message.Id && x.UserId == userId && x.BoxType == typeOfBox).FirstOrDefault();
+
+            if (md != null)
             {
-                messageInBox.Archived = true;
+                md.Archived = true;
             }
             dbContext.SaveChanges();
-            result = true;
-            return result;
+            
+            return md.Message;
         }
+    
 
-        public Message ArchiveInbox(Message message, int userId)
-        {
-
-            var md = dbContext.Inbox.Where(x => x.MessageId == message.Id && x.UserId == userId).FirstOrDefault();
-
-            bool flag = archiveMessage(md);
-
-            return message;
-        }
-
-
-        public Message ArchiveOutBox(Message message, int userId)
-        {
-            var md = dbContext.Outbox.Where(x => x.MessageId == message.Id && x.UserId == userId).FirstOrDefault();
-            bool flag = archiveMessage(md);
-            return message;
-        }
-
+       
 
 
 
@@ -120,9 +118,10 @@ namespace MoG.Domain.Repository
     public interface IMessageRepository
     {
 
-        IOrderedQueryable<Inbox> GetInbox(int userId);
+        IOrderedQueryable<MessageBox> GetBox(int userId,BoxType typeOfBox);
 
-        IOrderedQueryable<Outbox> GetOutbox(int userId);
+        IOrderedQueryable<MessageBox> GetArchived(int userId);
+     
 
         bool Create(Models.Message newMessage);
 
@@ -133,10 +132,12 @@ namespace MoG.Domain.Repository
 
 
 
-        Message ArchiveOutBox(Message message, int userId);
+        Message Archive(Message message, int userId, BoxType typeOfBox);
 
-        Message ArchiveInbox(Message message, int p);
+        //Message ArchiveInbox(Message message, int p);
 
-      
+
+
+       
     }
 }

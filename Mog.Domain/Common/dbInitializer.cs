@@ -10,6 +10,12 @@ namespace MoG
 {
     public class MyDataContextDbInitializer : DropCreateDatabaseIfModelChanges<MogDbContext>
     {
+      
+        public MyDataContextDbInitializer() 
+        {
+          
+        }
+
         protected override void Seed(MogDbContext context)
         {
             context.Users.Add(new UserProfile() { DisplayName = "Johnny ROCKET", Login = "jrocket" });
@@ -59,14 +65,19 @@ namespace MoG
           
             message.Title = "Title Lorem";
 
+            
+            
+
             message = context.Messages.Add(message);
             context.SaveChanges();
 
-            Inbox md = new Inbox() { MessageId = message.Id, UserId = jrocket.Id };
-            context.Inbox.Add(md);
+            MessageBox md = new MessageBox() { MessageId = message.Id, UserId = mvegas.Id, From = "JRocket" , To = "MVegas", BoxType = BoxType.Inbox};
+            context.MessageBoxes.Add(md);
+            MessageBox md2 = new MessageBox() { MessageId = message.Id, UserId = jrocket.Id, From = "JRocket", To = "MVegas", BoxType = BoxType.Outbox };
+            context.MessageBoxes.Add(md);
+            
+            
             context.SaveChanges();
-            Outbox sent = new Outbox() { MessageId = message.Id, UserId = jrocket.Id };
-            context.Outbox.Add(sent);
             context.SaveChanges();
         }
 

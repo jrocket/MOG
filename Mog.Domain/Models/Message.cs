@@ -49,17 +49,25 @@ namespace MoG.Domain.Models
         public string From { get; set; }
 
         public string To { get; set; }
+
+        public BoxType BoxType { get; set; }
     }
 
-    public class Inbox : MessageBox
+    public enum BoxType
     {
-
+        Inbox = 0,
+        Outbox = 1
     }
 
-    public class Outbox : MessageBox
-    {
+    //public class Inbox : MessageBox
+    //{
 
-    }
+    //}
+
+    //public class Outbox : MessageBox
+    //{
+
+    //}
 
 
 

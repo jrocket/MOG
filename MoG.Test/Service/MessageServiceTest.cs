@@ -60,12 +60,16 @@ namespace MoG.Test.Service
 
             //Act
             serviceMessage.Archive(firstMessage.Id, currentUser, MogConstants.MESSAGE_OUTBOX);
+              var archives = serviceMessage.GetFolder(currentUser.Id, MogConstants.MESSAGE_ARCHIVE);
 
             //Assert
             outbox = serviceMessage.GetFolder(currentUser.Id, MogConstants.MESSAGE_OUTBOX).ToList();
             Assert.IsTrue(inboxCount != outbox.Count);
+            Assert.IsTrue(archives.Count()>0);
+           
 
-
+          
+          
         }
 
 

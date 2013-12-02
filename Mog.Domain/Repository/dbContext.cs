@@ -26,7 +26,8 @@ namespace MoG.Domain.Repository
         public DbSet<Comment> Comments { get; set; }
 
         public DbSet<Message> Messages { get; set; }
-        public DbSet<Inbox> Inbox { get; set; }
-        public DbSet<Outbox> Outbox { get; set; }
+        //public DbSet<Inbox> Inbox { get; set; }
+        //public DbSet<Outbox> Outbox { get; set; }
+        public DbSet<MessageBox> MessageBoxes { get; set; }
     }
 }

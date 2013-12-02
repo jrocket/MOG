@@ -11,5 +11,7 @@ namespace MoG
         public static string MESSAGE_INBOX = "inbox";
         public static string MESSAGE_OUTBOX = "outbox";
 
+
+        public static string MESSAGE_ARCHIVE = "archive";
     }
 }

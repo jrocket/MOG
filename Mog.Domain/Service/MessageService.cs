@@ -20,18 +20,32 @@ namespace MoG.Domain.Service
             repositoryMessage = _messageRepo;
             System.Threading.Thread.Sleep(1000);
         }
-        public List<Inbox> GetInbox(int userId)
+        public List<MessageBox> GetBox(int userId, BoxType typeofBox)
         {
-            var messages = repositoryMessage.GetInbox(userId);
+            var messages = repositoryMessage.GetBox(userId, typeofBox);
 
-            return messages.ToList<Inbox>();
+            return messages.ToList<MessageBox>();
         }
 
-        public List<Outbox> GetOutbox(int userId)
+        private List<MessageBox> GetBox(int userId, bool archived)
         {
-            var messages = repositoryMessage.GetOutbox(userId);
-            return messages.ToList<Outbox>();
+            var messages = repositoryMessage.GetArchived(userId);
+
+            return messages.ToList<MessageBox>();
         }
+
+        //public List<Inbox> GetInbox(int userId)
+        //{
+        //    var messages = repositoryMessage.GetInbox(userId);
+
+        //    return messages.ToList<Inbox>();
+        //}
+
+        //public List<Outbox> GetOutbox(int userId)
+        //{
+        //    var messages = repositoryMessage.GetOutbox(userId);
+        //    return messages.ToList<Outbox>();
+        //}
 
         public Message Send(Message newMessage, IEnumerable<int> destinationIds)
         {
@@ -72,30 +86,27 @@ namespace MoG.Domain.Service
             switch (folderName.ToLower())
             {
                 case "inbox":
-                    messages = GetInbox(userId).Cast<MessageBox>().ToList();
-
+                    messages = GetBox(userId,BoxType.Inbox).ToList();
                     break;
                 case "outbox":
-                    messages = GetOutbox(userId).Cast<MessageBox>().ToList();
+                    messages = GetBox(userId, BoxType.Outbox).ToList();
+                    break;
+                case "archive":
+                    messages = GetBox(userId,true).ToList();
                     break;
             }
 
             foreach (MessageBox boxMessage in messages)
             {
-                VMMessage msg = new VMMessage()
-                {
-                    Body = boxMessage.Message.Body,
-                    Id = boxMessage.Message.Id,
-                    Sender = boxMessage.From,
-                    SentOn = boxMessage.Message.CreatedOn.ToUniversalTime().ToString(),
-                    Title = boxMessage.Message.Title,
-                    To = boxMessage.To
-                };
+                VMMessage msg = new VMMessage(boxMessage);
+               
                 result.Add(msg);
             }
 
             return result;
         }
+
+
 
 
         public Message GetById(int id)
@@ -112,10 +123,10 @@ namespace MoG.Domain.Service
             switch (folder.ToLower())
             {
                 case "inbox":
-                    result = repositoryMessage.ArchiveInbox(message, currentUser.Id);
+                    result = repositoryMessage.Archive(message, currentUser.Id, BoxType.Inbox);
                     break;
                 case "outbox":
-                    result = repositoryMessage.ArchiveOutBox(message, currentUser.Id);
+                    result = repositoryMessage.Archive(message, currentUser.Id, BoxType.Outbox);
                     break;
 
             }

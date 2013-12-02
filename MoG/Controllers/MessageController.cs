@@ -26,6 +26,14 @@ namespace MoG.Controllers
 
         }
 
+        public JsonResult Detail(int id)
+        {
+           Message msg =  this.serviceMessage.GetById(id);
+           VMMessage vm = new VMMessage(msg, true);
+           var result = new JsonResult() { Data = vm, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
+           return result;
+        }
+
         [HttpPost]
         public JsonResult Send(string to, string body, string title)
         {
@@ -34,14 +42,9 @@ namespace MoG.Controllers
             Message message = new Message() { Body = body, Title = title };
             message = this.serviceMessage.Send(message,destinationIds);
             //todo  : use automapper
-            VMMessage vm = new VMMessage()
-            {
-                Body = message.Body,
-                Sender = message.CreatedBy.DisplayName,
-                SentOn = message.CreatedOn.ToString("dd-MMM-yyyy hh:mm"),
-                Title = message.Title,
-                Id = message.Id
-            };
+            VMMessage vm = new VMMessage(message);
+           
+
             var result = new JsonResult() { Data = vm, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
             return result;
         }

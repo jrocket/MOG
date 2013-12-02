@@ -16,6 +16,9 @@
                    css: { active: $data == $root.chosenFolderId() },
                    click: $root.goToFolder"><a href="#" data-bind="text: $data"></a></li>
         </ul>
+        <div class="row">
+            <div class="col-md-12"><div data-bind="visible: Loading" class="text-center"><img src="/Content/Images/loading.gif" /></div></div>
+        </div>
     </div>
 
     @*@Html.Partial("_LeftMenu")*@
@@ -58,9 +61,7 @@
 
             </div>
         </div>
-        <div class="row">
-            <div class="col-md-12"><div data-bind="visible: Loading" class="text-center"><img src="/Content/Images/loading.gif" /></div></div>
-        </div>
+      
        
         <div data-bind="foreach : chosenFolderData">
             <div class="panel panel-default">
@@ -69,7 +70,7 @@
                         <div class="col-sm-7"><span data-bind="text: Sender"></span> ->  <span data-bind="text: To"></span>| <span data-bind="text: SentOn"></span>... (TODO : Replyed on )</div>
                         <div class="col-sm-offset-1 col-sm-2">
                             <span class="glyphicon glyphicon-comment"></span>
-                            <span class="glyphicon glyphicon-zoom-in"></span>
+                            <a href="#" data-bind="click : $root.btnDetailClicked"><span class="glyphicon glyphicon-zoom-in"></span></a>
                         </div>
                         <div class="col-sm-offset-1 col-sm-1">
                             <a href="#" data-bind="click : $root.btnArchiveClicked"><span class="glyphicon glyphicon-trash"></span></a>
@@ -112,14 +113,14 @@
             var self = this;
 
 
-            self.folders = ['Recus', 'Envoyé', 'Archives', 'Recherche','Live CHat'];
+            self.folders = ['Recus', 'Envoyé', 'Archives'/*, 'Recherche','Live CHat'*/];
 
             self.controllerParam = new Object();
-            self.controllerParam[self.folders[0]] = 'Inbox';
-            self.controllerParam[self.folders[1]] = 'Outbox';
-            self.controllerParam[self.folders[2]] = 'Archives';
-            self.controllerParam[self.folders[3]] = 'Search';
-            self.controllerParam[self.folders[4]] = 'LiveChat';
+            self.controllerParam[self.folders[0]] = 'inbox';
+            self.controllerParam[self.folders[1]] = 'outbox';
+            self.controllerParam[self.folders[2]] = 'archive';
+            //self.controllerParam[self.folders[3]] = 'Search';
+            //self.controllerParam[self.folders[4]] = 'LiveChat';
 
             self.chosenFolderId = ko.observable();
             self.chosenFolderData = ko.observableArray();
@@ -166,6 +167,35 @@
                 });
 
             };
+
+            self.btnDetailClicked = function (data) {
+                self.Loading(true);
+                console.log("messageId");
+                console.log(data.Id);
+                
+                var jsonPost = { "id": data.Id, "_noCache" : new Date().getMilliseconds() };
+                $.ajax({
+                    type: "POST",
+                    url: '/Message/Detail',
+
+                    data: jsonPost,
+                    cache: false,
+                    success: function (result) {
+                        self.Loading(false);
+                        var originaldata = self.chosenFolderData();
+                        for (var i=0;i<originaldata.length;i++)
+                        {
+                            if (originaldata[i].Id == result.Id) {
+                                originaldata[i] = result;
+                                break;
+                            }
+                        }
+
+                        self.chosenFolderData(originaldata);
+                        //console.log(datas);
+                    }
+                });
+            }
 
             self.sendMail = function () {
                 self.Loading(true);
