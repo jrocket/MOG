@@ -216,12 +216,12 @@
     <Content Include="Content\font-awesome\font\fontawesome-webfont.svg" />
     <Content Include="Content\Images\loading.gif" />
     <Content Include="Content\modern-business.css" />
-    <Content Include="Content\tags\bootstrap-tagsinput.css" />
+    <Content Include="Content\TagInput\bootstrap-tagsinput-custom.css" />
+    <Content Include="Content\TagInput\bootstrap-tagsinput.css" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
-    <Content Include="Scripts\bootstrap-tagsinput.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Content\font-awesome\font\fontawesome-webfont.eot" />
@@ -256,11 +256,14 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\knockout-3.0.0.debug.js" />
     <Content Include="Scripts\knockout-3.0.0.js" />
+    <Content Include="Scripts\Message\Index.js" />
     <Content Include="Scripts\modern-business.js" />
     <Content Include="Scripts\modernizr-2.6.2.js" />
     <Content Include="Scripts\MOG\DEBUGUser.js" />
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
+    <Content Include="Scripts\TagInput\bootstrap-tagsinput.js" />
+    <Content Include="Scripts\TagInput\typeahead.min.js" />
     <Content Include="Scripts\_references.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
@@ -290,12 +293,6 @@
     <Content Include="Views\Error\ERror.cshtml" />
     <Content Include="Views\Error\NotFound.cshtml" />
     <Content Include="Views\File\Detail.cshtml" />
-    <Content Include="Views\Message\Chat.cshtml" />
-    <Content Include="Views\Message\Mention.cshtml" />
-    <Content Include="Views\Message\Received.cshtml" />
-    <Content Include="Views\Message\Search.cshtml" />
-    <Content Include="Views\Message\Sent.cshtml" />
-    <Content Include="Views\Message\_leftMenu.cshtml" />
     <Content Include="Views\Profile\Alert.cshtml" />
     <Content Include="Views\Profile\Avatar.cshtml" />
     <Content Include="Views\Profile\Dashboard.cshtml" />
@@ -324,7 +321,7 @@
     <Content Include="Views\Shared\DisplayTemplates\ShortDateString.cshtml" />
     <Content Include="Views\Project\_trackRefinementPanel.cshtml" />
     <Content Include="Views\Shared\_TopNavigationTab.cshtml" />
-    <Content Include="Views\Message\Messages.cshtml" />
+    <Content Include="Views\Message\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

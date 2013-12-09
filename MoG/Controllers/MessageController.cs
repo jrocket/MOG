@@ -22,25 +22,25 @@ namespace MoG.Controllers
         }
         public ActionResult Index()
         {
-            return View("Messages");
+            return View();
 
         }
 
         public JsonResult Detail(int id)
         {
-           Message msg =  this.serviceMessage.GetById(id);
-           VMMessage vm = new VMMessage(msg, true);
-           var result = new JsonResult() { Data = vm, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
+            VMMessage msg = this.serviceMessage.GetByBoxId(id);
+           //VMMessage vm = new VMMessage(msg, true);
+            var result = new JsonResult() { Data = msg, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
            return result;
         }
 
         [HttpPost]
-        public JsonResult Send(string to, string body, string title)
+        public JsonResult Send(string to, string body, string title, int?  replyTo)
         {
           
             IEnumerable<int> destinationIds = this.serviceMessage.GetDestinationIds(to);
             Message message = new Message() { Body = body, Title = title };
-            message = this.serviceMessage.Send(message,destinationIds);
+            message = this.serviceMessage.Send(message, destinationIds, replyTo);
             //todo  : use automapper
             VMMessage vm = new VMMessage(message);
            
@@ -60,12 +60,12 @@ namespace MoG.Controllers
         }
 
         [HttpPost]
-        public JsonResult Archive(int id, string folder)
+        public JsonResult Archive(int id)
         {
 
           
 
-            Message message = serviceMessage.Archive(id, CurrentUser,folder);
+            Message message = serviceMessage.Archive(id, CurrentUser);
             var data = new VMMessage()
                 {
                     Body = message.Body,
@@ -78,32 +78,13 @@ namespace MoG.Controllers
             return result;
         }
 
-        //
-        // GET: /Message/
-        public ActionResult Received()
+        public JsonResult GetFriends(int id =-1)
         {
-            return View();
-        }
-
-        public ActionResult Sent()
-        {
-            return View();
+            string[] result = { "jrocket", "mvegas" };
+            return new JsonResult() { Data = result, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
 
         }
 
-        public ActionResult Chat()
-        {
-            return View();
-        }
-
-        public ActionResult Mention()
-        {
-            return View();
-        }
-
-        public ActionResult Search()
-        {
-            return View();
-        }
+      
     }
 }

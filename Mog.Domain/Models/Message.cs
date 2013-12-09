@@ -24,6 +24,7 @@ namespace MoG.Domain.Models
 
         public string Tag { get; set; }
 
+        public string SentTo { get; set; }
     }
 
     public  class MessageBox

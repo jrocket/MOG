@@ -8,31 +8,30 @@
     @Html.Partial("_TopNavigationTab", Model)
 
 
-<style>
+    <style>
         .btn:not(.btn-block) {
             width: 120px;
             margin-bottom: 10px;
         }
 
         .adminSection {
-        padding-top : 10px;
+            padding-top: 10px;
         }
-
     </style>
     <div class="row adminSection">
         <div class="col-md-3">
             <div class="row">
                 <div class="col-xs-6 col-md-6">
-                    <a href="javascript:goTo('AdminSettings')" class="btn btn-danger btn-lg" role="button"><span class="glyphicon glyphicon-list-alt"></span> <br />Parametres</a>
-                    <a href="javascript:goTo('AdminTracking')" class="btn btn-warning btn-lg" role="button"><span class="glyphicon glyphicon-eye-open"></span> <br />Suivi</a>
-                    <a href="javascript:goTo('AdminReports')" class="btn btn-primary btn-lg" role="button"><span class="glyphicon glyphicon-signal"></span> <br />Reports</a>
-                    <a href="javascript:goTo('AdminComments')" class="btn btn-primary btn-lg" role="button"><span class="glyphicon glyphicon-comment"></span> <br />Comments</a>
+                    <a href="#" data-bind="click: $root.GoTo(0)" class="btn btn-danger btn-lg" role="button"><span class="glyphicon glyphicon-list-alt"></span> <br />Parametres</a>
+                    <a href="#" data-bind="click: $root.GoTo(1)" class="btn btn-warning btn-lg" role="button"><span class="glyphicon glyphicon-eye-open"></span> <br />Suivi</a>
+                    <a href="#" data-bind="click: $root.GoTo(2)" class="btn btn-primary btn-lg" role="button"><span class="glyphicon glyphicon-signal"></span> <br />Reports</a>
+                    <a href="#" data-bind="click: $root.GoTo(3)" class="btn btn-primary btn-lg" role="button"><span class="glyphicon glyphicon-comment"></span> <br />Comments</a>
                 </div>
                 <div class="col-xs-6 col-md-6">
-                    <a href="javascript:goTo('AdminCollabs')" class="btn btn-success btn-lg" role="button"><span class="glyphicon glyphicon-user"></span> <br />Collabs</a>
-                    <a href="javascript:goTo('AdminNotes')" class="btn btn-info btn-lg" role="button"><span class="glyphicon glyphicon-file"></span> <br />Notes</a>
-                    <a href="javascript:goTo('AdminArtwork')" class="btn btn-primary btn-lg" role="button"><span class="glyphicon glyphicon-picture"></span> <br />Artwork</a>
-                    <a href="javascript:goTo('AdminTags')" class="btn btn-primary btn-lg" role="button"><span class="glyphicon glyphicon-tag"></span> <br />Tags</a>
+                    <a href="#" data-bind="click: $root.GoTo(4)" class="btn btn-success btn-lg" role="button"><span class="glyphicon glyphicon-user"></span> <br />Collabs</a>
+                    <a href="#" data-bind="click: $root.GoTo(5)" class="btn btn-info btn-lg" role="button"><span class="glyphicon glyphicon-file"></span> <br />Notes</a>
+                    <a href="#" data-bind="click: $root.GoTo(6)" class="btn btn-primary btn-lg" role="button"><span class="glyphicon glyphicon-picture"></span> <br />Artwork</a>
+                    <a href="#" data-bind="click: $root.GoTo(7)" class="btn btn-primary btn-lg" role="button"><span class="glyphicon glyphicon-tag"></span> <br />Tags</a>
                 </div>
             </div>
             @*<a href="http://www.jquery2dotnet.com/" class="btn btn-success btn-lg btn-block" role="button"><span class="glyphicon glyphicon-globe"></span> Website</a>*@
@@ -45,46 +44,53 @@
 
     @section scripts
     {
-        <script>
-            function goTo(action) {
-                var url = "";
-                switch (action) {
-                    case "AdminSettings":
-                        url = '@Url.Action("AdminSettings","Project", new { id = 1 } )';
-                        break;
-                    case "AdminTracking":
-                        url = '@Url.Action("AdminTracking", "Project", new { id = 1 })';
-                        break;
-                    case "AdminReports":
-                        url = '@Url.Action("AdminReports", "Project", new { id = 1 })';
-                        break;
-                    case "AdminComments":
-                        url = '@Url.Action("AdminComments", "Project", new { id = 1 })';
-                        break;
+        @Scripts.Render("~/bundles/knockout")
 
-                    case "AdminCollabs":
-                        url = '@Url.Action("AdminCollabs", "Project", new { id = 1 })';
-                        break;
-                    case "AdminNotes":
-                        url = '@Url.Action("AdminNotes", "Project", new { id = 1 })';
-                        break;
-                    case "AdminArtwork":
-                        url = '@Url.Action("AdminArtwork", "Project", new { id = 1 })';
-                        break;
-                    case "AdminTags":
-                        url = '@Url.Action("AdminTags", "Project", new { id = 1 })';
-                        break;
+
+        <script>
+
+
+            var UrlTabs = [
+                    '@Url.Action("AdminSettings","Project", new { id = Model.Id } )',
+                     '@Url.Action("AdminTracking", "Project", new { id = Model.Id })',
+                     '@Url.Action("AdminReports", "Project", new { id = Model.Id })',
+                     '@Url.Action("AdminComments", "Project", new { id = Model.Id })',
+                    '@Url.Action("AdminCollabs", "Project", new { id = Model.Id })',
+                     '@Url.Action("AdminNotes", "Project", new { id = Model.Id })',
+                    '@Url.Action("AdminArtwork", "Project", new { id = Model.Id })',
+                    '@Url.Action("AdminTags", "Project", new { id = Model.Id })'
+            ];
+
+            function ProjectAdministrationVM() {
+
+                var self = this;
+
+                self.ProjectAdministration = UrlTabs
+
+
+                self.GoTo = function (id) {
+                    $.get(self.ProjectAdministration[id], function (data) {
+                        $('#dynamicContent').replaceWith(data);
+                    });
+
                 }
-                $.get(url, function (data) {
+
+
+
+            }
+
+            ko.applyBindings(new ProjectAdministrationVM());
+
+            $(document).ready(function () {
+                $.get(UrlTabs[0], function (data) {
                     $('#dynamicContent').replaceWith(data);
                 });
-                return false;
-            }
+            });
 
         </script>
     }
 
 
 
-   
+
 </div>

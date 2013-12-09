@@ -21,16 +21,17 @@ namespace MoG
             context.Users.Add(new UserProfile() { DisplayName = "Johnny ROCKET", Login = "jrocket" });
             context.Users.Add(new UserProfile() { DisplayName = "Mike VEGAS", Login = "mvegas" });
             context.SaveChanges();
-            UserProfile jrocket = context.Users.Where(p => p.Login == "jrocket").First();
-            UserProfile mvegas = context.Users.Where(p => p.Login == "mvegas").First();
-
+            //UserProfile jrocket = context.Users.Where(p => p.Login == "jrocket").First();
+            //UserProfile mvegas = context.Users.Where(p => p.Login == "mvegas").First();
+            List<UserProfile> profiles = context.Users.ToList();
 
             DateTime initialDate = DateTime.Now;
+            Random rand = new Random((int)DateTime.Now.Ticks);
             for (int i = 0; i < 20; i++)
             {
                 var project = context.Projects.Add(new Project()
                 {
-                    Creator = jrocket,
+                    Creator = profiles[rand.Next(2)],
                     Name = "Project " + i,
                     ImageUrl = "http://placehold.it/700x400",
                     ImageUrlThumb1 = "http://placehold.it/350x200",
@@ -42,24 +43,24 @@ namespace MoG
 
                 });
                 context.SaveChanges();
-                addActivityToProjec(project, jrocket, context);
+                addActivityToProjec(project, profiles, context);
 
-                addFilesToProject(project, jrocket, context);
+                addFilesToProject(project, profiles, context);
 
              
                 
             }
 
 
-            addMessages(jrocket, mvegas, context);
+            addMessages(profiles, context);
 
 
         }
 
-        private void addMessages(UserProfile jrocket, UserProfile mvegas, MogDbContext context)
+        private void addMessages(List<UserProfile> profiles, MogDbContext context)
         {
             Message message = new Message();
-            message.CreatedBy = jrocket;
+            message.CreatedBy = profiles[0];
             message.Body = "Lorem Ipsmus du message";
             message.CreatedOn = DateTime.Now;
           
@@ -71,9 +72,9 @@ namespace MoG
             message = context.Messages.Add(message);
             context.SaveChanges();
 
-            MessageBox md = new MessageBox() { MessageId = message.Id, UserId = mvegas.Id, From = "JRocket" , To = "MVegas", BoxType = BoxType.Inbox};
+            MessageBox md = new MessageBox() { MessageId = message.Id, UserId =  profiles[1].Id, From = "JRocket" , To = "MVegas", BoxType = BoxType.Inbox};
             context.MessageBoxes.Add(md);
-            MessageBox md2 = new MessageBox() { MessageId = message.Id, UserId = jrocket.Id, From = "JRocket", To = "MVegas", BoxType = BoxType.Outbox };
+            MessageBox md2 = new MessageBox() { MessageId = message.Id, UserId = profiles[0].Id, From = "JRocket", To = "MVegas", BoxType = BoxType.Outbox };
             context.MessageBoxes.Add(md);
             
             
@@ -81,8 +82,9 @@ namespace MoG
             context.SaveChanges();
         }
 
-        private void addActivityToProjec(Project project, UserProfile jrocket, MogDbContext context)
+        private void addActivityToProjec(Project project, List<UserProfile> profiles, MogDbContext context)
         {
+            Random rand = new Random((int)DateTime.Now.Ticks);
             for (int j = 0; j < 20; j++)
             {
                 Activity activity = new Activity()
@@ -90,24 +92,24 @@ namespace MoG
                     Type = ActivityType.File,
                     What = "lorem ipsum",
                     When = DateTime.Now,
-                    Who = jrocket,
+                    Who = profiles[rand.Next(2)],
                     ProjectId = project.Id
                 };
                 context.Activities.Add(activity);
             }
         }
 
-        private void addFilesToProject(Project project, UserProfile jrocket, MogDbContext context)
+        private void addFilesToProject(Project project, List<UserProfile> profiles, MogDbContext context)
         {
             List<FileType> filetypes = new List<FileType>() { FileType.Bass, FileType.Drums, FileType.Guitar, FileType.Idea, FileType.Mixdown };
             List<FileStatus> filestatus = new List<FileStatus>() { FileStatus.Accepted, FileStatus.Draft, FileStatus.Rejected, FileStatus.Submitted };
-
+            Random rand = new Random((int)DateTime.Now.Ticks);
             for (int j = 0; j < 20; j++)
             {
                 MoGFile file = new MoGFile()
                 {
                    CreatedOn = DateTime.Now,
-                   Creator = jrocket,
+                   Creator = profiles[rand.Next(2)],
                    Description = "Lorem Ipsum",
                    DownloadCount = 42,
                    FileStatus = filestatus[j % 4],
@@ -120,19 +122,20 @@ namespace MoG
 
                 };
                 file = context.Files.Add(file);
-                addCommentToFile(file,jrocket,context);
+                addCommentToFile(file,profiles,context);
             }
         }
 
-        private void addCommentToFile(MoGFile file, UserProfile jrocket, MogDbContext context)
+        private void addCommentToFile(MoGFile file, List<UserProfile> profiles, MogDbContext context)
         {
+            Random rand = new Random((int)DateTime.Now.Ticks);
             for (int i=0;i<1;i++)
             {
                 Comment comment = new Comment()
                 {
                     Body = "Lorem Ipsums.... ",
                     CreatedOn = DateTime.Now,
-                    Creator = jrocket,
+                    Creator = profiles[rand.Next(2)],
                     FileId = file.Id
                 };
                 context.Comments.Add(comment);

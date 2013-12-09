@@ -165,8 +165,8 @@ namespace MoG.Controllers
         }
         public ActionResult AdminCollabs(int id)
         {
-
-            return PartialView("_AdminCollabs");
+            VMCollabs collabs = serviceProject.GetCollabs(id);
+            return PartialView("_AdminCollabs", collabs);
         }
 
 

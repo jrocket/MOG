@@ -30,14 +30,14 @@ namespace MoG.Test.Service
             List<UserProfile> dummyUsers = serviceUser.GetAll().ToList();
             Message test = new Message() { Body = "TEST MessageService_TestArchiveInbox", Title = "Title", Tag = "tag1#tag2" };
             var destinationIds = dummyUsers.Select(x => x.Id).ToList();
-            serviceMessage.Send(test, destinationIds);
+            serviceMessage.Send(test, destinationIds,null);
             var currentUser = serviceUser.GetCurrentUser();
             var inbox = serviceMessage.GetFolder(currentUser.Id, MogConstants.MESSAGE_INBOX).ToList();
             var firstMessage = inbox[0];
             int inboxCount = inbox.Count;
 
             //Act
-            serviceMessage.Archive(firstMessage.Id, currentUser, MogConstants.MESSAGE_INBOX);
+            serviceMessage.Archive(firstMessage.BoxId, currentUser);
 
             //Assert
             inbox = serviceMessage.GetFolder(currentUser.Id, MogConstants.MESSAGE_INBOX).ToList();
@@ -52,14 +52,14 @@ namespace MoG.Test.Service
             List<UserProfile> dummyUsers = serviceUser.GetAll().ToList();
             Message test = new Message() { Body = "TEST MessageService_TestArchiveOutbox", Title = "Title", Tag = "tag1#tag2" };
             var destinationIds = dummyUsers.Select(x => x.Id).ToList();
-            serviceMessage.Send(test, destinationIds);
+            serviceMessage.Send(test, destinationIds,null);
             var currentUser = serviceUser.GetCurrentUser();
             var outbox = serviceMessage.GetFolder(currentUser.Id, MogConstants.MESSAGE_OUTBOX).ToList();
             var firstMessage = outbox[0];
             int inboxCount = outbox.Count;
 
             //Act
-            serviceMessage.Archive(firstMessage.Id, currentUser, MogConstants.MESSAGE_OUTBOX);
+            serviceMessage.Archive(firstMessage.BoxId, currentUser);
               var archives = serviceMessage.GetFolder(currentUser.Id, MogConstants.MESSAGE_ARCHIVE);
 
             //Assert
@@ -82,7 +82,7 @@ namespace MoG.Test.Service
             var destinationIds = dummyUsers.Select(x => x.Id).ToList();
 
             //act
-            var result = serviceMessage.Send(test, destinationIds);
+            var result = serviceMessage.Send(test, destinationIds,null);
 
             Assert.IsTrue(result.Id > 0);
 

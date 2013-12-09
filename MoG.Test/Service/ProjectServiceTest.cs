@@ -218,5 +218,16 @@ namespace MoG.Test.Service
 
             Assert.IsTrue(files.Count < project.Files.Count);
         }
+
+
+         [TestMethod]
+        public void ProjectService_GetCollabs()
+        {
+            var collabs = serviceProject.GetCollabs(1);
+
+
+            Assert.IsTrue(collabs.Collabs.Count > 0);
+
+        }
     }
 }

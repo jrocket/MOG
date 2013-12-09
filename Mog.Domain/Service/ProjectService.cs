@@ -1,4 +1,5 @@
 ﻿using MoG.Domain.Models;
+using MoG.Domain.Models.ViewModel;
 using MoG.Domain.Repository;
 using System;
 using System.Collections.Generic;
@@ -12,14 +13,18 @@ namespace MoG.Domain.Service
         private IProjectRepository projectRepo = null;
         private IActivityRepository activytRepo = null;
         private IFileRepository fileRepo = null;
+        private IUserRepository userRepo = null;
 
         public ProjectService(IProjectRepository _repo
             , IActivityRepository _activityRepo
-            , IFileRepository _fileRepo)
+            , IFileRepository _fileRepo
+            , IUserRepository _userRepo
+            )
         {
             activytRepo = _activityRepo;
             projectRepo = _repo;
             fileRepo = _fileRepo;
+            userRepo = _userRepo;
         }
 
 
@@ -137,6 +142,15 @@ namespace MoG.Domain.Service
 
             return result.ToList();
         }
+
+
+        public VMCollabs GetCollabs(int projectId)
+        {
+            List<UserProfile> users = userRepo.GetCollabs(projectId);
+            VMCollabs result = new VMCollabs();
+            result.Collabs = users;
+            return result;
+        }
     }
 
     public interface IProjectService
@@ -164,5 +178,7 @@ namespace MoG.Domain.Service
         ICollection<string> GetFileTypes(Project project);
 
         IList<MoGFile> GetFilteredFiles(Project projet, string filterByAuthor, string filterByStatus, string filterByType);
+
+        VMCollabs GetCollabs(int projectId);
     }
 }

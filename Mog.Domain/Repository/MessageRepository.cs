@@ -1,6 +1,7 @@
 ﻿using MoG.Domain.Models;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
@@ -48,20 +49,13 @@ namespace MoG.Domain.Repository
         }
 
 
-        //public IOrderedQueryable<Outbox> GetOutbox(int userId)
-        //{
-        //    return dbContext.Outbox
-        //        .Where(m => !m.Deleted)
-        //        .Where(m => m.UserId == userId)
-        //        .Where(m => !m.Archived)
-        //        .OrderByDescending(m => m.Message.CreatedOn);
-        //}
+     
 
-
-        public bool Send(Message newMessage, IEnumerable<UserProfile> destinations)
+        public bool Send(Message newMessage, IEnumerable<UserProfile> destinations, int? replyTo)
         {
             bool result = true;
             string Tos = destinations.Select(u => u.DisplayName).Aggregate((current, next) => current + ", " + next);
+
             foreach (var sendTo in destinations)
             {
                 MessageBox received = new MessageBox() 
@@ -85,6 +79,18 @@ namespace MoG.Domain.Repository
             };
             dbContext.MessageBoxes.Add(sent);
 
+            if (replyTo.HasValue)
+            {// reply to a message, set the repliedOn
+                var replyedMsg = this.GetBox(newMessage.CreatedBy.Id,BoxType.Inbox).Where(msg => msg.MessageId == replyTo.Value).FirstOrDefault();
+                if (replyedMsg != null)
+                {
+                    replyedMsg.ReplyedOn = DateTime.Now;
+                    dbContext.Entry(replyedMsg).State = EntityState.Modified;
+                }
+            }
+
+
+
             dbContext.SaveChanges();
             return result;
         }
@@ -94,25 +100,43 @@ namespace MoG.Domain.Repository
         {
             return this.dbContext.Messages.Find(id);
         }
-        public  Message Archive(Message message, int userId, BoxType typeOfBox)
-        {
+        public  Message Archive(int  messageBoxId, int userId)
+        {//ToDo : Message -> archived By 
+            //Todo : Message -> deleted By
+
+            var md = dbContext.MessageBoxes.Where(x => x.Id == messageBoxId ).FirstOrDefault();
+
            
-            var md = dbContext.MessageBoxes.Where(x => x.MessageId == message.Id && x.UserId == userId && x.BoxType == typeOfBox).FirstOrDefault();
+
 
             if (md != null)
             {
-                md.Archived = true;
+                if (!md.Archived)
+                {
+                    md.Archived = true;
+                }    
+                else
+                {
+                    md.Deleted = true;
+                }
+
             }
             dbContext.SaveChanges();
             
             return md.Message;
         }
-    
-
-       
 
 
 
+
+
+
+
+
+        public MessageBox GetByBoxId(int boxId)
+        {
+            return this.dbContext.MessageBoxes.Find(boxId);
+        }
     }
 
     public interface IMessageRepository
@@ -125,19 +149,21 @@ namespace MoG.Domain.Repository
 
         bool Create(Models.Message newMessage);
 
-       
-        bool Send(Message newMessage, IEnumerable<UserProfile> destinations);
+
+        bool Send(Message newMessage, IEnumerable<UserProfile> destinations, int? replyTo);
 
         Message GetById(int id);
 
 
 
-        Message Archive(Message message, int userId, BoxType typeOfBox);
+        Message Archive(int  messageBoxId, int userId);
 
         //Message ArchiveInbox(Message message, int p);
 
 
 
-       
+
+
+        MessageBox GetByBoxId(int boxId);
     }
 }

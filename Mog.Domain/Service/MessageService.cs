@@ -18,7 +18,7 @@ namespace MoG.Domain.Service
         {
             serviceUser = _userService;
             repositoryMessage = _messageRepo;
-            System.Threading.Thread.Sleep(1000);
+          
         }
         public List<MessageBox> GetBox(int userId, BoxType typeofBox)
         {
@@ -34,30 +34,22 @@ namespace MoG.Domain.Service
             return messages.ToList<MessageBox>();
         }
 
-        //public List<Inbox> GetInbox(int userId)
-        //{
-        //    var messages = repositoryMessage.GetInbox(userId);
+       
 
-        //    return messages.ToList<Inbox>();
-        //}
 
-        //public List<Outbox> GetOutbox(int userId)
-        //{
-        //    var messages = repositoryMessage.GetOutbox(userId);
-        //    return messages.ToList<Outbox>();
-        //}
-
-        public Message Send(Message newMessage, IEnumerable<int> destinationIds)
+        public Message Send(Message newMessage, IEnumerable<int> destinationIds, int? replyTo = null)
         {
             bool result = true;
-            newMessage.CreatedBy = serviceUser.GetCurrentUser();
-            newMessage.CreatedOn = DateTime.Now;
-            result &= repositoryMessage.Create(newMessage);
-
             IEnumerable<UserProfile> destinations = serviceUser.GetByIds(destinationIds);
 
+            newMessage.CreatedBy = serviceUser.GetCurrentUser();
+            newMessage.CreatedOn = DateTime.Now;
+            newMessage.SentTo = destinations.Select(u => u.DisplayName).Aggregate((current, next) => current + ", " + next);
 
-            result &= repositoryMessage.Send(newMessage, destinations);
+
+            result &= repositoryMessage.Create(newMessage);
+
+            result &= repositoryMessage.Send(newMessage, destinations,replyTo);
             return newMessage;
         }
 
@@ -116,22 +108,26 @@ namespace MoG.Domain.Service
 
 
 
-        public Message Archive(int id, UserProfile currentUser, string folder)
+        public Message Archive(int id, UserProfile currentUser)
         {
-            var message = GetById(id);
+            //var message = GetById(id);
             Message result = null;
-            switch (folder.ToLower())
-            {
-                case "inbox":
-                    result = repositoryMessage.Archive(message, currentUser.Id, BoxType.Inbox);
-                    break;
-                case "outbox":
-                    result = repositoryMessage.Archive(message, currentUser.Id, BoxType.Outbox);
-                    break;
 
-            }
+            result = repositoryMessage.Archive(id, currentUser.Id);
+              
 
 
+            return result;
+        }
+
+
+
+
+
+        public VMMessage GetByBoxId(int boxId)
+        {
+            var boxMessage = repositoryMessage.GetByBoxId(boxId);
+            VMMessage result = new VMMessage(boxMessage,true);
             return result;
         }
     }
@@ -144,7 +140,8 @@ namespace MoG.Domain.Service
 
         //IList<Outbox> GetOutbox(int userId);
 
-        Message Send(Models.Message newMessage, IEnumerable<int> destinationIds);
+
+        Message Send(Message message, IEnumerable<int> destinationIds, int?  replyTo);
 
         IEnumerable<int> GetDestinationIds(string to);
 
@@ -152,8 +149,12 @@ namespace MoG.Domain.Service
 
         Message GetById(int id);
 
-        Message Archive(int id, UserProfile currentUser, string folder);
+        Message Archive(int id, UserProfile currentUser);
 
 
+
+
+
+        VMMessage GetByBoxId(int boxId);
     }
 }
