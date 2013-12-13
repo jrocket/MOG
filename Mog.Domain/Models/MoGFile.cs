@@ -40,6 +40,7 @@ namespace MoG.Domain.Models
 
         public int ProjectId { get; set; }
 
+        [ForeignKey("ProjectId")]
         public virtual Project Project { get; set; }
     }
 }

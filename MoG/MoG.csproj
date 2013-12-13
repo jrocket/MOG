@@ -218,6 +218,10 @@
     <Content Include="Content\modern-business.css" />
     <Content Include="Content\TagInput\bootstrap-tagsinput-custom.css" />
     <Content Include="Content\TagInput\bootstrap-tagsinput.css" />
+    <Content Include="Content\Timeline\loading.gif" />
+    <Content Include="Content\Timeline\timeline%402x.png" />
+    <Content Include="Content\Timeline\timeline.css" />
+    <Content Include="Content\Timeline\timeline.png" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
@@ -264,6 +268,9 @@
     <Content Include="Scripts\respond.min.js" />
     <Content Include="Scripts\TagInput\bootstrap-tagsinput.js" />
     <Content Include="Scripts\TagInput\typeahead.min.js" />
+    <Content Include="Scripts\Timeline\storyjs-embed.js" />
+    <Content Include="Scripts\Timeline\timeline-min.js" />
+    <Content Include="Scripts\Timeline\timeline.js" />
     <Content Include="Scripts\_references.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">

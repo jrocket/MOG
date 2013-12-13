@@ -25,12 +25,15 @@ namespace MoG
         CCBYNDNC = 3
     }
 
+    [Flags]
     public enum ActivityType
     {
-        Project = 0,
-        File = 1,
-        Comment = 2,
-        Like = 3
+        Project = 1,
+        File = 2,
+        Comment = 4,
+        Like = 8,
+        Create = 16,
+        Feature = 32
 
     }
 

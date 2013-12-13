@@ -1,4 +1,5 @@
 ﻿using MoG.Domain.Models;
+using MoG.Domain.Models.TimeLine;
 using MoG.Domain.Models.ViewModel;
 using MoG.Domain.Service;
 using System;
@@ -18,7 +19,7 @@ namespace MoG.Controllers
         {
 
             serviceProject = project;
-          
+
         }
         //
         // GET: /Project/
@@ -117,18 +118,66 @@ namespace MoG.Controllers
 
         public ActionResult Activity(int id = 1)
         {
-            VMProjectActivity model = new VMProjectActivity();
-            if (id > 0)
-            {
-                model.Project = serviceProject.GetById(id);
-                model.Activities = serviceProject.GetProjectActivity(id);
-            }
-
+            //VMProjectActivity model = new VMProjectActivity();
+            //if (id > 0)
+            //{
+            //    model.Project = serviceProject.GetById(id);
+            //    model.Activities = serviceProject.GetProjectActivity(id);
+            //}
+            Project model = this.serviceProject.GetById(id);
 
             return View(model);
         }
 
-        public ActionResult Files(int id = 1, string filterByType = "", string filterByStatus = "",string  filterByAuthor= "")
+
+        public JsonResult GetActivities(int id)
+        {
+            Project project = serviceProject.GetById(id);
+            List<Activity> activities = serviceProject.GetProjectActivity(id);
+            //todo : use automapper
+            Root data = new Root();
+            data.timeline = new Timeline();
+            data.timeline.headline = String.Format("Here is what happened in {0}", project.Name);
+            data.timeline.type = "default";
+            data.timeline.text = "<p>Intro body text goes here, some HTML is ok</p>";
+            data.timeline.asset = new Asset()
+            {
+                credit = "Credit Name Goes Here",
+                caption = "Caption text goes here"
+            };
+            data.timeline.date = new List<Date>();
+            foreach (var activity in activities)
+            {
+                Date theEvent = new Date()
+               {
+                   StartDate = activity.When,
+                   EndDate = activity.When,
+                   headline = activity.Who.DisplayName
+
+               };
+
+                if ((activity.Type & ActivityType.Project) == ActivityType.Project)
+                {
+                    theEvent.tag = "Project";
+                    theEvent.text = "Something happened on the project <br> this is cool!";
+                }
+                else if ((activity.Type & ActivityType.File) == ActivityType.File)
+                {
+                    theEvent.tag = "File";
+                    theEvent.text = "Someone did something on a file";
+                }
+
+
+                data.timeline.date.Add(theEvent);
+            }
+
+            return new JsonResult() { Data = data, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
+
+        }
+
+
+
+        public ActionResult Files(int id = 1, string filterByType = "", string filterByStatus = "", string filterByAuthor = "")
         {
             if (id < 0)
             {

@@ -3,6 +3,7 @@ using MoG.Domain.Repository;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Data.Entity.ModelConfiguration.Conventions;
 using System.Linq;
 using System.Web;
 
@@ -13,8 +14,9 @@ namespace MoG
       
         public MyDataContextDbInitializer() 
         {
-          
+         
         }
+      
 
         protected override void Seed(MogDbContext context)
         {
@@ -43,11 +45,11 @@ namespace MoG
 
                 });
                 context.SaveChanges();
-                addActivityToProjec(project, profiles, context);
+               
 
                 addFilesToProject(project, profiles, context);
 
-             
+                addActivityToProjec(project, profiles, context);
                 
             }
 
@@ -78,7 +80,7 @@ namespace MoG
             context.MessageBoxes.Add(md);
             
             
-            context.SaveChanges();
+          
             context.SaveChanges();
         }
 
@@ -89,14 +91,15 @@ namespace MoG
             {
                 Activity activity = new Activity()
                 {
-                    Type = ActivityType.File,
-                    What = "lorem ipsum",
-                    When = DateTime.Now,
+                    Type = (ActivityType)rand.Next(33),
+                    When = DateTime.Now.AddDays(rand.Next(100)-50),
                     Who = profiles[rand.Next(2)],
-                    ProjectId = project.Id
+                    ProjectId = project.Id,
+                    FileId = 1
                 };
                 context.Activities.Add(activity);
             }
+            context.SaveChanges();
         }
 
         private void addFilesToProject(Project project, List<UserProfile> profiles, MogDbContext context)
@@ -124,6 +127,7 @@ namespace MoG
                 file = context.Files.Add(file);
                 addCommentToFile(file,profiles,context);
             }
+            context.SaveChanges();
         }
 
         private void addCommentToFile(MoGFile file, List<UserProfile> profiles, MogDbContext context)

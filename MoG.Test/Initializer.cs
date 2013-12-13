@@ -19,7 +19,7 @@ namespace MoG.Test
           Database.SetInitializer(new MyDataContextDbInitializer());
 
           MoG.Domain.Repository.MogDbContext dbContext = new MoG.Domain.Repository.MogDbContext();
-
+       
           dbContext.Database.Initialize(false);
          
       }
