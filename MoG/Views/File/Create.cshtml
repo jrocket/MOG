@@ -1,0 +1,58 @@
+﻿@model MoG.Domain.Models.VMFile
+@{
+    ViewBag.Title = "Add File";
+}
+
+<div class="container">
+
+    <div class="row">
+        <div class="col-lg-12">
+            <h1 class="page-header">@Html.DisplayFor(model => model.Project.Name) <small>@Html.DisplayFor(model => model.Project.Creator.DisplayName)</small></h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <ul class="nav nav-tabs">
+                @Html.MenuItem("Général", "Detail", "Project", null, new { id = Model.Project.Id })
+                @Html.MenuItem("Activité", "Activity", "Project", null, new { id = Model.Project.Id })
+                @Html.MenuItem("Fichiers", "Files", "Project", "active", new { id = Model.Project.Id })
+                @Html.MenuItem("Administration", "Administration", "Project", null, new { id = Model.Project.Id })
+            </ul>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            @using (Html.BeginForm("Create", "File", FormMethod.Post,
+                             new { enctype = "multipart/form-data" }))
+            {
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary(true)
+                <div class="form-horizontal">
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.File.Name)
+                        @Html.TextBoxFor(m => m.File.Name, new { @class = "form-control" })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.File.Description)
+                        @Html.TextAreaFor(m => m.File.Description, new { @class = "form-control" })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.File.Tags, new { @class = "control-label" }) 
+                        @Html.TextBoxFor(model => model.File.Tags, new { @class = "form-control", @data_role = "tagsinput" })
+                        <p class="help-block">Press the 'enter' key after each tag...</p>
+                    </div>
+                        <div class="form-group">
+                            <label for="exampleInputFile">Select file : </label>
+                            <input type="file" id="File">
+                          
+                            @Html.HiddenFor(m => m.Project.Id);
+                        </div>
+                        <button type="submit" class="btn btn-default">Submit</button>
+                    </div>
+            }
+        </div>
+    </div>
+
+
+
+</div><!-- /.container -->

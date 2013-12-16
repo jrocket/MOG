@@ -32,5 +32,10 @@ namespace MoG.Domain.Models
 
         public ActivityType Type { get; set; }
 
+
+        public int? CommentId { get; set; }
+
+        [ForeignKey("CommentId")]
+        public virtual Comment Comment { get; set; }
     }
 }

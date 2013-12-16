@@ -47,16 +47,18 @@ namespace MoG
     }
     public enum FileType
     {
-         [Description("Bass")]
+        [Description("Bass")]
         Bass = 0,
-         [Description("Guitar")]
+        [Description("Guitar")]
         Guitar = 1,
-         [Description("Drums")]
+        [Description("Drums")]
         Drums = 2,
-         [Description("Mixdown")]
+        [Description("Mixdown")]
         Mixdown = 3,
-         [Description("Idea")]
+        [Description("Idea")]
         Idea = 4,
+        [Description("Unknown")]
+        Unknown = 5,
 
     }
 }

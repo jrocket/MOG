@@ -79,6 +79,7 @@ namespace MoG.App_Start
             kernel.Bind<IUserService>().To<UserService>();
             kernel.Bind<ICommentService>().To<CommentService>();
             kernel.Bind<IMessageService>().To<MessageService>();
+            kernel.Bind<IActivityService>().To<ActivityService>();
 
             kernel.Bind<IProjectRepository>().To<ProjectRepository>();
             kernel.Bind<IActivityRepository>().To<ActivityRepository>();

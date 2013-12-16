@@ -35,6 +35,8 @@ namespace MoG.Domain.Models
 
         public FileStatus FileStatus{ get;set;}
 
+        public int FileStatusAsInt { get { return (int)FileStatus; } }
+
         public FileType FileType { get; set; }
 
 
@@ -42,5 +44,14 @@ namespace MoG.Domain.Models
 
         [ForeignKey("ProjectId")]
         public virtual Project Project { get; set; }
+
+        public bool Deleted { get; set; }
+
+        public int? DeletedById { get; set; }
+
+        [ForeignKey("DeletedById")]
+        public virtual UserProfile DeletedBy { get; set; }
+
+        public DateTime? DeletedOn { get; set; }
     }
 }

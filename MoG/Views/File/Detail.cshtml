@@ -17,9 +17,10 @@
     <div class="row">
         <div class="col-md-8">
             <button type="button" class="btn btn-default">Telecharger</button>
-            <button type="button" class="btn btn-primary">Accepter</button>
+            <button type="button" class="btn btn-primary" data-bind="visible : isBtnAcceptVisible, click:btnAcceptClicked">Accepter</button>
+            <button type="button" class="btn btn-primary" data-bind="visible : isBtnRejectVisible, click:btnRejectClicked">Rejeter</button>
             <button type="button" class="btn btn-success">Promouvoir</button>
-            <button type="button" class="btn btn-danger">Supprimer</button>
+            <button type="button" class="btn btn-danger" data-bind="click:btnDeleteClicked">Supprimer</button>
 
 
         </div>
@@ -93,69 +94,9 @@
 </div><!-- /.container -->
 @section Scripts{
     @Scripts.Render("~/bundles/knockout")
+    <script type="text/javascript" src="/Scripts/File/Detail.js"></script>
     <script>
-        function CommentListVM() {
-
-            var self = this;
-
-            this.comments = new ko.observableArray();
-            this.newBody = new ko.observable();
-            this.fileId = new ko.observable(@Model.Id);
-
-            $(document).ready(function () {
-                console.dir(ko.toJSON({ "id": self.fileId(), "_nocache": new Date().getMilliseconds() }));
-                $.ajax({
-                    url: '/File/GetComments',
-                    dataType: 'json',
-                    data: { "id": self.fileId(), "_nocache" : new Date().getMilliseconds()} ,
-                    success: function (data) {
-                        self.comments(data);
-                      
-                    }
-                });
-            });
-
-
-            this.btnCreateComment = function () {
-                console.dir(self.fileId());
-                $.ajax({
-                    url: '/Comment/Create',
-                    type: 'post',
-                    dataType: 'json',
-                    data:  ko.toJSON({"fileId" : self.fileId(),  "body" : self.newBody() }),
-                    contentType: 'application/json',
-                    success: function (result) {
-                        self.comments.push(result);
-                        self.newBody("");
-                        //                window.location.href = urlPath + '/';
-                    },
-                    error: function (err) {
-                        if (err.responseText == "success")
-                        { window.location.href = urlPath + '/'; }
-                        else {
-                            alert(err.responseText);
-                        }
-                    },
-                    complete: function () {
-                    }
-                });
-                return false;
-
-            };
-
-
-
-        };
-
-        ko.applyBindings(new CommentListVM());
-
-
-
-
-
-
-
+        ko.applyBindings(new FileVM( @Model.Id,@Model.FileStatusAsInt));
+        
     </script>
-
-
 }

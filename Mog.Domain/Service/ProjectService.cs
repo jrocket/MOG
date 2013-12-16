@@ -11,17 +11,17 @@ namespace MoG.Domain.Service
     public class ProjectService : IProjectService
     {
         private IProjectRepository projectRepo = null;
-        private IActivityRepository activytRepo = null;
+        private IActivityService serviceActivity = null;
         private IFileRepository fileRepo = null;
         private IUserRepository userRepo = null;
 
         public ProjectService(IProjectRepository _repo
-            , IActivityRepository _activityRepo
+            , IActivityService _activityService
             , IFileRepository _fileRepo
             , IUserRepository _userRepo
             )
         {
-            activytRepo = _activityRepo;
+            serviceActivity = _activityService;
             projectRepo = _repo;
             fileRepo = _fileRepo;
             userRepo = _userRepo;
@@ -65,6 +65,8 @@ namespace MoG.Domain.Service
 
             if ( projectRepo.Create(project))
             {
+                serviceActivity.LogProjectCreation(project);
+
                 return project.Id;
             }
             return -1;
@@ -78,18 +80,6 @@ namespace MoG.Domain.Service
         }
 
 
-        public List<Activity> GetProjectActivity(int projectId)
-        {
-            //var project = GetById(projectId);
-            //VMProjectActivity result = new VMProjectActivity();
-            //result.Project = project;
-
-            var result = activytRepo.GetByProjectId(projectId).ToList();
-          
-            return result;
-        }
-
-
        
 
 
@@ -99,7 +89,7 @@ namespace MoG.Domain.Service
            {
                return project.Files.Select(file => file.FileStatus.ToString()).Distinct().ToList();
            }
-           return null;
+           return new List<String>();
         }
 
         public ICollection<string> GetFileAuthors(Project project)
@@ -108,7 +98,7 @@ namespace MoG.Domain.Service
             {
                 return project.Files.Select(file => file.Creator.DisplayName).Distinct().ToList();
             }
-            return null;
+            return new List<String>();
         }
 
         public ICollection<string> GetFileTypes(Project project)
@@ -117,14 +107,14 @@ namespace MoG.Domain.Service
             {
                 return project.Files.Select(file => file.FileType.ToString()).Distinct().ToList();
             }
-            return null;
+            return new List<String>();
         }
 
 
         public IList<MoGFile> GetFilteredFiles(Project project, string filterByAuthor, string filterByStatus, string filterByType)
         {
             var files = project.Files;
-            IEnumerable<MoGFile> result = files.Where(f => true);
+            IEnumerable<MoGFile> result = files.Where(f => f.Deleted == false);
             if (!String.IsNullOrEmpty(filterByAuthor))
             {
                 result = result.Where(f => f.Creator.DisplayName == filterByAuthor);
@@ -151,6 +141,12 @@ namespace MoG.Domain.Service
             result.Collabs = users;
             return result;
         }
+
+
+        public IList<Activity> GetProjectActivity(int projectId)
+        {
+            return this.serviceActivity.GetByProjectId(projectId);
+        }
     }
 
     public interface IProjectService
@@ -168,7 +164,7 @@ namespace MoG.Domain.Service
 
         Project GetById(int id);
 
-        List<Activity> GetProjectActivity(int projectId);
+        IList<Activity> GetProjectActivity(int projectId);
 
         
         ICollection<string> GetFileStatuses(Project project);

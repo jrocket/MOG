@@ -133,7 +133,7 @@ namespace MoG.Controllers
         public JsonResult GetActivities(int id)
         {
             Project project = serviceProject.GetById(id);
-            List<Activity> activities = serviceProject.GetProjectActivity(id);
+            IList<Activity> activities = serviceProject.GetProjectActivity(id);
             //todo : use automapper
             Root data = new Root();
             data.timeline = new Timeline();

@@ -136,9 +136,12 @@ namespace MoG.Test.Service
             var user = serviceUser.GetCurrentUser();
 
             int i = serviceProject.Create(p, user);
+            var activities = serviceProject.GetProjectActivity(i);
 
             Assert.IsTrue(i > 0);
             Assert.IsTrue(p.Id > 0);
+            Assert.IsTrue(activities.Count > 0);
+
          }
 
 

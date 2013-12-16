@@ -10,5 +10,7 @@ namespace MoG.Domain.Models
     {
         public MoGFile File {get;set;}
 
+        public Project Project { get; set; }
+
     }
 }

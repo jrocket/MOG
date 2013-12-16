@@ -35,6 +35,39 @@ namespace MoG.Domain.Repository
         {
             return dbContext.Files.Find(id);
         }
+
+
+        public bool Create(MoGFile file)
+        {
+            dbContext.Files.Add(file);
+            int result = dbContext.SaveChanges();
+            return (result > 0);
+        }
+
+
+
+        public bool SetStatus(int fileId, FileStatus fileStatus)
+        {
+            var file = dbContext.Files.Find(fileId);
+            file.FileStatus = fileStatus;
+            int result = dbContext.SaveChanges();
+            return (result > 0);
+        }
+
+
+        public int Save(MoGFile file)
+        {
+            if (file.Id >0)
+            {//todo : check if file is attached to dbContext
+                return dbContext.SaveChanges();
+
+            }
+            else
+            {
+                throw new Exception("use Create() instead!");
+            }
+            return -1;
+        }
     }
     public interface IFileRepository
     {
@@ -45,5 +78,11 @@ namespace MoG.Domain.Repository
 
 
         MoGFile GetById(int id);
+
+        bool Create(MoGFile file);
+
+        bool SetStatus(int fileId,FileStatus fileStatus);
+
+        int Save(MoGFile file);
     }
 }

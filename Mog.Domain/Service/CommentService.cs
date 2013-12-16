@@ -10,17 +10,23 @@ namespace MoG.Domain.Service
     public class CommentService : ICommentService
     {
         private ICommentRepository repoComment = null;
-        public CommentService(ICommentRepository repo)
+        private IActivityService servActivity = null;
+        public CommentService(ICommentRepository repo, IActivityService activityService)
         {
             repoComment = repo;
+            this.servActivity = activityService;
 
         }
 
         public Models.Comment Create(Models.Comment newComment)
-        {//todo : add the activity
+        {
             newComment.CreatedOn = DateTime.Now;
             newComment.ModifiedOn = DateTime.Now;
-            repoComment.Create(newComment);
+            if (repoComment.Create(newComment))
+            {
+                this.servActivity.LogCommentCreation(newComment);
+            }
+
             return newComment;
         }
     }

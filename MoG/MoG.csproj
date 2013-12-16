@@ -251,6 +251,7 @@
     <Content Include="Content\font-awesome\scss\_path.scss" />
     <Content Include="Content\font-awesome\scss\_variables.scss" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
+    <Content Include="Scripts\File\Detail.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
@@ -329,6 +330,7 @@
     <Content Include="Views\Project\_trackRefinementPanel.cshtml" />
     <Content Include="Views\Shared\_TopNavigationTab.cshtml" />
     <Content Include="Views\Message\Index.cshtml" />
+    <Content Include="Views\File\Create.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -5,6 +5,7 @@ using MoG.Domain.Models;
 using MoG.Domain.Service;
 using MoG.App_Start;
 using Ninject;
+using System.Linq;
 
 namespace MoG.Test.Service
 {
@@ -13,11 +14,17 @@ namespace MoG.Test.Service
     {
         private IFileService serviceFile;
 
+        private IUserService serviceUser;
+
+        private IProjectService serviceProject;
+        
         [TestInitialize]
         public void MyTestInitialize()
         {
             var kernel = NinjectWebCommon.CreatePublicKernel();
             serviceFile = kernel.Get<IFileService>();
+            serviceUser = kernel.Get<IUserService>();
+            serviceProject = kernel.Get<IProjectService>();
         }
 
 
@@ -48,14 +55,38 @@ namespace MoG.Test.Service
             int fileId = 1;
             var messages = serviceFile.GetFileComments(fileId);
 
-            
+
             Assert.IsNotNull(messages);
-           
+
             foreach (var message in messages)
             {
                 Assert.IsTrue(message.FileId == fileId);
             }
-           
+
+
+        }
+        [TestMethod]
+        public void FileService_Create()
+        {
+            var project = serviceProject.GetNew(10).ToList();
+            var user = serviceUser.GetCurrentUser();
+            MoGFile f = new MoGFile();
+            f.Description = "Test + " + DateTime.Now.ToString();
+            f.FileType = FileType.Drums;
+            f.Likes = 42;
+            f.Name = "TEST FILE " + DateTime.Now.Ticks;
+            f.ProjectId = project[0].Id;
+            f.Tags = "TAGS TEST";
+
+
+
+            int i = this.serviceFile.Create(f, user);
+            var activities = this.serviceProject.GetProjectActivity(f.ProjectId);
+            var fileActivities = activities.Where(a => (a.Type & ActivityType.File) == ActivityType.File).ToList();
+
+            Assert.IsTrue(i > 0);
+            Assert.IsTrue(f.Id > 0);
+            Assert.IsTrue(fileActivities.Count > 0);
 
         }
     }
