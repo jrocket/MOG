@@ -37,5 +37,7 @@ namespace MoG.Domain.Repository
         //public DbSet<Inbox> Inbox { get; set; }
         //public DbSet<Outbox> Outbox { get; set; }
         public DbSet<MessageBox> MessageBoxes { get; set; }
+
+        public DbSet<TempUploadedFile> TempUploadedFiles { get; set; }
     }
 }

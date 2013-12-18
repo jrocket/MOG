@@ -64,10 +64,12 @@
     <Compile Include="Models\MoGFile.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\Project.cs" />
+    <Compile Include="Models\TempUploadedFile.cs" />
     <Compile Include="Models\UserProfile.cs" />
     <Compile Include="Models\ViewModel\TimeLine.cs" />
     <Compile Include="Models\ViewModel\VMCollabs.cs" />
     <Compile Include="Models\ViewModel\VMFile.cs" />
+    <Compile Include="Models\ViewModel\VMFileUpload.cs" />
     <Compile Include="Models\ViewModel\VMMessage.cs" />
     <Compile Include="Models\ViewModel\VMProjectFiles.cs" />
     <Compile Include="Models\ViewModel\VMProjectList.cs" />
@@ -79,12 +81,14 @@
     <Compile Include="Repository\dbContext.cs" />
     <Compile Include="Repository\dbContextProvider.cs" />
     <Compile Include="Repository\FileRepository.cs" />
+    <Compile Include="Repository\TempFileRepository.cs" />
     <Compile Include="Repository\ProjectRepository.cs" />
     <Compile Include="Repository\UserRepository.cs" />
     <Compile Include="Service\ActivityService.cs" />
     <Compile Include="Service\CommentService.cs" />
     <Compile Include="Service\FileService.cs" />
     <Compile Include="Service\MessageService.cs" />
+    <Compile Include="Service\TempFileService.cs" />
     <Compile Include="Service\ProjectService.cs" />
     <Compile Include="Service\UserService.cs" />
   </ItemGroup>

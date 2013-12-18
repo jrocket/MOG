@@ -39,6 +39,29 @@ namespace MoG
     ));
 
 #endif 
+
+            
+            bundles.Add(new StyleBundle("~/Content/jQuery.FileUpload/jQueryFileupload").Include(
+                          "~/Content/jQuery.FileUpload/jquery.fileupload.css",
+                          "~/Content/jQuery.FileUpload/jquery.fileupload-ui.css"
+                      ));
+
+            bundles.Add(new ScriptBundle("~/bundles/jQuery.FileUpload/jQueryFileupload").Include(
+  "~/Scripts/jQuery.Fileupload/jquery.ui.widget.js",
+  "~/Scripts/jQuery.Fileupload/load-image.min.js",
+  "~/Scripts/jQuery.Fileupload/canvas-to-blob.min.js",
+  "~/Scripts/jQuery.Fileupload/jquery.iframe-transport.js",
+  "~/Scripts/jQuery.Fileupload/jquery.fileupload.js",
+  "~/Scripts/jQuery.Fileupload/jquery.fileupload-process.js",
+  "~/Scripts/jQuery.Fileupload/jquery.fileupload-image.js",
+  "~/Scripts/jQuery.Fileupload/jquery.fileupload-audio.js",
+  "~/Scripts/jQuery.Fileupload/jquery.fileupload-video.js",
+  "~/Scripts/jQuery.Fileupload/jquery.fileupload-validate.js",
+  //"~/Scripts/jQuery.Fileupload/jquery.blueimp-gallery.min.js",
+  "~/Scripts/jQuery.Fileupload/tmpl.min.js",
+  "~/Scripts/jQuery.Fileupload/jquery.fileupload-ui.js"
+            ));
+
         }
     }
 }

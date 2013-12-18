@@ -215,6 +215,10 @@
     <Content Include="Content\font-awesome\css\font-awesome.min.css" />
     <Content Include="Content\font-awesome\font\fontawesome-webfont.svg" />
     <Content Include="Content\Images\loading.gif" />
+    <Content Include="Content\jQuery.FileUpload\jquery.fileupload-ui.css" />
+    <Content Include="Content\jQuery.FileUpload\jquery.fileupload.css" />
+    <Content Include="Content\jQuery.FileUpload\loading.gif" />
+    <Content Include="Content\jQuery.FileUpload\progressbar.gif" />
     <Content Include="Content\modern-business.css" />
     <Content Include="Content\TagInput\bootstrap-tagsinput-custom.css" />
     <Content Include="Content\TagInput\bootstrap-tagsinput.css" />
@@ -251,17 +255,31 @@
     <Content Include="Content\font-awesome\scss\_path.scss" />
     <Content Include="Content\font-awesome\scss\_variables.scss" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
-    <Content Include="Scripts\File\Detail.js" />
+    <Content Include="Scripts\Views\File\Create.js" />
+    <Content Include="Scripts\Views\File\Detail.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Scripts\jQuery.Fileupload\canvas-to-blob.min.js" />
+    <Content Include="Scripts\jQuery.Fileupload\jquery.blueimp-gallery.min.js" />
+    <Content Include="Scripts\jQuery.Fileupload\jquery.fileupload-audio.js" />
+    <Content Include="Scripts\jQuery.Fileupload\jquery.fileupload-image.js" />
+    <Content Include="Scripts\jQuery.Fileupload\jquery.fileupload-process.js" />
+    <Content Include="Scripts\jQuery.Fileupload\jquery.fileupload-ui.js" />
+    <Content Include="Scripts\jQuery.Fileupload\jquery.fileupload-validate.js" />
+    <Content Include="Scripts\jQuery.Fileupload\jquery.fileupload-video.js" />
+    <Content Include="Scripts\jQuery.Fileupload\jquery.fileupload.js" />
+    <Content Include="Scripts\jQuery.Fileupload\jquery.iframe-transport.js" />
+    <Content Include="Scripts\jQuery.Fileupload\jquery.ui.widget.js" />
+    <Content Include="Scripts\jQuery.Fileupload\load-image.min.js" />
+    <Content Include="Scripts\jQuery.Fileupload\tmpl.min.js" />
     <Content Include="Scripts\jquery.validate.js" />
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\knockout-3.0.0.debug.js" />
     <Content Include="Scripts\knockout-3.0.0.js" />
-    <Content Include="Scripts\Message\Index.js" />
+    <Content Include="Scripts\Views\Message\Index.js" />
     <Content Include="Scripts\modern-business.js" />
     <Content Include="Scripts\modernizr-2.6.2.js" />
     <Content Include="Scripts\MOG\DEBUGUser.js" />
@@ -331,6 +349,7 @@
     <Content Include="Views\Shared\_TopNavigationTab.cshtml" />
     <Content Include="Views\Message\Index.cshtml" />
     <Content Include="Views\File\Create.cshtml" />
+    <Content Include="Views\File\Create2.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

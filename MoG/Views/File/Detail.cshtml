@@ -94,7 +94,7 @@
 </div><!-- /.container -->
 @section Scripts{
     @Scripts.Render("~/bundles/knockout")
-    <script type="text/javascript" src="/Scripts/File/Detail.js"></script>
+    <script type="text/javascript" src="/Scripts/Views/File/Detail.js"></script>
     <script>
         ko.applyBindings(new FileVM( @Model.Id,@Model.FileStatusAsInt));
         
