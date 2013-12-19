@@ -39,15 +39,16 @@ namespace MoG.Domain.Repository
 
         public bool Delete(TempUploadedFile file)
         {
+            System.IO.File.Delete(file.Path);
             dbContext.TempUploadedFiles.Remove(file);
             int result = dbContext.SaveChanges();
             return (result > 0);
         }
 
 
-        public IQueryable<TempUploadedFile> GetByProjectId(int id)
+        public IQueryable<TempUploadedFile> GetByProjectId(int id, int userId)
         {
-            return dbContext.TempUploadedFiles.Where(file => file.ProjectId == id);
+            return dbContext.TempUploadedFiles.Where(file => file.ProjectId == id && file.Creator.Id == userId);
         }
     }
 
@@ -59,6 +60,6 @@ namespace MoG.Domain.Repository
 
         TempUploadedFile GetById(int id);
 
-        IQueryable<TempUploadedFile> GetByProjectId(int id);
+        IQueryable<TempUploadedFile> GetByProjectId(int id, int userID);
     }
 }

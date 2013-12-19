@@ -1,13 +1,74 @@
-﻿@model IEnumerable<MoG.Domain.Models.VMFile> 
+﻿@model IList<MoG.Domain.Models.VMFile>
 
-
-@foreach ( var file in Model)
+@using (Html.BeginForm("Create2", "File", FormMethod.Post, new { @class = "form-inline" }))
 {
-    
-<div>
-    @file.File.Name;
+    @Html.AntiForgeryToken()
 
-</div>    
-    
+    <div class="row" style="padding-bottom:4px;">
+        <div class="col-lg-7">
+            <button type="submit" class="btn btn-primary start">
+                <i class="glyphicon glyphicon-upload"></i>
+                <span>Submit</span>
+            </button>
+            <a class="btn btn-warning cancel" href="#" data-bind="click : btnCancelClicked" role="button">
+                <i class="glyphicon glyphicon-ban-circle"></i>
+                <span>Cancel upload</span>
+            </a>
+
+
+        </div>
+    </div>
+
+    <div class="form-horizontal">
+
+        <div class="row" style="padding-bottom:4px;">
+            <div class="col-xs-2">
+                <strong>File name</strong>
+            </div>
+            <div class="col-xs-3">
+                <strong>Type</strong>
+            </div>
+            <div class="col-xs-4">
+                <strong>Description</strong>
+            </div>
+        </div>
+
+        @for (var i = Model.Count() - 1; i >= 0; i--)
+        {
+
+            <div class="row" style="padding-bottom:4px;">
+                <div class="col-xs-2">
+                    @Html.TextBoxFor(f => f[i].File.Name, new { @class = "form-control" })
+                </div>
+                <div class="col-xs-2">
+                    @Html.TextBoxFor(f => f[i].File.FileType, new { @class = "form-control" })
+                </div>
+                <div class="col-xs-8">
+                    @Html.TextAreaFor(f => f[i].File.Description, new { @class = "form-control" })
+                </div>
+            </div>
+        }
+
+    </div>
 }
-toto mange des pommes
+
+
+    @Scripts.Render("~/bundles/knockout")
+   
+    <script>
+        function Create2VM() {
+
+            var self = this;
+
+            this.btnCancelClicked = function () {
+                if (confirm("Are you sure")) {
+                    var url = "@Url.Action("CancelUpload","File",new{id=Model[0].Project.Id})";
+                    window.location.href = url;
+                }
+            }
+
+        }
+       
+        ko.applyBindings(new Create2VM( ));
+
+    </script>}

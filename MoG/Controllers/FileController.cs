@@ -47,16 +47,25 @@ namespace MoG.Controllers
 
         public ActionResult Create2(int id)
         {
+            
             List<VMFile> model = new List<VMFile>();
-            var tmpFiles = this.serviceTempFile.GetByProjectId(id);
+            var tmpFiles = this.serviceTempFile.GetByProjectId(id, CurrentUser);
             foreach (var tmpFile in tmpFiles)
             {
                 var modelFile = new VMFile();
+
                 modelFile.File = new MoGFile();
                 modelFile.File.Name = tmpFile.Name;
+                modelFile.Project = new Project() { Id = id };
                 model.Add(modelFile);
             }
             return PartialView(model);
+        }
+
+        public ActionResult CancelUpload(int id)
+        {
+            this.serviceTempFile.Cancel(id, CurrentUser);
+            return PartialView();
         }
 
         //[HttpPost]

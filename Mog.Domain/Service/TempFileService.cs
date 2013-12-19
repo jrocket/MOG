@@ -53,11 +53,23 @@ namespace MoG.Domain.Service
           
         }
 
-        public IList<TempUploadedFile> GetByProjectId(int id)
+        public IList<TempUploadedFile> GetByProjectId(int id, UserProfile user)
         {
-            return this.fileRepo.GetByProjectId(id).ToList();
+            return this.fileRepo.GetByProjectId(id,user.Id).ToList();
         }
 
+
+
+        public bool Cancel(int projectId, UserProfile User)
+        {
+            bool result = true;
+            var files = GetByProjectId(projectId, User);
+            foreach (var file in files)
+            {
+                result &= this.DeleteById(file.Id);
+            }
+            return result;
+        }
     }
 
     public interface ITempFileService
@@ -68,9 +80,11 @@ namespace MoG.Domain.Service
 
         bool DeleteById(int id);
 
-        IList<TempUploadedFile> GetByProjectId(int id);
+        IList<TempUploadedFile> GetByProjectId(int id, UserProfile user);
         TempUploadedFile GetById(int id);
 
-            
+
+
+        bool Cancel(int projectId, UserProfile CurrentUser);
     }
 }
