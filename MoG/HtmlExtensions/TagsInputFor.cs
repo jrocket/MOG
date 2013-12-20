@@ -25,7 +25,7 @@ namespace MoG
          this HtmlHelper<TModel> helper,
          Expression<Func<TModel, TProperty>> expression, string cssClass)
         {
-            return helper.TextBoxFor(expression, new { @class = cssClass, data_role = "tagsinput"});
+            return helper.TextBoxFor(expression, new { @class = cssClass, data_role = "tagsinput" });
 
         }
 
@@ -33,16 +33,21 @@ namespace MoG
          this HtmlHelper helper,
         string value, string cssClass)
         {
-            String[] values = value.Split( ',');
             string html = "";
-            foreach (string tag in values)
+            if (!String.IsNullOrEmpty(value))
             {
-                TagBuilder element = new TagBuilder("span");
-                element.AddCssClass("badge color_good");
-                element.SetInnerText(tag);
-                html += element.ToString();
+                String[] values = value.Split(',');
+
+                foreach (string tag in values)
+                {
+                    TagBuilder element = new TagBuilder("span");
+                    element.AddCssClass("badge color_good");
+                    element.SetInnerText(tag);
+                    html += element.ToString();
+                }
+
             }
-           
+
 
             return new MvcHtmlString(html);
 

@@ -47,7 +47,7 @@ namespace MoG.Controllers
 
         public ActionResult Create2(int id)
         {
-            
+
             List<VMFile> model = new List<VMFile>();
             var tmpFiles = this.serviceTempFile.GetByProjectId(id, CurrentUser);
             foreach (var tmpFile in tmpFiles)
@@ -55,12 +55,33 @@ namespace MoG.Controllers
                 var modelFile = new VMFile();
 
                 modelFile.File = new MoGFile();
-                modelFile.File.Name = tmpFile.Name;
+                modelFile.File.Name = System.IO.Path.GetFileNameWithoutExtension(tmpFile.Name);
                 modelFile.Project = new Project() { Id = id };
+                modelFile.File.Id = tmpFile.Id;
                 model.Add(modelFile);
             }
             return PartialView(model);
         }
+
+        [HttpPost]
+        public ActionResult Create2(List<VMFile> files)
+        {
+            foreach (var file in files)
+            {//TODO : Automapper
+                MoGFile modelFile = new MoGFile()
+                {
+                    Description = file.File.Description,
+                    Tags = file.File.Tags,
+                    Name = file.File.Name,
+                    ProjectId = file.Project.Id,
+                    FileStatus = FileStatus.Draft
+                };
+                this.serviceFile.Create(modelFile,CurrentUser);
+            }
+            
+            return RedirectToAction("Files", "Project", 1);
+        }
+
 
         public ActionResult CancelUpload(int id)
         {
@@ -152,7 +173,7 @@ namespace MoG.Controllers
 
         public JsonResult Upload(IEnumerable<HttpPostedFileBase> files, int id)
         {
-         
+
             VMFileUpload result = new VMFileUpload();
             result.files = new List<UploadedFile>();
             foreach (var baseFile in files)
@@ -167,7 +188,7 @@ namespace MoG.Controllers
                 tmpFile.ProjectId = id;
                 tmpFile.Size = tmpFile.Data.Length;
 
-                tmpFile.Id =  this.serviceTempFile.Create(tmpFile,CurrentUser);
+                tmpFile.Id = this.serviceTempFile.Create(tmpFile, CurrentUser);
                 UploadedFile f = new UploadedFile()
                 {
                     name = tmpFile.Name,
@@ -193,14 +214,28 @@ namespace MoG.Controllers
             this.serviceTempFile.DeleteById(id);
 
 
-            return new JsonResult() { Data = true};
+            return new JsonResult() { Data = true };
         }
 
-        public JsonResult GetUploaded()
+        public JsonResult GetUploaded(int id = 1)
         {
             VMFileUpload result = new VMFileUpload();
             result.files = new List<UploadedFile>();
+            var tmpFiles = this.serviceTempFile.GetByProjectId(id, CurrentUser);
+            foreach (var file in tmpFiles)
+            {
 
+                UploadedFile f = new UploadedFile()
+                {
+                    name = file.Name,
+                    size = file.Size,
+                    //url = Url.Action("GetTempFile", new { id = tmpFile.Id }),
+                    //thumbnailUrl = "http//:www.google.com/picture1.jpg",
+                    deleteUrl = Url.Action("DeleteTempFile", new { id = file.Id }),
+                    deleteType = "POST"
+                };
+                result.files.Add(f);
+            }
 
 
             return new JsonResult() { Data = result, JsonRequestBehavior = JsonRequestBehavior.AllowGet };

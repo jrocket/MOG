@@ -26,7 +26,7 @@
                 <strong>File name</strong>
             </div>
             <div class="col-xs-3">
-                <strong>Type</strong>
+                <strong>Tags</strong>
             </div>
             <div class="col-xs-4">
                 <strong>Description</strong>
@@ -38,37 +38,47 @@
 
             <div class="row" style="padding-bottom:4px;">
                 <div class="col-xs-2">
+                    @Html.HiddenFor(f => f[i].Project.Id)
+                    @Html.HiddenFor(f => f[i].File.Id);
                     @Html.TextBoxFor(f => f[i].File.Name, new { @class = "form-control" })
                 </div>
                 <div class="col-xs-2">
-                    @Html.TextBoxFor(f => f[i].File.FileType, new { @class = "form-control" })
+                    @Html.TagsInputFor(f => f[i].File.Tags, "form-control")
                 </div>
                 <div class="col-xs-8">
+
                     @Html.TextAreaFor(f => f[i].File.Description, new { @class = "form-control" })
                 </div>
             </div>
         }
 
     </div>
+
 }
 
 
-    @Scripts.Render("~/bundles/knockout")
-   
-    <script>
-        function Create2VM() {
 
-            var self = this;
+@Scripts.Render("~/bundles/knockout")
 
-            this.btnCancelClicked = function () {
-                if (confirm("Are you sure")) {
-                    var url = "@Url.Action("CancelUpload","File",new{id=Model[0].Project.Id})";
-                    window.location.href = url;
-                }
+<script>
+    function Create2VM() {
+
+        var self = this;
+
+        this.btnCancelClicked = function () {
+            if (confirm("Are you sure")) {
+                var url = "@Url.Action("CancelUpload","File",new{id=Model[0].Project.Id})";
+                window.location.href = url;
             }
-
         }
-       
-        ko.applyBindings(new Create2VM( ));
 
-    </script>}
+    }
+
+    ko.applyBindings(new Create2VM());
+
+    $().ready(function () {
+        $('[data-role=tagsinput]').tagsinput('refresh');
+    });
+
+
+</script>

@@ -69,7 +69,7 @@
 
 
             <!-- The blueimp Gallery widget -->
-            @*<div id="blueimp-gallery" class="blueimp-gallery blueimp-gallery-controls" data-filter=":even">
+           @*<div id="blueimp-gallery" class="blueimp-gallery blueimp-gallery-controls" data-filter=":even">
                     <div class="slides"></div>
                     <h3 class="title"></h3>
                     <a class="prev">‹</a>
@@ -175,9 +175,25 @@
                                 $("#mainContent").html(data);
                             });
                         });
+
+
+                        $('#fileupload').addClass('fileupload-processing');
+                        $.ajax({
+                            // Uncomment the following to send cross-domain cookies:
+                            //xhrFields: {withCredentials: true},
+                            url: "/File/GetUploaded/@Model.Project.Id",
+                            dataType: 'json',
+                            context: $('#fileupload')[0]
+                        }).always(function () {
+                            $(this).removeClass('fileupload-processing');
+                        }).done(function (result) {
+                            $(this).fileupload('option', 'done')
+                                .call(this, $.Event('done'), { result: result });
+                        });
+
                     });
                 </script> 
-                <script src="@Url.Content("~/Scripts/Views/File/Create.js")"></script>
+                @*<script src="@Url.Content("~/Scripts/Views/File/Create.js")"></script>*@
 
 
             }
