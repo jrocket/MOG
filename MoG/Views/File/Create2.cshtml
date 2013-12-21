@@ -6,7 +6,7 @@
 
     <div class="row" style="padding-bottom:4px;">
         <div class="col-lg-7">
-            <button type="submit" class="btn btn-primary start">
+            <button type="button" class="btn btn-primary start" data-bind="click: btnSubmitClicked">
                 <i class="glyphicon glyphicon-upload"></i>
                 <span>Submit</span>
             </button>
@@ -32,26 +32,27 @@
                 <strong>Description</strong>
             </div>
         </div>
-
-        @for (var i = Model.Count() - 1; i >= 0; i--)
+        @if (Model.Count > 0)
         {
+            for (var i = Model.Count() - 1; i >= 0; i--)
+            {
 
-            <div class="row" style="padding-bottom:4px;">
-                <div class="col-xs-2">
-                    @Html.HiddenFor(f => f[i].Project.Id)
-                    @Html.HiddenFor(f => f[i].File.Id);
-                    @Html.TextBoxFor(f => f[i].File.Name, new { @class = "form-control" })
-                </div>
-                <div class="col-xs-2">
-                    @Html.TagsInputFor(f => f[i].File.Tags, "form-control")
-                </div>
-                <div class="col-xs-8">
+                <div class="row" style="padding-bottom:4px;">
+                    <div class="col-xs-2">
+                        @Html.HiddenFor(f => f[i].Project.Id)
+                        @Html.HiddenFor(f => f[i].File.Id)
+                        @Html.TextBoxFor(f => f[i].File.Name, new { @class = "form-control" })
+                    </div>
+                    <div class="col-xs-2">
+                        @Html.TagsInputFor(f => f[i].File.Tags, "form-control")
+                    </div>
+                    <div class="col-xs-8">
 
-                    @Html.TextAreaFor(f => f[i].File.Description, new { @class = "form-control" })
+                        @Html.TextAreaFor(f => f[i].File.Description, new { @class = "form-control" })
+                    </div>
                 </div>
-            </div>
+            }
         }
-
     </div>
 
 }
@@ -67,10 +68,24 @@
 
         this.btnCancelClicked = function () {
             if (confirm("Are you sure")) {
-                var url = "@Url.Action("CancelUpload","File",new{id=Model[0].Project.Id})";
+                var url = "@Url.Action("CancelUpload","File",new{id=ViewBag.ProjectId})";
                 window.location.href = url;
             }
-        }
+        };
+
+        this.btnSubmitClicked = function () {
+            $('[data-role=tagsinput]').tagsinput('refresh');
+            var $taginputControl = $('[data-role=tagsinput]');
+            var $elt = $taginputControl.tagsinput('input');
+            if ($elt && $elt[0] && $elt[0].value != "") {
+                //we have a pending tag, let's add it to the list
+                if (/\S/.test($elt[0].value)) {
+                    // string is not empty and not just whitespace
+                    $taginputControl.tagsinput('add', $elt[0].value);
+                }
+            }
+            $("form").submit();
+        };
 
     }
 

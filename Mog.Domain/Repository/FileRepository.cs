@@ -66,7 +66,7 @@ namespace MoG.Domain.Repository
             {
                 throw new Exception("use Create() instead!");
             }
-            return -1;
+           
         }
     }
     public interface IFileRepository

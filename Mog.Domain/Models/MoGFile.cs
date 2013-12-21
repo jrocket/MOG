@@ -37,7 +37,8 @@ namespace MoG.Domain.Models
 
         public int FileStatusAsInt { get { return (int)FileStatus; } }
 
-        public FileType FileType { get; set; }
+
+        //public FileType FileType { get; set; }
 
 
         public int ProjectId { get; set; }

@@ -1,102 +1,26 @@
 ﻿@model MoG.Domain.Models.MoGFile
-@{
-    ViewBag.Title = "Detail";
-}
 
-<div class="container">
-    <div class="row">
-        <div class="col-lg-12">
-            <h1 class="page-header">
-                @Html.ActionLink(Model.Project.Name, "Files", "Project", new { id = @Model.ProjectId }, null) /
-                @Html.DisplayFor(model => model.Name) <small>by @Html.DisplayFor(model => model.Creator.DisplayName)</small>
-            </h1>
-        </div>
-    </div>
-    @*@Html.Partial("_TopNavigationTab",Model.Project)*@
+<div class="col-md-8">
+    <img class="img-responsive" src="http://placehold.it/750x200"><br />
+    @Html.TagsLabelFor(Model.Tags, "")
+</div>
 
-    <div class="row">
-        <div class="col-md-8">
-            <button type="button" class="btn btn-default">Telecharger</button>
-            <button type="button" class="btn btn-primary" data-bind="visible : isBtnAcceptVisible, click:btnAcceptClicked">Accepter</button>
-            <button type="button" class="btn btn-primary" data-bind="visible : isBtnRejectVisible, click:btnRejectClicked">Rejeter</button>
-            <button type="button" class="btn btn-success">Promouvoir</button>
-            <button type="button" class="btn btn-danger" data-bind="click:btnDeleteClicked">Supprimer</button>
-
-
-        </div>
-        <div class="col-md-4">
-        </div>
-
-    </div>
-    <div class="row">
-        <div class="col-md-8">
-            <img class="img-responsive" src="http://placehold.it/750x200">
-
-        </div>
-
-        <div class="col-md-4">
-            <h4>Detail de la piste</h4>
-            <dl>
-                <dt>@Html.LabelFor(model => model.CreatedOn)</dt>
-                <dd>@Html.DisplayFor(model => model.CreatedOn, "LongDateString")</dd>
-            </dl>
-            <dl>
-                <dt>@Html.LabelFor(model => model.Description)</dt>
-                <dd>@Html.DisplayFor(model => model.Description)</dd>
-            </dl>
-            <dl>
-                <dt>@Html.LabelFor(model => model.Tags)</dt>
-                <dd>@Html.DisplayFor(model => model.Tags)</dd>
-            </dl>
-            <dl>
-                <dt>Metrics</dt>
-                <dd>played @Model.PlayCount | Likes @Model.Likes | Downloaded @Model.DownloadCount</dd>
-            </dl>
-        </div>
-    </div>
-    <div class="row">
-        <hr />
-    </div>
-
-    <div data-bind="foreach: comments">
-        <div class="row">
-            <div class="col-md-1">
-                <img src="http://placehold.it/75x75&text=john+smith" />
-            </div>
-            <div class="col-md-7">
-                <div class="panel panel-default">
-                    <div class="panel-body">
-                        <p>
-                            <h4 data-bind="text: CreatorName"></h4>
-                            <span data-bind="text: Body"></span>
-                            <br /><small data-bind="text: CreatedOnAsString"></small>
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="row">
-        <form>
-            <div class="clearfix"></div>
-            <div class="form-group col-lg-8">
-                <label for="input4">Message</label>
-                <textarea name="message" class="form-control" data-bind="value: newBody" rows="6" id="input4"></textarea>
-            </div>
-            <div class="form-group col-lg-8">
-                <input type="hidden" name="save" value="contact">
-                <button class="btn btn-primary" data-bind="click: btnCreateComment">Submit</button>
-            </div>
-        </form>
-    </div>
-
-</div><!-- /.container -->
-@section Scripts{
-    @Scripts.Render("~/bundles/knockout")
-    <script type="text/javascript" src="/Scripts/Views/File/Detail.js"></script>
-    <script>
-        ko.applyBindings(new FileVM( @Model.Id,@Model.FileStatusAsInt));
-        
-    </script>
-}
+<div class="col-md-4">
+    <h4>Detail de la piste</h4>
+    <dl>
+        <dt>@Html.LabelFor(model => model.CreatedOn)</dt>
+        <dd>@Html.DisplayFor(model => model.CreatedOn, "LongDateString")</dd>
+    </dl>
+    <dl>
+        <dt>@Html.LabelFor(model => model.Description)</dt>
+        <dd>@Html.DisplayFor(model => model.Description)</dd>
+    </dl>
+    @*<dl>
+            <dt>@Html.LabelFor(model => model.Tags)</dt>
+            <dd>@Html.DisplayFor(model => model.Tags)</dd>
+        </dl>*@
+    <dl>
+        <dt>Metrics</dt>
+        <dd>played @Model.PlayCount | Likes @Model.Likes | Downloaded @Model.DownloadCount</dd>
+    </dl>
+</div>

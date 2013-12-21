@@ -49,8 +49,8 @@ namespace MoG.Domain.Service
 
             file.DownloadCount = 0;
             file.FileStatus = FileStatus.Draft;
-            file.FileType = FileType.Unknown;
-
+            //file.FileType = FileType.Unknown;
+           
             if (this.repoFile.Create(file))
             {
                 servActivity.LogFileCreation(file);
@@ -95,6 +95,12 @@ namespace MoG.Domain.Service
             }
             return result;
         }
+
+
+        public int SaveChanges(MoGFile file)
+        {
+            return this.repoFile.Save(file);
+        }
     }
 
     public interface IFileService
@@ -115,5 +121,7 @@ namespace MoG.Domain.Service
         bool Reject(int fileId);
 
         bool Delete(int fileId, UserProfile userProfile);
+
+        int SaveChanges(MoGFile file);
     }
 }

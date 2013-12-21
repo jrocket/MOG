@@ -49,6 +49,7 @@ namespace MoG.Test.Service
             Assert.IsNotNull(file.Project);
         }
 
+
         [TestMethod]
         public void FileService_GetComments()
         {
@@ -72,11 +73,10 @@ namespace MoG.Test.Service
             var user = serviceUser.GetCurrentUser();
             MoGFile f = new MoGFile();
             f.Description = "Test + " + DateTime.Now.ToString();
-            f.FileType = FileType.Drums;
+            f.Tags = FileType.Drums.ToString();
             f.Likes = 42;
             f.Name = "TEST FILE " + DateTime.Now.Ticks;
             f.ProjectId = project[0].Id;
-            f.Tags = "TAGS TEST";
 
 
 

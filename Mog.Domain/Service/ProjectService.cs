@@ -37,7 +37,7 @@ namespace MoG.Domain.Service
 
         public IQueryable<Project> GetNew(int limit)
         {
-           return projectRepo.GetNew( limit);
+            return projectRepo.GetNew(limit);
         }
 
 
@@ -53,7 +53,7 @@ namespace MoG.Domain.Service
         }
 
 
-        public int  Create(Project project, UserProfile userProfile)
+        public int Create(Project project, UserProfile userProfile)
         {
             project.CreatedOn = DateTime.Now;
             project.ModifiedOn = DateTime.Now;
@@ -63,14 +63,14 @@ namespace MoG.Domain.Service
             project.ImageUrl = "http://placehold.it/700x400";
             project.ImageUrlThumb1 = "http://placehold.it/350x200";
 
-            if ( projectRepo.Create(project))
+            if (projectRepo.Create(project))
             {
                 serviceActivity.LogProjectCreation(project);
 
                 return project.Id;
             }
             return -1;
-           
+
         }
 
 
@@ -80,16 +80,16 @@ namespace MoG.Domain.Service
         }
 
 
-       
+
 
 
         public ICollection<string> GetFileStatuses(Project project)
         {
-           if (project!=null && project.Files!=null && project.Files.Count>0)
-           {
-               return project.Files.Select(file => file.FileStatus.ToString()).Distinct().ToList();
-           }
-           return new List<String>();
+            if (project != null && project.Files != null && project.Files.Count > 0)
+            {
+                return project.Files.Select(file => file.FileStatus.ToString()).Distinct().ToList();
+            }
+            return new List<String>();
         }
 
         public ICollection<string> GetFileAuthors(Project project)
@@ -101,17 +101,35 @@ namespace MoG.Domain.Service
             return new List<String>();
         }
 
-        public ICollection<string> GetFileTypes(Project project)
+        public ICollection<string> GetFileTags(Project project)
         {
+            List<string> result = new List<string>();
             if (project != null && project.Files != null && project.Files.Count > 0)
             {
-                return project.Files.Select(file => file.FileType.ToString()).Distinct().ToList();
+
+                var filetags = project.Files.Select(file => (file.Tags != null ? file.Tags.Split(',') : null));
+                if (filetags != null)
+                {
+                    foreach (var filetag in filetags)
+                    {
+                        if (filetag != null)
+                        {
+                            foreach (string tag in filetag)
+                            {
+                                result.Add(tag);
+                            }
+
+                        }
+                    }
+
+                }
+                return result.Distinct().ToList();
             }
             return new List<String>();
         }
 
 
-        public IList<MoGFile> GetFilteredFiles(Project project, string filterByAuthor, string filterByStatus, string filterByType)
+        public IList<MoGFile> GetFilteredFiles(Project project, string filterByAuthor, string filterByStatus, string filterByTag)
         {
             var files = project.Files;
             IEnumerable<MoGFile> result = files.Where(f => f.Deleted == false);
@@ -124,10 +142,10 @@ namespace MoG.Domain.Service
                 FileStatus testStatus = (FileStatus)Enum.Parse(typeof(FileStatus), filterByStatus);
                 result = result.Where(f => f.FileStatus == testStatus);
             }
-            if (!String.IsNullOrEmpty(filterByType))
+            if (!String.IsNullOrEmpty(filterByTag))
             {
-                FileType testType = (FileType)Enum.Parse(typeof(FileType), filterByType);
-                result = result.Where(f => f.FileType == testType);
+                //FileType testType = (FileType)Enum.Parse(typeof(FileType), filterByType);
+                result = result.Where(f => f.Tags.Contains(filterByTag));
             }
 
             return result.ToList();
@@ -166,14 +184,14 @@ namespace MoG.Domain.Service
 
         IList<Activity> GetProjectActivity(int projectId);
 
-        
+
         ICollection<string> GetFileStatuses(Project project);
 
         ICollection<string> GetFileAuthors(Project project);
 
-        ICollection<string> GetFileTypes(Project project);
+        ICollection<string> GetFileTags(Project project);
 
-        IList<MoGFile> GetFilteredFiles(Project projet, string filterByAuthor, string filterByStatus, string filterByType);
+        IList<MoGFile> GetFilteredFiles(Project projet, string filterByAuthor, string filterByStatus, string filterByTag);
 
         VMCollabs GetCollabs(int projectId);
     }

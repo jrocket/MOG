@@ -30,8 +30,13 @@
 
                 <!-- The fileupload-buttonbar contains buttons to add/delete files and start/cancel the upload -->
                 <div class="row fileupload-buttonbar">
-                    <div class="col-lg-7">
+                    <div class="col-lg-8">
                         <!-- The fileinput-button span is used to style the file input field as button -->
+                        <button id="proceedToStep2" type="button" class="btn btn-success hidden" >
+                            <i class="glyphicon glyphicon-arrow-right"></i>
+                            <span>Proceed to step 2</span>
+                        </button>
+
                         <span class="btn btn-success fileinput-button">
                             <i class="glyphicon glyphicon-plus"></i>
                             <span>Add files...</span>
@@ -46,10 +51,10 @@
                             <span>Cancel upload</span>
                         </button>
                         <button type="button" class="btn btn-danger delete">
-                                <i class="glyphicon glyphicon-trash"></i>
-                                <span>Delete</span>
-                            </button>
-                            <input type="checkbox" class="toggle">
+                            <i class="glyphicon glyphicon-trash"></i>
+                            <span>Delete</span>
+                        </button>
+                        <input type="checkbox" class="toggle">
                         <!-- The global file processing state -->
                         <span class="fileupload-process"></span>
                     </div>
@@ -69,7 +74,7 @@
 
 
             <!-- The blueimp Gallery widget -->
-           @*<div id="blueimp-gallery" class="blueimp-gallery blueimp-gallery-controls" data-filter=":even">
+            @*<div id="blueimp-gallery" class="blueimp-gallery blueimp-gallery-controls" data-filter=":even">
                     <div class="slides"></div>
                     <h3 class="title"></h3>
                     <a class="prev">‹</a>
@@ -168,9 +173,14 @@
                             // Uncomment the following to send cross-domain cookies:
                             //xhrFields: {withCredentials: true},
                             url: '/File/Upload/@Model.Project.Id'
-                        }).bind('fileuploadstop', function (e)
-                        {
+                        }).bind('fileuploadstop', function (e) {
                             // at the end of the upload, proceed to step 2
+                            $.get("/File/Create2/@Model.Project.Id", function (data) {
+                                $("#mainContent").html(data);
+                            });
+                        });
+
+                        $('#proceedToStep2').on('click', function () {
                             $.get("/File/Create2/@Model.Project.Id", function (data) {
                                 $("#mainContent").html(data);
                             });
@@ -187,12 +197,18 @@
                         }).always(function () {
                             $(this).removeClass('fileupload-processing');
                         }).done(function (result) {
+                            //todo : remove this ugly thing
+                            if (result.files.length > 0) {
+                                $("#proceedToStep2").removeClass("hidden");
+                            }
+
+                                
                             $(this).fileupload('option', 'done')
                                 .call(this, $.Event('done'), { result: result });
                         });
 
                     });
-                </script> 
+                </script>
                 @*<script src="@Url.Content("~/Scripts/Views/File/Create.js")"></script>*@
 
 

@@ -191,7 +191,7 @@ namespace MoG.Controllers
             model.Project = project;
             model.Statuses = serviceProject.GetFileStatuses(project);
             model.Authors = serviceProject.GetFileAuthors(project);
-            model.Types = serviceProject.GetFileTypes(project);
+            model.Types = serviceProject.GetFileTags(project);
             model.filterByAuthor = filterByAuthor;
             model.filterByStatus = filterByStatus;
             model.filterByType = filterByType;

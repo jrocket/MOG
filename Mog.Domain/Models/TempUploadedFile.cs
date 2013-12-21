@@ -22,6 +22,7 @@ namespace MoG.Domain.Models
 
         public string ThumbnailPath { get; set; }
 
+        
 
         public virtual UserProfile Creator { get; set; }
 
@@ -30,5 +31,7 @@ namespace MoG.Domain.Models
         [NotMapped]
         public byte[] Data { get; set; }
 
+
+       
     }
 }

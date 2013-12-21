@@ -187,10 +187,10 @@ namespace MoG.Test.Service
             Assert.IsTrue(authors.Count > 0);
         }
         [TestMethod]
-        public void ProjectService_GetFileTypes()
+        public void ProjectService_GetFileTags()
         {
             var project = serviceProject.GetById(1);
-            var types = serviceProject.GetFileTypes(project);
+            var types = serviceProject.GetFileTags(project);
 
             Assert.IsNotNull(types);
             Assert.IsTrue(types.Count > 0);

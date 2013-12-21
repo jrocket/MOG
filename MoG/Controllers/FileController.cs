@@ -24,11 +24,34 @@ namespace MoG.Controllers
             serviceProject = projectService;
             serviceTempFile = tempFileService;
         }
-        public ActionResult Detail(int id = -1)
+        public ActionResult Display(int id = -1)
         {
             var file = serviceFile.GetById(id);
             ViewBag.Comments = serviceFile.GetFileComments(id);
+
             return View(file);
+        }
+
+        public ActionResult Edit(int id)
+        {
+            var file = serviceFile.GetById(id);
+            return PartialView(file);
+        }
+
+        [HttpPost]
+        public ActionResult Edit(int id, string tags, string description)
+        {
+            var file = serviceFile.GetById(id);
+            file.Tags = tags;
+            file.Description = description;
+            serviceFile.SaveChanges(file);
+            return PartialView("Detail", file);
+        }
+
+        public ActionResult Detail(int id)
+        {
+            var file = serviceFile.GetById(id);
+            return PartialView(file);
         }
 
         public JsonResult GetComments(int id = 1)
@@ -47,9 +70,14 @@ namespace MoG.Controllers
 
         public ActionResult Create2(int id)
         {
-
+            ViewBag.ProjectId = id;
+            
             List<VMFile> model = new List<VMFile>();
             var tmpFiles = this.serviceTempFile.GetByProjectId(id, CurrentUser);
+            if (tmpFiles == null || tmpFiles.Count == 0)
+            {
+                return this.RedirectToErrorPage("Il faudrait peut etre ajouter de fichiers!");
+            }
             foreach (var tmpFile in tmpFiles)
             {
                 var modelFile = new VMFile();
@@ -66,6 +94,11 @@ namespace MoG.Controllers
         [HttpPost]
         public ActionResult Create2(List<VMFile> files)
         {
+            if (files == null )
+            {
+                return this.RedirectToErrorPage("Il faudrait peut etre ajouter de fichiers!");
+            }
+            
             foreach (var file in files)
             {//TODO : Automapper
                 MoGFile modelFile = new MoGFile()

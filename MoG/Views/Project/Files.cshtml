@@ -16,7 +16,7 @@
     </div>
     <div class="row">
         <div class="col-md-2 col-sm-4">
-            <div class="bs-sidebar affix">
+            <div class="bs-sidebar">
                 <!-- sidebar -->
                @Html.Partial("_trackRefinementPanel",Model)
 
@@ -37,13 +37,13 @@
                             <a href="track-detail.html"><img src="http://placehold.it/100x100" class="img-responsive"></a>
                         </div>
                         <div class="col-md-4">
-                            <h3><a href="@Url.Action("Detail","File",new { id=file.Id})">@file.Name</a></h3>
+                            <h3><a href="@Url.Action("Display","File",new { id=file.Id})">@file.Name</a></h3>
                             <p>---------------PLAYER ----------- <i class="icon-cloud-download"></i>&nbsp;<i class="icon-trash"></i>&nbsp;<i class="icon-heart"></i></p>
 
                         </div>
                         <div class="col-md-1">@file.DownloadCount</div>
                         <div class="col-md-1">@file.FileStatus</div>
-                        <div class="col-md-1">@file.FileType</div>
+                        <div class="col-md-1">@file.Tags</div>
                         <div class="col-md-1">@file.Likes</div>
                         <div class="col-md-1">@file.PlayCount</div>
                     </div>
