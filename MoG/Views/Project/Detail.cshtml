@@ -5,54 +5,54 @@
 <div class="container">
 
 
-    @*<div class="col-lg-12">
-            <ol class="breadcrumb">
-                <li><a href="index.html">Home</a></li>
-                <li><a href="projects.html">Projects</a></li>
-                <li class="active">nom du projet</li>
-            </ol>
-        </div>*@
     @Html.Partial("_TopNavigationTab", Model)
     <div class="row">
         <div class="col-md-12">
             <hr>
-            <p><i class="icon-time"></i> Posted on @Html.DisplayFor(m => m.CreatedOn, "LongDateString")</p>
+            <p>
+                <i class="icon-time"></i> Posted on @Html.DisplayFor(m => m.CreatedOn, "LongDateString")
+                <button type="button"  class="btn btn-warning" data-bind="click:btnEditClicked, visible: (displayMode() == 'display') "> Editer</button>
+                <button type="button" class="btn btn-primary" data-bind="click:btnSaveClicked, visible: (displayMode()== 'edit') "> Save</button>
+                <button type="button" class="btn btn-danger" data-bind="click:btnCancelClicked, visible: (displayMode()== 'edit') "> Cancel</button>
+            </p>
             <hr>
         </div>
     </div>
-    <div class="row">
+    <div class="row" id="MainContent">
 
-        <div class="col-md-12">
-
-        </div>
-        <div class="col-md-4">
-            <img class="img-responsive" src="@Model.ImageUrlThumb1">
-            ----------------- PLAYER  --------------
-        </div>
-        <div class="col-md-4">
-            <h3>Project Description</h3>
-            <p>@Model.Description</p>
-
-        </div>
-
-        <div class="col-md-4">
-            <h3>Project Details</h3>
-            <ul>
-                <li>Licence : @Model.LicenceType</li>
-                <li>Last Modification  @Html.DisplayFor(m => m.ModifiedOn, "ShortDateString") </li>
-                <li>Likes : @Model.Likes</li>
-                <li></li>
-            </ul>
-        </div>
+        @Html.Partial("Display", Model);
 
     </div>
-
-    <div class="row">
-        <div class="form-group col-lg-12">
-            @Html.TagsLabelFor(@Model.Tags, "form-control")
-        </div>
-    </div>
-
-
 
 </div><!-- /.container -->
+@section scripts{
+    @Scripts.Render("~/bundles/knockout")
+    <script>
+
+        function DetailVM() {
+            var self = this;
+            self.displayMode = ko.observable("display");
+
+            self.btnEditClicked = function () {
+                self.displayMode("edit");
+                $.get('@Url.Action("Edit", new {id = Model.Id })', function (data) {
+                    $('#MainContent').replaceWith(data);
+                });
+            };
+
+            self.btnSaveClicked = function () {
+                self.displayMode("display");
+               //TODO : switch this to the edit.cshtml viewmodel
+            };
+
+            self.btnCancelClicked = function () {
+                self.displayMode("display");
+                //TODO : switch this to the edit.cshtml viewmodel
+            };
+        }
+
+        ko.applyBindings(new DetailVM());
+
+    </script>
+}
+

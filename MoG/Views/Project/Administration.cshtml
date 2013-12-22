@@ -20,19 +20,10 @@
     </style>
     <div class="row adminSection">
         <div class="col-md-3">
-            <div class="row">
-                <div class="col-xs-6 col-md-6">
-                    <a href="#" data-bind="click: $root.GoTo(0)" class="btn btn-danger btn-lg" role="button"><span class="glyphicon glyphicon-list-alt"></span> <br />Parametres</a>
-                    <a href="#" data-bind="click: $root.GoTo(1)" class="btn btn-warning btn-lg" role="button"><span class="glyphicon glyphicon-eye-open"></span> <br />Suivi</a>
-                    <a href="#" data-bind="click: $root.GoTo(2)" class="btn btn-primary btn-lg" role="button"><span class="glyphicon glyphicon-signal"></span> <br />Reports</a>
-                    <a href="#" data-bind="click: $root.GoTo(3)" class="btn btn-primary btn-lg" role="button"><span class="glyphicon glyphicon-comment"></span> <br />Comments</a>
-                </div>
-                <div class="col-xs-6 col-md-6">
-                    <a href="#" data-bind="click: $root.GoTo(4)" class="btn btn-success btn-lg" role="button"><span class="glyphicon glyphicon-user"></span> <br />Collabs</a>
-                    <a href="#" data-bind="click: $root.GoTo(5)" class="btn btn-info btn-lg" role="button"><span class="glyphicon glyphicon-file"></span> <br />Notes</a>
-                    <a href="#" data-bind="click: $root.GoTo(6)" class="btn btn-primary btn-lg" role="button"><span class="glyphicon glyphicon-picture"></span> <br />Artwork</a>
-                    <a href="#" data-bind="click: $root.GoTo(7)" class="btn btn-primary btn-lg" role="button"><span class="glyphicon glyphicon-tag"></span> <br />Tags</a>
-                </div>
+            <div class="row" data-bind="foreach: menuEntries">
+                
+                    <a href="#" data-bind="click : $parent.btnAdminClicked , css: button" role="button"><span data-bind="css: icon"></span> <br /><span data-bind="text: text "></span></a>
+
             </div>
             @*<a href="http://www.jquery2dotnet.com/" class="btn btn-success btn-lg btn-block" role="button"><span class="glyphicon glyphicon-globe"></span> Website</a>*@
         </div>
@@ -48,32 +39,48 @@
 
 
         <script>
+            function menuEntry(text, icon, url, button) {
+                var self = this;
+                self.text = text;
+                self.icon = icon;
+                self.url = url;
+                self.button = button;
+            }
 
-
-            var UrlTabs = [
-                    '@Url.Action("AdminSettings","Project", new { id = Model.Id } )',
-                     '@Url.Action("AdminTracking", "Project", new { id = Model.Id })',
-                     '@Url.Action("AdminReports", "Project", new { id = Model.Id })',
-                     '@Url.Action("AdminComments", "Project", new { id = Model.Id })',
-                    '@Url.Action("AdminCollabs", "Project", new { id = Model.Id })',
-                     '@Url.Action("AdminNotes", "Project", new { id = Model.Id })',
-                    '@Url.Action("AdminArtwork", "Project", new { id = Model.Id })',
-                    '@Url.Action("AdminTags", "Project", new { id = Model.Id })'
-            ];
 
             function ProjectAdministrationVM() {
 
                 var self = this;
 
-                self.ProjectAdministration = UrlTabs
+
+                self.menuEntries = ko.observableArray([
+                @*new menuEntry("Parametres", "glyphicon glyphicon-list-alt", '@Url.Action("AdminSettings","Project", new { id = Model.Id } )', "btn btn-danger btn-lg"),*@
+                new menuEntry("Suivi", "glyphicon glyphicon-eye-open", '@Url.Action("AdminTracking", "Project", new { id = Model.Id })', "btn btn-warning btn-lg"),
+                new menuEntry("Reports", "glyphicon glyphicon-signal", '@Url.Action("AdminReports", "Project", new { id = Model.Id })', "btn btn-primary btn-lg"),
+                new menuEntry("Comments", "glyphicon glyphicon-comment", '@Url.Action("AdminComments", "Project", new { id = Model.Id })',  "btn btn-primary btn-lg"),
+                new menuEntry("Collabs", "glyphicon glyphicon-user", '@Url.Action("AdminCollabs", "Project", new { id = Model.Id })', "btn btn-success btn-lg"),
+                new menuEntry("Notes", "glyphicon glyphicon-file", '@Url.Action("AdminNotes", "Project", new { id = Model.Id })',  "btn btn-info btn-lg"),
+                new menuEntry("Artwork", "glyphicon glyphicon-picture", '@Url.Action("AdminArtwork", "Project", new { id = Model.Id })', "btn btn-primary btn-lg"),
+                new menuEntry("Invits", "glyphicon glyphicon-tag", '@Url.Action("AdminInvits", "Project", new { id = Model.Id })', "btn btn-primary btn-lg")
+
+                ]);
 
 
-                self.GoTo = function (id) {
-                    $.get(self.ProjectAdministration[id], function (data) {
-                        $('#dynamicContent').replaceWith(data);
-                    });
 
-                }
+                //self.GoTo = function (id) {
+                //    console.log("id = " + id);
+                //    $.get(self.ProjectAdministration[id], function (data) {
+                //        $('#dynamicContent').replaceWith(data);
+                //    });
+
+                //};
+
+                self.btnAdminClicked = function (menuEntry) {
+                    
+                    $.get(menuEntry.url, function (data) {
+                                $('#dynamicContent').replaceWith(data);
+                            });
+                };
 
 
 
@@ -81,11 +88,11 @@
 
             ko.applyBindings(new ProjectAdministrationVM());
 
-            $(document).ready(function () {
-                $.get(UrlTabs[0], function (data) {
-                    $('#dynamicContent').replaceWith(data);
-                });
-            });
+            //$(document).ready(function () {
+            //    $.get(UrlTabs[0], function (data) {
+            //        $('#dynamicContent').replaceWith(data);
+            //    });
+            //});
 
         </script>
     }

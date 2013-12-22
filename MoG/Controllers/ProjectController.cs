@@ -89,6 +89,20 @@ namespace MoG.Controllers
             return View(project);
         }
 
+        public ActionResult Edit(int id = -1)
+        {
+            Project project = serviceProject.GetById(id);
+
+
+            if (id < 0)
+            {
+                // return RedirectToErrorPage("project not found");
+            }
+
+
+            return PartialView(project);
+        }
+
 
 
         public ActionResult Create()
@@ -253,10 +267,10 @@ namespace MoG.Controllers
             return PartialView("_AdminArtwork");
         }
 
-        public ActionResult AdminTags(int id)
+        public ActionResult AdminInvits(int id)
         {
 
-            return PartialView("_AdminTags");
+            return PartialView("_AdminInvits");
         }
 
         private VMProjectList getDummyProjects()

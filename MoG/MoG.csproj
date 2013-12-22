@@ -338,8 +338,7 @@
     <Content Include="Views\Project\_AdminComments.cshtml" />
     <Content Include="Views\Project\_AdminNotes.cshtml" />
     <Content Include="Views\Project\_AdminReports.cshtml" />
-    <Content Include="Views\Project\_AdminSettings.cshtml" />
-    <Content Include="Views\Project\_AdminTags.cshtml" />
+    <Content Include="Views\Project\_AdminInvits.cshtml" />
     <Content Include="Views\Project\_AdminTracking.cshtml" />
     <Content Include="Views\Social\Friends.cshtml" />
     <Content Include="Views\Social\Invits.cshtml" />
@@ -353,6 +352,8 @@
     <Content Include="Views\File\CancelUpload.cshtml" />
     <Content Include="Views\File\Edit.cshtml" />
     <Content Include="Views\File\Display.cshtml" />
+    <Content Include="Views\Project\Display.cshtml" />
+    <Content Include="Views\Project\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
