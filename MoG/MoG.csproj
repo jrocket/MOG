@@ -352,8 +352,7 @@
     <Content Include="Views\File\CancelUpload.cshtml" />
     <Content Include="Views\File\Edit.cshtml" />
     <Content Include="Views\File\Display.cshtml" />
-    <Content Include="Views\Project\Display.cshtml" />
-    <Content Include="Views\Project\Edit.cshtml" />
+    <Content Include="Views\Project\_AdminSettings.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

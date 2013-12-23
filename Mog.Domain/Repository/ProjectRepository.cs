@@ -93,6 +93,14 @@ namespace MoG.Domain.Repository
         {
             return dbContext.Projects.Find(id);
         }
+
+
+        public Project SaveChanges(Project project)
+        {
+            dbContext.Entry(project).State = System.Data.Entity.EntityState.Modified;
+            dbContext.SaveChanges();
+            return project;
+        }
     }
 
     public interface IProjectRepository
@@ -109,5 +117,7 @@ namespace MoG.Domain.Repository
 
 
         Project GetById(int id);
+
+        Project SaveChanges(Project project);
     }
 }

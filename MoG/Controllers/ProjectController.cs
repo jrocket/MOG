@@ -215,16 +215,31 @@ namespace MoG.Controllers
 
         public ActionResult Administration(int id = 1)
         {
-            var project = serviceProject.GetById(id);
+            var project = new Project() { Id = id };
             return View(project);
         }
 
+        public JsonResult JSON(int id)
+        {
+            var project = serviceProject.GetById(id);
+            var projectVM = new Project() { Id = project.Id, Description = project.Description, Name = project.Name };
+            return new JsonResult() { Data = projectVM, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
+        }
 
+        [HttpPost]
+        public JsonResult SaveProjectSettings(Project model)
+        {
+            var project = serviceProject.GetById(model.Id);
+            project.Name = model.Name;
+            project.Description = model.Description;
+            Project result = serviceProject.SaveChanges(project);
+            return new JsonResult() { Data = true };
+        }
 
         public ActionResult AdminSettings(int id)
         {
-
-            return PartialView("_AdminSettings");
+            var project = serviceProject.GetById(id);
+            return PartialView("_AdminSettings",project);
         }
         public ActionResult AdminCollabs(int id)
         {

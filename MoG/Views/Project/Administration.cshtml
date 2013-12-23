@@ -21,8 +21,8 @@
     <div class="row adminSection">
         <div class="col-md-3">
             <div class="row" data-bind="foreach: menuEntries">
-                
-                    <a href="#" data-bind="click : $parent.btnAdminClicked , css: button" role="button"><span data-bind="css: icon"></span> <br /><span data-bind="text: text "></span></a>
+
+                <a href="#" data-bind="click : $parent.btnAdminClicked , css: button" role="button"><span data-bind="css: icon"></span> <br /><span data-bind="text: text "></span></a>
 
             </div>
             @*<a href="http://www.jquery2dotnet.com/" class="btn btn-success btn-lg btn-block" role="button"><span class="glyphicon glyphicon-globe"></span> Website</a>*@
@@ -52,14 +52,19 @@
 
                 var self = this;
 
+                $.getJSON('@Url.Action("JSON",new {id = @Model.Id})', function (data) {
+                    self.Project = ko.observable(data);
+                    console.dir(data);
+                });
+
 
                 self.menuEntries = ko.observableArray([
-                @*new menuEntry("Parametres", "glyphicon glyphicon-list-alt", '@Url.Action("AdminSettings","Project", new { id = Model.Id } )', "btn btn-danger btn-lg"),*@
-                new menuEntry("Suivi", "glyphicon glyphicon-eye-open", '@Url.Action("AdminTracking", "Project", new { id = Model.Id })', "btn btn-warning btn-lg"),
                 new menuEntry("Reports", "glyphicon glyphicon-signal", '@Url.Action("AdminReports", "Project", new { id = Model.Id })', "btn btn-primary btn-lg"),
-                new menuEntry("Comments", "glyphicon glyphicon-comment", '@Url.Action("AdminComments", "Project", new { id = Model.Id })',  "btn btn-primary btn-lg"),
+                new menuEntry("Parametres", "glyphicon glyphicon-list-alt", '@Url.Action("AdminSettings","Project", new { id = Model.Id } )', "btn btn-danger btn-lg"),
+                new menuEntry("Suivi", "glyphicon glyphicon-eye-open", '@Url.Action("AdminTracking", "Project", new { id = Model.Id })', "btn btn-warning btn-lg"),
+                new menuEntry("Comments", "glyphicon glyphicon-comment", '@Url.Action("AdminComments", "Project", new { id = Model.Id })', "btn btn-primary btn-lg"),
                 new menuEntry("Collabs", "glyphicon glyphicon-user", '@Url.Action("AdminCollabs", "Project", new { id = Model.Id })', "btn btn-success btn-lg"),
-                new menuEntry("Notes", "glyphicon glyphicon-file", '@Url.Action("AdminNotes", "Project", new { id = Model.Id })',  "btn btn-info btn-lg"),
+                new menuEntry("Notes", "glyphicon glyphicon-file", '@Url.Action("AdminNotes", "Project", new { id = Model.Id })', "btn btn-info btn-lg"),
                 new menuEntry("Artwork", "glyphicon glyphicon-picture", '@Url.Action("AdminArtwork", "Project", new { id = Model.Id })', "btn btn-primary btn-lg"),
                 new menuEntry("Invits", "glyphicon glyphicon-tag", '@Url.Action("AdminInvits", "Project", new { id = Model.Id })', "btn btn-primary btn-lg")
 
@@ -76,23 +81,34 @@
                 //};
 
                 self.btnAdminClicked = function (menuEntry) {
-                    
+
                     $.get(menuEntry.url, function (data) {
-                                $('#dynamicContent').replaceWith(data);
-                            });
+                        var $partialContent = $("#PartialContent");
+
+                        //if ($partialContent && $partialContent.get(0)) {
+                        //    ko.cleanNode($partialContent.get(0));
+                        //}
+                        $('#dynamicContent').html(data);
+                        ko.applyBindings(self, $("#PartialContent").get(0));
+                    });
                 };
 
+                self.btnSaveClicked = function (data) {
+                    $.post('@Url.Action("SaveProjectSettings")', data.Project(), function (result) {
+                        console.dir(result);
+                    });
+                }
+
+
+                $.get(self.menuEntries()[0].url, function (data) {
+                    $('#dynamicContent').html(data);
+                });
 
 
             }
 
             ko.applyBindings(new ProjectAdministrationVM());
 
-            //$(document).ready(function () {
-            //    $.get(UrlTabs[0], function (data) {
-            //        $('#dynamicContent').replaceWith(data);
-            //    });
-            //});
 
         </script>
     }

@@ -11,21 +11,51 @@
             <hr>
             <p>
                 <i class="icon-time"></i> Posted on @Html.DisplayFor(m => m.CreatedOn, "LongDateString")
-                <button type="button"  class="btn btn-warning" data-bind="click:btnEditClicked, visible: (displayMode() == 'display') "> Editer</button>
-                <button type="button" class="btn btn-primary" data-bind="click:btnSaveClicked, visible: (displayMode()== 'edit') "> Save</button>
-                <button type="button" class="btn btn-danger" data-bind="click:btnCancelClicked, visible: (displayMode()== 'edit') "> Cancel</button>
             </p>
             <hr>
         </div>
     </div>
     <div class="row" id="MainContent">
+        <div class="col-md-12">
 
-        @Html.Partial("Display", Model);
+        </div>
+        <div class="col-md-4">
+            <img class="img-responsive" src="@Model.ImageUrlThumb1">
+            ----------------- PLAYER  --------------
+        </div>
+        <div class="col-md-4">
+            <h3>Project Description</h3>
+            <p>@Model.Description</p>
 
+        </div>
+
+        <div class="col-md-4">
+            <h3>Project Details</h3>
+            <dl>
+                <dt>Licence</dt>
+                <dd>@Model.LicenceType</dd>
+            </dl>
+
+            <dl>
+                <dt>Last Modification</dt>
+                <dd>@Html.DisplayFor(m => m.ModifiedOn, "ShortDateString") </dd>
+            </dl>
+
+
+            <dl>
+                <dt>Likes</dt>
+                <dd>@Model.Likes </dd>
+            </dl>
+
+            <dl>
+                <dt>Tags</dt>
+                <dd>@Html.TagsLabelFor(@Model.Tags, "form-control")</dd>
+            </dl>
+        </div>
     </div>
 
 </div><!-- /.container -->
-@section scripts{
+@*@section scripts{
     @Scripts.Render("~/bundles/knockout")
     <script>
 
@@ -40,19 +70,10 @@
                 });
             };
 
-            self.btnSaveClicked = function () {
-                self.displayMode("display");
-               //TODO : switch this to the edit.cshtml viewmodel
-            };
-
-            self.btnCancelClicked = function () {
-                self.displayMode("display");
-                //TODO : switch this to the edit.cshtml viewmodel
-            };
         }
 
         ko.applyBindings(new DetailVM());
 
     </script>
-}
+}*@
 

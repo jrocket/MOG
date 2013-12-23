@@ -1,33 +1,32 @@
 ﻿@model MoG.Domain.Models.VMCollabs
 
-<div class="container" id="dynamicContent">
-    <div class="row">
-        <div class="col-md-12">
-            <div class="row">
-                <div class="col-md-12">
-                    <table class="table  table-striped">
-                        <thead>
+<div class="row" id="PartialContent">
+    <div class="col-md-12">
+        <div class="row">
+            <div class="col-md-12">
+                <table class="table  table-striped">
+                    <thead>
+                        <tr>
+                            <th class="myspan">DisplayName</th>
+                            <th>Id</th>
+                            <th>Login</th>
+                            <th>Lien</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var collab in @Model.Collabs)
+                        {
                             <tr>
-                                <th class="myspan">DisplayName</th>
-                                <th>Id</th>
-                                <th>Login</th>
-                                <th>Lien</th>
+                                <td>@collab.DisplayName</td>
+                                <td>@collab.Id</td>
+                                <td>@collab.Login</td>
+                                <td>TODO</td>
                             </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var collab in @Model.Collabs)
-                            {
-                                <tr>
-                                    <td>@collab.DisplayName</td>
-                                    <td>@collab.Id</td>
-                                    <td>@collab.Login</td>
-                                    <td>TODO</td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
-                </div>
+                        }
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
 </div>
+

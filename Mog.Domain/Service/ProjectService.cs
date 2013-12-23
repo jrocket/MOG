@@ -165,6 +165,13 @@ namespace MoG.Domain.Service
         {
             return this.serviceActivity.GetByProjectId(projectId);
         }
+
+
+        public Project SaveChanges(Project project)
+        {
+            project.ModifiedOn = DateTime.Now;
+            return projectRepo.SaveChanges(project);
+        }
     }
 
     public interface IProjectService
@@ -194,5 +201,7 @@ namespace MoG.Domain.Service
         IList<MoGFile> GetFilteredFiles(Project projet, string filterByAuthor, string filterByStatus, string filterByTag);
 
         VMCollabs GetCollabs(int projectId);
+
+        Project SaveChanges(Project project);
     }
 }
