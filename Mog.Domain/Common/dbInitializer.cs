@@ -107,7 +107,7 @@ namespace MoG
             List<FileType> filetypes = new List<FileType>() { FileType.Bass, FileType.Drums, FileType.Guitar, FileType.Idea, FileType.Mixdown };
             List<FileStatus> filestatus = new List<FileStatus>() { FileStatus.Accepted, FileStatus.Draft, FileStatus.Rejected, FileStatus.Submitted };
             Random rand = new Random((int)DateTime.Now.Ticks);
-            for (int j = 0; j < 20; j++)
+            for (int j = 0; j < 5; j++)
             {
                 MoGFile file = new MoGFile()
                 {

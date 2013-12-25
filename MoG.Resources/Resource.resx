@@ -117,46 +117,160 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Files" xml:space="preserve">
+  <data name="COMMON_AreYouSure" xml:space="preserve">
+    <value>Are you sure?</value>
+  </data>
+  <data name="COMMON_Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="COMMON_Description" xml:space="preserve">
+    <value>Description</value>
+  </data>
+  <data name="COMMON_Files" xml:space="preserve">
     <value>Files</value>
   </data>
-  <data name="Friends" xml:space="preserve">
+  <data name="COMMON_Friends" xml:space="preserve">
     <value>Friends</value>
   </data>
-  <data name="Invits" xml:space="preserve">
+  <data name="COMMON_Invits" xml:space="preserve">
     <value>Invits</value>
   </data>
-  <data name="Latest" xml:space="preserve">
+  <data name="COMMON_Latest" xml:space="preserve">
     <value>Latest</value>
   </data>
-  <data name="Messages" xml:space="preserve">
+  <data name="COMMON_Messages" xml:space="preserve">
     <value>Messages</value>
   </data>
-  <data name="My" xml:space="preserve">
+  <data name="COMMON_Save" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="COMMON_Submit" xml:space="preserve">
+    <value>Submit</value>
+  </data>
+  <data name="COMMON_Tags" xml:space="preserve">
+    <value>Tags</value>
+  </data>
+  <data name="FILE_Accept" xml:space="preserve">
+    <value>Accept</value>
+  </data>
+  <data name="FILE_Activity" xml:space="preserve">
+    <value>Activity</value>
+  </data>
+  <data name="FILE_AddFiles" xml:space="preserve">
+    <value>Add files...</value>
+  </data>
+  <data name="FILE_Administration" xml:space="preserve">
+    <value>Administration</value>
+  </data>
+  <data name="FILE_CancelUpload" xml:space="preserve">
+    <value>Cancel upload</value>
+  </data>
+  <data name="FILE_Delete" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="FILE_Detail" xml:space="preserve">
+    <value>File details</value>
+  </data>
+  <data name="FILE_DetailTitle" xml:space="preserve">
+    <value>Detail</value>
+  </data>
+  <data name="FILE_Download" xml:space="preserve">
+    <value>Download</value>
+  </data>
+  <data name="FILE_Downloaded" xml:space="preserve">
+    <value>Downloaded</value>
+  </data>
+  <data name="FILE_Edit" xml:space="preserve">
+    <value>Edit</value>
+  </data>
+  <data name="FILE_FileName" xml:space="preserve">
+    <value>File name</value>
+  </data>
+  <data name="FILE_Files" xml:space="preserve">
+    <value>Files</value>
+  </data>
+  <data name="FILE_General" xml:space="preserve">
+    <value>General</value>
+  </data>
+  <data name="FILE_Likes" xml:space="preserve">
+    <value>Likes</value>
+  </data>
+  <data name="FILE_Metrics" xml:space="preserve">
+    <value>Metrics</value>
+  </data>
+  <data name="FILE_Played" xml:space="preserve">
+    <value>Played</value>
+  </data>
+  <data name="FILE_ProceedStep2" xml:space="preserve">
+    <value>Proceed to step 2</value>
+  </data>
+  <data name="FILE_Processing" xml:space="preserve">
+    <value>Processing...</value>
+  </data>
+  <data name="FILE_Reject" xml:space="preserve">
+    <value>Reject</value>
+  </data>
+  <data name="FILE_Start" xml:space="preserve">
+    <value>Start</value>
+  </data>
+  <data name="FILE_StartUpload" xml:space="preserve">
+    <value>Start upload</value>
+  </data>
+  <data name="FILE_Title" xml:space="preserve">
+    <value>Files</value>
+  </data>
+  <data name="HOME_CAROUSEL_1" xml:space="preserve">
+    <value>Carousel #1 : find something...</value>
+  </data>
+  <data name="HOME_CAROUSEL_2" xml:space="preserve">
+    <value>Carousel #2 : another something...</value>
+  </data>
+  <data name="HOME_CAROUSEL_3" xml:space="preserve">
+    <value>Carousel #3 : and another something...</value>
+  </data>
+  <data name="MAINMENU_My" xml:space="preserve">
     <value>My</value>
   </data>
-  <data name="MyMessages" xml:space="preserve">
+  <data name="MAINMENU_MyMessages" xml:space="preserve">
     <value>My messages</value>
   </data>
-  <data name="MyProfil" xml:space="preserve">
+  <data name="MAINMENU_MyProfil" xml:space="preserve">
     <value>My profile</value>
   </data>
-  <data name="MyProjects" xml:space="preserve">
+  <data name="MAINMENU_MyProjects" xml:space="preserve">
     <value>My projects</value>
   </data>
-  <data name="Popular" xml:space="preserve">
+  <data name="MAINMENU_Popular" xml:space="preserve">
     <value>Popular</value>
   </data>
-  <data name="Profile" xml:space="preserve">
+  <data name="MAINMENU_Profile" xml:space="preserve">
     <value>Profile</value>
   </data>
-  <data name="Project" xml:space="preserve">
+  <data name="MAINMENU_Project" xml:space="preserve">
     <value>Project</value>
   </data>
-  <data name="Projects" xml:space="preserve">
+  <data name="MAINMENU_Projects" xml:space="preserve">
     <value>Projects</value>
   </data>
-  <data name="Random" xml:space="preserve">
+  <data name="MAINMENU_Random" xml:space="preserve">
     <value>Random</value>
+  </data>
+  <data name="PROFILE_Alerts" xml:space="preserve">
+    <value>Alerts</value>
+  </data>
+  <data name="PROFILE_Avatar" xml:space="preserve">
+    <value>Avatar</value>
+  </data>
+  <data name="PROFILE_Dashboard" xml:space="preserve">
+    <value>Dashboard</value>
+  </data>
+  <data name="PROFILE_MySettings" xml:space="preserve">
+    <value>My settings</value>
+  </data>
+  <data name="PROFILE_PageTitle" xml:space="preserve">
+    <value>Profile</value>
+  </data>
+  <data name="PROFILE_Storage" xml:space="preserve">
+    <value>Storage</value>
   </data>
 </root>

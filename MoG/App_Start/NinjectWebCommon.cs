@@ -81,6 +81,8 @@ namespace MoG.App_Start
             kernel.Bind<IMessageService>().To<MessageService>();
             kernel.Bind<IActivityService>().To<ActivityService>();
             kernel.Bind<ITempFileService>().To<TempFileService>();
+            kernel.Bind<IWaveformService>().To<WaveformService>();
+
 
             kernel.Bind<IProjectRepository>().To<ProjectRepository>();
             kernel.Bind<IActivityRepository>().To<ActivityRepository>();

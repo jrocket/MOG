@@ -22,16 +22,21 @@ namespace MoG.Domain.Models
 
         public string ThumbnailPath { get; set; }
 
-        
-
         public virtual UserProfile Creator { get; set; }
 
         public int ProjectId { get; set; }
+
+        public string Description { get; set; }
+
+        public string Tags { get; set; }
+
 
         [NotMapped]
         public byte[] Data { get; set; }
 
 
-       
+
+
+
     }
 }

@@ -99,20 +99,36 @@ namespace MoG.Controllers
                 return this.RedirectToErrorPage("Il faudrait peut etre ajouter de fichiers!");
             }
             
+
             foreach (var file in files)
             {//TODO : Automapper
-                MoGFile modelFile = new MoGFile()
+                TempUploadedFile modelFile = new TempUploadedFile()
                 {
                     Description = file.File.Description,
                     Tags = file.File.Tags,
                     Name = file.File.Name,
-                    ProjectId = file.Project.Id,
-                    FileStatus = FileStatus.Draft
+                    Id = file.File.Id,
+                    ProjectId = file.File.ProjectId,
+
+
                 };
-                this.serviceFile.Create(modelFile,CurrentUser);
+                modelFile = this.serviceTempFile.Update(modelFile);
+                //todo : background processing
+                serviceTempFile.DefaultSavePath = Server.MapPath("~/Data/");
+
+                this.serviceTempFile.Process(modelFile);
+                //MoGFile modelFile = new MoGFile()
+                //{
+                //    Description = file.File.Description,
+                //    Tags = file.File.Tags,
+                //    Name = file.File.Name,
+                //    ProjectId = file.Project.Id,
+                //    FileStatus = FileStatus.Draft
+                //};
+                //this.serviceFile.Create(modelFile,CurrentUser);
             }
             
-            return RedirectToAction("Files", "Project", 1);
+            return RedirectToAction("Files", "Project", files[0].Project.Id);
         }
 
 

@@ -1,6 +1,6 @@
 ﻿@model MoG.Domain.Models.VMFile
 @{
-    ViewBag.Title = "Add File";
+    ViewBag.Title = @Resource.FILE_Title;
 }
 @Styles.Render("~/Content/jQuery.FileUpload/jQueryFileupload")
 <div class="container">
@@ -13,10 +13,10 @@
     <div class="row">
         <div class="col-lg-12">
             <ul class="nav nav-tabs">
-                @Html.MenuItem("Général", "Detail", "Project", null, new { id = Model.Project.Id })
-                @Html.MenuItem("Activité", "Activity", "Project", null, new { id = Model.Project.Id })
-                @Html.MenuItem("Fichiers", "Files", "Project", "active", new { id = Model.Project.Id })
-                @Html.MenuItem("Administration", "Administration", "Project", null, new { id = Model.Project.Id })
+                @Html.MenuItem(Resource.FILE_General, "Detail", "Project", null, new { id = Model.Project.Id })
+                @Html.MenuItem(Resource.FILE_Activity, "Activity", "Project", null, new { id = Model.Project.Id })
+                @Html.MenuItem(Resource.FILE_Files, "Files", "Project", "active", new { id = Model.Project.Id })
+                @Html.MenuItem(Resource.FILE_Administration,  "Administration", "Project", null, new { id = Model.Project.Id })
             </ul>
         </div>
     </div>
@@ -34,25 +34,25 @@
                         <!-- The fileinput-button span is used to style the file input field as button -->
                         <button id="proceedToStep2" type="button" class="btn btn-success hidden" >
                             <i class="glyphicon glyphicon-arrow-right"></i>
-                            <span>Proceed to step 2</span>
+                            <span>@Resource.FILE_ProceedStep2</span>
                         </button>
 
                         <span class="btn btn-success fileinput-button">
                             <i class="glyphicon glyphicon-plus"></i>
-                            <span>Add files...</span>
+                            <span>@Resource.FILE_AddFiles</span>
                             <input type="file" name="files" multiple>
                         </span>
                         <button type="submit" class="btn btn-primary start">
                             <i class="glyphicon glyphicon-upload"></i>
-                            <span>Start upload</span>
+                            <span>@Resource.FILE_StartUpload</span>
                         </button>
                         <button type="reset" class="btn btn-warning cancel">
                             <i class="glyphicon glyphicon-ban-circle"></i>
-                            <span>Cancel upload</span>
+                            <span>@Resource.FILE_CancelUpload</span>
                         </button>
                         <button type="button" class="btn btn-danger delete">
                             <i class="glyphicon glyphicon-trash"></i>
-                            <span>Delete</span>
+                            <span>@Resource.FILE_Delete</span>
                         </button>
                         <input type="checkbox" class="toggle">
                         <!-- The global file processing state -->
@@ -96,20 +96,20 @@
                         <strong class="error text-danger"></strong>
                     </td>
                     <td>
-                        <p class="size">Processing...</p>
+                        <p class="size">@Resource.FILE_Processing</p>
                         <div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div class="progress-bar progress-bar-success" style="width:0%;"></div></div>
                     </td>
                     <td>
                         {% if (!i && !o.options.autoUpload) { %}
                         <button class="btn btn-primary start hidden" disabled>
                             <i class="glyphicon glyphicon-upload"></i>
-                            <span>Start</span>
+                            <span>@Resource.FILE_Start</span>
                         </button>
                         {% } %}
                         {% if (!i) { %}
                         <button class="btn btn-warning cancel">
                             <i class="glyphicon glyphicon-ban-circle"></i>
-                            <span>Cancel</span>
+                            <span>@Resource.COMMON_Cancel</span>
                         </button>
                         {% } %}
                     </td>
@@ -146,13 +146,13 @@
                         {% if (file.deleteUrl) { %}
                         <button class="btn btn-danger delete" data-type="{%=file.deleteType%}" data-url="{%=file.deleteUrl%}" {% if (file.deletewithcredentials) { %} data-xhr-fields='{"withCredentials":true}' {% } %}>
                             <i class="glyphicon glyphicon-trash"></i>
-                            <span>Delete</span>
+                            <span>@Resource.FILE_Delete</span>
                         </button>
                         <input type="checkbox" name="delete" value="1" class="toggle">
                         {% } else { %}
                         <button class="btn btn-warning cancel">
                             <i class="glyphicon glyphicon-ban-circle"></i>
-                            <span>Cancel</span>
+                            <span>@Resource.COMMON_Cancel</span>
                         </button>
                         {% } %}
                     </td>

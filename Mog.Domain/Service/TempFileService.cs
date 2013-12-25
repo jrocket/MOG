@@ -12,14 +12,21 @@ namespace MoG.Domain.Service
     {
         private ITempFileRepository fileRepo = null;
         private IUserRepository userRepo = null;
+        private IWaveformService serviceWaveform = null;
+        private IFileService serviceMogFile = null;
+        public string DefaultSavePath  {get;set;}
 
         public TempFileService(ITempFileRepository _repo
             , IUserRepository _userRepo
+            , IWaveformService _waveformService
+            , IFileService _fileService
             )
         {
             fileRepo = _repo;
         
             userRepo = _userRepo;
+            serviceWaveform = _waveformService;
+            this.serviceMogFile = _fileService;
         }
 
 
@@ -70,8 +77,56 @@ namespace MoG.Domain.Service
             }
             return result;
         }
-    }
 
+
+
+        public bool Process(TempUploadedFile file)
+        { 
+            // Generate thumbnail
+            //TODO : rework, too many hardcoded things
+            var thumbnail = serviceWaveform.GetWaveform(file.Path);
+            string filename = file.Name + ".png";
+            string path = System.IO.Path.Combine(this.DefaultSavePath, filename);
+            thumbnail.Save( path);
+            file.ThumbnailPath = path;
+            file.ThumbnailUrl = "~/Data/" + filename;
+ 
+            // create file
+            MoGFile projectFile = new MoGFile()
+            {
+                Description = file.Description,
+                FileStatus = FileStatus.Draft,
+                Name = file.Name,
+                ProjectId = file.ProjectId,
+                Tags = file.Tags,
+                ThumbnailUrl = file.ThumbnailUrl
+            };
+            this.serviceMogFile.Create(projectFile, file.Creator);
+
+            // delete temp
+            this.DeleteById(file.Id);
+
+            return true;
+        }
+
+
+        public TempUploadedFile  Update(TempUploadedFile modelFile)
+        {
+            TempUploadedFile data = GetById(modelFile.Id);
+            if (data!=null)
+            {
+                data.Description = modelFile.Description;
+                data.Name = modelFile.Name;
+                data.Tags = modelFile.Tags;
+                this.fileRepo.SaveChanges(data);
+            }
+            return data;
+        }
+
+
+        
+    }
+   
     public interface ITempFileService
     {
      
@@ -86,5 +141,13 @@ namespace MoG.Domain.Service
 
 
         bool Cancel(int projectId, UserProfile CurrentUser);
+
+        bool Process(TempUploadedFile file);
+
+
+        TempUploadedFile Update(TempUploadedFile modelFile);
+
+         string DefaultSavePath { get; set; }
+
     }
 }

@@ -1,12 +1,19 @@
 ﻿@model MoG.Domain.Models.MoGFile
 
 <div class="col-md-8">
-    <img class="img-responsive" src="http://placehold.it/750x200"><br />
+    @if (!String.IsNullOrEmpty(Model.ThumbnailUrl))
+    {
+        <img class="img-responsive" src="@Url.Content(@Model.ThumbnailUrl)"><br />
+    }
+    else
+    {
+        <img class="img-responsive" src="http://placehold.it/750x200"><br />
+    }
     @Html.TagsLabelFor(Model.Tags, "")
 </div>
 
 <div class="col-md-4">
-    <h4>Detail de la piste</h4>
+    <h4>@Resource.FILE_Detail</h4>
     <dl>
         <dt>@Html.LabelFor(model => model.CreatedOn)</dt>
         <dd>@Html.DisplayFor(model => model.CreatedOn, "LongDateString")</dd>
@@ -20,7 +27,7 @@
             <dd>@Html.DisplayFor(model => model.Tags)</dd>
         </dl>*@
     <dl>
-        <dt>Metrics</dt>
-        <dd>played @Model.PlayCount | Likes @Model.Likes | Downloaded @Model.DownloadCount</dd>
+        <dt>@Resource.FILE_Metrics</dt>
+        <dd>@Resource.FILE_Played @Model.PlayCount | @Resource.FILE_Likes @Model.Likes | @Resource.FILE_Downloaded @Model.DownloadCount</dd>
     </dl>
 </div>

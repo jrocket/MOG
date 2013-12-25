@@ -54,5 +54,7 @@ namespace MoG.Domain.Models
         public virtual UserProfile DeletedBy { get; set; }
 
         public DateTime? DeletedOn { get; set; }
+
+        public string ThumbnailUrl { get; set; }
     }
 }

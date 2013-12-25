@@ -226,6 +226,7 @@
     <Content Include="Content\Timeline\timeline%402x.png" />
     <Content Include="Content\Timeline\timeline.css" />
     <Content Include="Content\Timeline\timeline.png" />
+    <Content Include="Data\mabenz.png" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />

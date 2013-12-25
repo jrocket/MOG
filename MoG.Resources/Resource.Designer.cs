@@ -61,128 +61,470 @@ namespace MoG.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Are you sure?.
+        /// </summary>
+        public static string COMMON_AreYouSure {
+            get {
+                return ResourceManager.GetString("COMMON_AreYouSure", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cancel.
+        /// </summary>
+        public static string COMMON_Cancel {
+            get {
+                return ResourceManager.GetString("COMMON_Cancel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Description.
+        /// </summary>
+        public static string COMMON_Description {
+            get {
+                return ResourceManager.GetString("COMMON_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Files.
         /// </summary>
-        public static string Files {
+        public static string COMMON_Files {
             get {
-                return ResourceManager.GetString("Files", resourceCulture);
+                return ResourceManager.GetString("COMMON_Files", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Friends.
         /// </summary>
-        public static string Friends {
+        public static string COMMON_Friends {
             get {
-                return ResourceManager.GetString("Friends", resourceCulture);
+                return ResourceManager.GetString("COMMON_Friends", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Invits.
         /// </summary>
-        public static string Invits {
+        public static string COMMON_Invits {
             get {
-                return ResourceManager.GetString("Invits", resourceCulture);
+                return ResourceManager.GetString("COMMON_Invits", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Latest.
         /// </summary>
-        public static string Latest {
+        public static string COMMON_Latest {
             get {
-                return ResourceManager.GetString("Latest", resourceCulture);
+                return ResourceManager.GetString("COMMON_Latest", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Messages.
         /// </summary>
-        public static string Messages {
+        public static string COMMON_Messages {
             get {
-                return ResourceManager.GetString("Messages", resourceCulture);
+                return ResourceManager.GetString("COMMON_Messages", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Save.
+        /// </summary>
+        public static string COMMON_Save {
+            get {
+                return ResourceManager.GetString("COMMON_Save", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Submit.
+        /// </summary>
+        public static string COMMON_Submit {
+            get {
+                return ResourceManager.GetString("COMMON_Submit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Tags.
+        /// </summary>
+        public static string COMMON_Tags {
+            get {
+                return ResourceManager.GetString("COMMON_Tags", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Accept.
+        /// </summary>
+        public static string FILE_Accept {
+            get {
+                return ResourceManager.GetString("FILE_Accept", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Activity.
+        /// </summary>
+        public static string FILE_Activity {
+            get {
+                return ResourceManager.GetString("FILE_Activity", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Add files....
+        /// </summary>
+        public static string FILE_AddFiles {
+            get {
+                return ResourceManager.GetString("FILE_AddFiles", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Administration.
+        /// </summary>
+        public static string FILE_Administration {
+            get {
+                return ResourceManager.GetString("FILE_Administration", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cancel upload.
+        /// </summary>
+        public static string FILE_CancelUpload {
+            get {
+                return ResourceManager.GetString("FILE_CancelUpload", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Delete.
+        /// </summary>
+        public static string FILE_Delete {
+            get {
+                return ResourceManager.GetString("FILE_Delete", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to File details.
+        /// </summary>
+        public static string FILE_Detail {
+            get {
+                return ResourceManager.GetString("FILE_Detail", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Detail.
+        /// </summary>
+        public static string FILE_DetailTitle {
+            get {
+                return ResourceManager.GetString("FILE_DetailTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Download.
+        /// </summary>
+        public static string FILE_Download {
+            get {
+                return ResourceManager.GetString("FILE_Download", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Downloaded.
+        /// </summary>
+        public static string FILE_Downloaded {
+            get {
+                return ResourceManager.GetString("FILE_Downloaded", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Edit.
+        /// </summary>
+        public static string FILE_Edit {
+            get {
+                return ResourceManager.GetString("FILE_Edit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to File name.
+        /// </summary>
+        public static string FILE_FileName {
+            get {
+                return ResourceManager.GetString("FILE_FileName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Files.
+        /// </summary>
+        public static string FILE_Files {
+            get {
+                return ResourceManager.GetString("FILE_Files", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to General.
+        /// </summary>
+        public static string FILE_General {
+            get {
+                return ResourceManager.GetString("FILE_General", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Likes.
+        /// </summary>
+        public static string FILE_Likes {
+            get {
+                return ResourceManager.GetString("FILE_Likes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Metrics.
+        /// </summary>
+        public static string FILE_Metrics {
+            get {
+                return ResourceManager.GetString("FILE_Metrics", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Played.
+        /// </summary>
+        public static string FILE_Played {
+            get {
+                return ResourceManager.GetString("FILE_Played", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Proceed to step 2.
+        /// </summary>
+        public static string FILE_ProceedStep2 {
+            get {
+                return ResourceManager.GetString("FILE_ProceedStep2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Processing....
+        /// </summary>
+        public static string FILE_Processing {
+            get {
+                return ResourceManager.GetString("FILE_Processing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Reject.
+        /// </summary>
+        public static string FILE_Reject {
+            get {
+                return ResourceManager.GetString("FILE_Reject", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Start.
+        /// </summary>
+        public static string FILE_Start {
+            get {
+                return ResourceManager.GetString("FILE_Start", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Start upload.
+        /// </summary>
+        public static string FILE_StartUpload {
+            get {
+                return ResourceManager.GetString("FILE_StartUpload", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Files.
+        /// </summary>
+        public static string FILE_Title {
+            get {
+                return ResourceManager.GetString("FILE_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Carousel #1 : find something....
+        /// </summary>
+        public static string HOME_CAROUSEL_1 {
+            get {
+                return ResourceManager.GetString("HOME_CAROUSEL_1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Carousel #2 : another something....
+        /// </summary>
+        public static string HOME_CAROUSEL_2 {
+            get {
+                return ResourceManager.GetString("HOME_CAROUSEL_2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Carousel #3 : and another something....
+        /// </summary>
+        public static string HOME_CAROUSEL_3 {
+            get {
+                return ResourceManager.GetString("HOME_CAROUSEL_3", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to My.
         /// </summary>
-        public static string My {
+        public static string MAINMENU_My {
             get {
-                return ResourceManager.GetString("My", resourceCulture);
+                return ResourceManager.GetString("MAINMENU_My", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to My messages.
         /// </summary>
-        public static string MyMessages {
+        public static string MAINMENU_MyMessages {
             get {
-                return ResourceManager.GetString("MyMessages", resourceCulture);
+                return ResourceManager.GetString("MAINMENU_MyMessages", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to My profile.
         /// </summary>
-        public static string MyProfil {
+        public static string MAINMENU_MyProfil {
             get {
-                return ResourceManager.GetString("MyProfil", resourceCulture);
+                return ResourceManager.GetString("MAINMENU_MyProfil", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to My projects.
         /// </summary>
-        public static string MyProjects {
+        public static string MAINMENU_MyProjects {
             get {
-                return ResourceManager.GetString("MyProjects", resourceCulture);
+                return ResourceManager.GetString("MAINMENU_MyProjects", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Popular.
         /// </summary>
-        public static string Popular {
+        public static string MAINMENU_Popular {
             get {
-                return ResourceManager.GetString("Popular", resourceCulture);
+                return ResourceManager.GetString("MAINMENU_Popular", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Profile.
         /// </summary>
-        public static string Profile {
+        public static string MAINMENU_Profile {
             get {
-                return ResourceManager.GetString("Profile", resourceCulture);
+                return ResourceManager.GetString("MAINMENU_Profile", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Project.
         /// </summary>
-        public static string Project {
+        public static string MAINMENU_Project {
             get {
-                return ResourceManager.GetString("Project", resourceCulture);
+                return ResourceManager.GetString("MAINMENU_Project", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Projects.
         /// </summary>
-        public static string Projects {
+        public static string MAINMENU_Projects {
             get {
-                return ResourceManager.GetString("Projects", resourceCulture);
+                return ResourceManager.GetString("MAINMENU_Projects", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Random.
         /// </summary>
-        public static string Random {
+        public static string MAINMENU_Random {
             get {
-                return ResourceManager.GetString("Random", resourceCulture);
+                return ResourceManager.GetString("MAINMENU_Random", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Alerts.
+        /// </summary>
+        public static string PROFILE_Alerts {
+            get {
+                return ResourceManager.GetString("PROFILE_Alerts", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Avatar.
+        /// </summary>
+        public static string PROFILE_Avatar {
+            get {
+                return ResourceManager.GetString("PROFILE_Avatar", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Dashboard.
+        /// </summary>
+        public static string PROFILE_Dashboard {
+            get {
+                return ResourceManager.GetString("PROFILE_Dashboard", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to My settings.
+        /// </summary>
+        public static string PROFILE_MySettings {
+            get {
+                return ResourceManager.GetString("PROFILE_MySettings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Profile.
+        /// </summary>
+        public static string PROFILE_PageTitle {
+            get {
+                return ResourceManager.GetString("PROFILE_PageTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Storage.
+        /// </summary>
+        public static string PROFILE_Storage {
+            get {
+                return ResourceManager.GetString("PROFILE_Storage", resourceCulture);
             }
         }
     }

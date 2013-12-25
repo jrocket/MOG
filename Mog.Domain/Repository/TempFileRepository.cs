@@ -50,6 +50,13 @@ namespace MoG.Domain.Repository
         {
             return dbContext.TempUploadedFiles.Where(file => file.ProjectId == id && file.Creator.Id == userId);
         }
+
+
+        public int SaveChanges(TempUploadedFile data)
+        {
+            dbContext.Entry(data).State = System.Data.Entity.EntityState.Modified;
+            return dbContext.SaveChanges();
+        }
     }
 
     public interface ITempFileRepository
@@ -61,5 +68,7 @@ namespace MoG.Domain.Repository
         TempUploadedFile GetById(int id);
 
         IQueryable<TempUploadedFile> GetByProjectId(int id, int userID);
+
+        int SaveChanges(TempUploadedFile data);
     }
 }

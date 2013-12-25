@@ -42,9 +42,13 @@
     <Reference Include="Microsoft.AspNet.Identity.EntityFramework">
       <HintPath>..\packages\Microsoft.AspNet.Identity.EntityFramework.1.0.0\lib\net45\Microsoft.AspNet.Identity.EntityFramework.dll</HintPath>
     </Reference>
+    <Reference Include="NAudio">
+      <HintPath>..\packages\NAudio.1.7\lib\net35\NAudio.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -85,12 +89,14 @@
     <Compile Include="Repository\ProjectRepository.cs" />
     <Compile Include="Repository\UserRepository.cs" />
     <Compile Include="Service\ActivityService.cs" />
+    <Compile Include="Service\BatchFileService.cs" />
     <Compile Include="Service\CommentService.cs" />
     <Compile Include="Service\FileService.cs" />
     <Compile Include="Service\MessageService.cs" />
     <Compile Include="Service\TempFileService.cs" />
     <Compile Include="Service\ProjectService.cs" />
     <Compile Include="Service\UserService.cs" />
+    <Compile Include="Service\WaveformService.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

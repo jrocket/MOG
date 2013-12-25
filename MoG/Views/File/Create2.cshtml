@@ -8,11 +8,11 @@
         <div class="col-lg-7">
             <button type="button" class="btn btn-primary start" data-bind="click: btnSubmitClicked">
                 <i class="glyphicon glyphicon-upload"></i>
-                <span>Submit</span>
+                <span>@Resource.COMMON_Submit</span>
             </button>
             <a class="btn btn-warning cancel" href="#" data-bind="click : btnCancelClicked" role="button">
                 <i class="glyphicon glyphicon-ban-circle"></i>
-                <span>Cancel upload</span>
+                <span>@Resource.COMMON_Cancel</span>
             </a>
 
 
@@ -23,13 +23,13 @@
 
         <div class="row" style="padding-bottom:4px;">
             <div class="col-xs-2">
-                <strong>File name</strong>
+                <strong>@Resource.FILE_FileName</strong>
             </div>
             <div class="col-xs-3">
-                <strong>Tags</strong>
+                <strong>@Resource.COMMON_Tags</strong>
             </div>
             <div class="col-xs-4">
-                <strong>Description</strong>
+                <strong>@Resource.COMMON_Description</strong>
             </div>
         </div>
         @if (Model.Count > 0)
@@ -67,7 +67,7 @@
         var self = this;
 
         this.btnCancelClicked = function () {
-            if (confirm("Are you sure")) {
+            if (confirm("@Resource.COMMON_AreYouSure")) {
                 var url = "@Url.Action("CancelUpload","File",new{id=ViewBag.ProjectId})";
                 window.location.href = url;
             }
