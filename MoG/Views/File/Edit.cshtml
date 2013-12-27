@@ -1,0 +1,39 @@
+﻿@model MoG.Domain.Models.MoGFile
+
+
+    @using (Html.BeginForm())
+    {
+        <div class="row">
+            <div class="col-md-8">
+                <img class="img-responsive" src="http://placehold.it/750x200"><br />
+                @Html.TagsInputFor(f => f.Tags, "form-control")
+            </div>
+
+            <div class="col-md-4">
+                <h4>Detail de la piste</h4>
+                <dl>
+                    <dt>@Html.LabelFor(model => model.CreatedOn)</dt>
+                    <dd>@Html.DisplayFor(model => model.CreatedOn, "LongDateString")</dd>
+                </dl>
+                <dl>
+                    <dt>@Html.LabelFor(model => model.Description)</dt>
+                    <dd>@Html.TextAreaFor(model => model.Description, new { @class="form-control"})</dd>
+                </dl>
+                @*<dl>
+                        <dt>@Html.LabelFor(model => model.Tags)</dt>
+                        <dd>@Html.DisplayFor(model => model.Tags)</dd>
+                    </dl>*@
+                <dl>
+                    <dt>Metrics</dt>
+                    <dd>played @Model.PlayCount | Likes @Model.Likes | Downloaded @Model.DownloadCount</dd>
+                </dl>
+            </div>
+        </div>
+        <div class="row">
+            <hr />
+        </div>
+    }
+
+<script>
+    $('[data-role=tagsinput]').tagsinput('refresh');
+</script>

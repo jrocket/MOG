@@ -66,10 +66,12 @@
   </Choose>
   <ItemGroup>
     <Compile Include="Initializer.cs" />
+    <Compile Include="Model\MogFileTest.cs" />
     <Compile Include="Service\ProjectServiceTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Service\FileServiceTest.cs" />
     <Compile Include="Service\MessageServiceTest.cs" />
+    <Compile Include="Service\TempFileServiceTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config">
@@ -86,6 +88,15 @@
       <Project>{d389f85f-e3ea-4a68-b1a6-684e51012e00}</Project>
       <Name>MoG</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <Content Include="Data\mabenz.mp3">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\mabenz.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">

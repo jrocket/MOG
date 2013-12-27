@@ -84,8 +84,14 @@ namespace MoG.Domain.Service
         { 
             // Generate thumbnail
             //TODO : rework, too many hardcoded things
-            var thumbnail = serviceWaveform.GetWaveform(file.Path);
+            serviceWaveform.Initialize(file.Path);
+            var thumbnail = serviceWaveform.GetWaveform();
+            Metadata metadata = serviceWaveform.Metadata;
             string filename = file.Name + ".png";
+            if (String.IsNullOrEmpty(this.DefaultSavePath))
+            {
+                throw new ArgumentException("DefaultSavePath is not initialized");
+            }
             string path = System.IO.Path.Combine(this.DefaultSavePath, filename);
             thumbnail.Save( path);
             file.ThumbnailPath = path;
@@ -101,6 +107,7 @@ namespace MoG.Domain.Service
                 Tags = file.Tags,
                 ThumbnailUrl = file.ThumbnailUrl
             };
+            projectFile.SetMetadata(metadata);
             this.serviceMogFile.Create(projectFile, file.Creator);
 
             // delete temp

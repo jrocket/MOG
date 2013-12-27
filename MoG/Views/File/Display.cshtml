@@ -1,0 +1,86 @@
+﻿@model MoG.Domain.Models.MoGFile
+@{
+    ViewBag.Title = @Resource.FILE_DetailTitle;
+}
+@Styles.Render("~/Content/SndManager")
+<div class="container">
+    <div class="row">
+        <div class="col-lg-12">
+            <h1 class="page-header">
+                @Html.ActionLink(Model.Project.Name, "Files", "Project", new { id = @Model.ProjectId }, null) /
+                @Html.DisplayFor(model => model.Name) <small>by @Html.DisplayFor(model => model.Creator.DisplayName)</small>
+            </h1>
+        </div>
+    </div>
+    @*@Html.Partial("_TopNavigationTab",Model.Project)*@
+
+    <div class="row">
+        <div class="col-md-8" data-bind="visible : isDisplayMode">
+            <button type="button" class="btn btn-default">@Resource.FILE_Download</button>
+            <button type="button" class="btn btn-primary" data-bind="visible : isBtnAcceptVisible, click:btnAcceptClicked">@Resource.FILE_Accept</button>
+            <button type="button" class="btn btn-primary" data-bind="visible : isBtnRejectVisible, click:btnRejectClicked">@Resource.FILE_Reject</button>
+            <button type="button" class="btn btn-success">Promouvoir</button>
+            <button type="button" class="btn btn-danger" data-bind="click:btnDeleteClicked">@Resource.FILE_Delete</button>
+            <button type="button" class="btn btn-warning" data-bind="click:btnEditClicked ">@Resource.FILE_Edit</button>
+        </div>
+        <div class="col-md-8" data-bind="visible : isEditMode">
+            <button type="button" class="btn btn-primary" data-bind="click:btnSaveClicked">@Resource.COMMON_Save</button>
+            <button type="button" class="btn btn-danger" data-bind="click:btnCancelClicked">@Resource.COMMON_Cancel</button>
+        </div>
+<div class="col-md-4">
+        </div>
+
+    </div>
+    <div class="row"><div class="col-md-12">&nbsp;</div></div>
+    <div class="row" id="mainContent">
+        @Html.Partial("Detail", Model);
+    </div>
+    <div class="row">
+        <hr />
+    </div>
+
+    <div data-bind="foreach: comments">
+        <div class="row">
+            <div class="col-md-1">
+                <img src="http://placehold.it/75x75&text=john+smith" />
+            </div>
+            <div class="col-md-7">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <p>
+                            <h4 data-bind="text: CreatorName"></h4>
+                            <span data-bind="text: Body"></span>
+                            <br /><small data-bind="text: CreatedOnAsString"></small>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <form>
+            <div class="clearfix"></div>
+            <div class="form-group col-lg-8">
+                <label for="input4">Message</label>
+                <textarea name="message" class="form-control" data-bind="value: newBody" rows="6" id="input4"></textarea>
+            </div>
+            <div class="form-group col-lg-8">
+                <input type="hidden" name="save" value="contact">
+                <button class="btn btn-primary" data-bind="click: btnCreateComment">Submit</button>
+            </div>
+        </form>
+    </div>
+
+</div><!-- /.container -->
+@section Scripts{
+@Scripts.Render("~/bundles/soundmanager")
+
+
+    @Scripts.Render("~/bundles/knockout")
+    <script type="text/javascript" src="/Scripts/Views/File/Display.js"></script>
+    <script>
+        ko.applyBindings(new FileVM( @Model.Id, @Model.FileStatusAsInt));
+
+    </script>
+}

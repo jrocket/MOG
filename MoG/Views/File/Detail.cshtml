@@ -3,7 +3,20 @@
 <div class="col-md-8">
     @if (!String.IsNullOrEmpty(Model.ThumbnailUrl))
     {
-        <img class="img-responsive" src="@Url.Content(@Model.ThumbnailUrl)"><br />
+        @*<img class="img-responsive" src="@Url.Content(@Model.ThumbnailUrl)"><br />*@
+        <ul class="playlist">
+                        <li>
+                            <a href="@Url.Content("~/Content/data/07.mp3")">MaBenz</a>
+                            <div class="metadata">
+                                 <div class="duration">4:07</div>
+                                <ul>
+                                    <li><span>Electric razor</span><span>0:00</span></li>
+                                    <li><span>Water</span><span>2:00</span></li>
+                                    <li><span>More razor work</span><span>2:10</span></li>
+                                </ul>
+                            </div>
+                        </li>
+                    </ul>
     }
     else
     {

@@ -6,6 +6,10 @@ using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel;
+using System.Xml.Serialization;
+using System.IO;
+using System.Runtime.Serialization.Json;
+
 
 namespace MoG.Domain.Models
 {
@@ -33,13 +37,19 @@ namespace MoG.Domain.Models
 
         public int DownloadCount { get; set; }
 
-        public FileStatus FileStatus{ get;set;}
+        public FileStatus FileStatus { get; set; }
 
+        [NotMapped]
         public int FileStatusAsInt { get { return (int)FileStatus; } }
 
+        public string Metadata { get; set; }
 
-        //public FileType FileType { get; set; }
+        public string MetadataType { get; set; }
+       
 
+        public string PublicUrl { get; set; }
+
+        public string ThumbnailUrl { get; set; }
 
         public int ProjectId { get; set; }
 
@@ -55,6 +65,36 @@ namespace MoG.Domain.Models
 
         public DateTime? DeletedOn { get; set; }
 
-        public string ThumbnailUrl { get; set; }
+
+        public void SetMetadata(Metadata data)
+        {
+            MemoryStream stream1 = new MemoryStream();
+            DataContractJsonSerializer ser = new DataContractJsonSerializer(data.GetType());
+            this.MetadataType = data.GetType().AssemblyQualifiedName;
+            ser.WriteObject(stream1, data);
+
+
+            stream1.Position = 0;
+            StreamReader reader = new StreamReader(stream1);
+            this.Metadata = reader.ReadToEnd();
+        
+
+        }
+
+        public Metadata GetMetadata()
+        {
+            string assemblyQualifiedName = this.MetadataType;
+
+            var futureType = Type.GetType(assemblyQualifiedName);
+
+            var serializer = new DataContractJsonSerializer(futureType);
+
+            MemoryStream stream = new MemoryStream(Encoding.UTF8.GetBytes(this.Metadata ?? ""));
+            var result = (Metadata)serializer.ReadObject(stream);
+
+         
+            return result;
+        }
+
     }
 }

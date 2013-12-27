@@ -62,6 +62,23 @@ namespace MoG
   "~/Scripts/jQuery.Fileupload/jquery.fileupload-ui.js"
             ));
 
+
+            //SoundManager
+            bundles.Add(new StyleBundle("~/Content/SndManager").Include(
+                      "~/Content/SoundManager/css/demo.css",
+                      "~/Content/SoundManager/css/page-player.css",
+                      "~/Content/SoundManager/css/optional-annotations.css",
+                        "~/Content/SoundManager/css/optional-themes.css"
+                      ));
+
+
+            bundles.Add(new ScriptBundle("~/bundles/soundmanager").Include(
+                        "~/Content/SoundManager/script/soundmanager2.js",
+                          "~/Content/SoundManager/script/page-player.js",
+                           "~/Content/SoundManager/script/optional-page-player-metadata.js"
+                        ));
+
+
         }
     }
 }
