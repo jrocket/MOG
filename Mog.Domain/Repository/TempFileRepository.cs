@@ -11,6 +11,7 @@ namespace MoG.Domain.Repository
     {
 
 
+
         public TempFileRepository(IdbContextProvider provider)
             : base(provider)
         {
@@ -27,10 +28,6 @@ namespace MoG.Domain.Repository
         public bool Create(TempUploadedFile file)
         {
 
-            string path = System.IO.Path.GetTempPath();
-            string filename = Guid.NewGuid().ToString();
-            file.Path = System.IO.Path.Combine(path, filename);
-            System.IO.File.WriteAllBytes(file.Path, file.Data);
             dbContext.TempUploadedFiles.Add(file);
             int result = dbContext.SaveChanges();
 
@@ -39,7 +36,6 @@ namespace MoG.Domain.Repository
 
         public bool Delete(TempUploadedFile file)
         {
-            System.IO.File.Delete(file.Path);
             dbContext.TempUploadedFiles.Remove(file);
             int result = dbContext.SaveChanges();
             return (result > 0);
@@ -55,7 +51,23 @@ namespace MoG.Domain.Repository
         public int SaveChanges(TempUploadedFile data)
         {
             dbContext.Entry(data).State = System.Data.Entity.EntityState.Modified;
-            return dbContext.SaveChanges();
+            return dbContext.SaveChanges(); 
+        }
+        public TempUploadedFile GetNextInQueue()
+        {
+            return dbContext.TempUploadedFiles
+                .Where(t => t.Status == Models.ProcessStatus.NotStarted)
+                .OrderBy(t => t.Id)
+                .Take(1)
+                .FirstOrDefault();
+        }
+
+
+        public int GetQueueLength()
+        {
+            return dbContext.TempUploadedFiles
+                .Where(t => t.Status == Models.ProcessStatus.NotStarted)
+                .Count();
         }
     }
 
@@ -70,5 +82,9 @@ namespace MoG.Domain.Repository
         IQueryable<TempUploadedFile> GetByProjectId(int id, int userID);
 
         int SaveChanges(TempUploadedFile data);
+
+        TempUploadedFile GetNextInQueue();
+
+        int GetQueueLength();
     }
 }

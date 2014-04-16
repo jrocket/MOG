@@ -9,7 +9,10 @@ namespace MoG.Controllers
 {
     public class DEBUGController : MogController
     {
-        public DEBUGController(IUserService userService) : base (userService)
+        public DEBUGController(IUserService userService
+           , ILogService logService
+            )
+            : base(userService, logService)
         {
 
         }
@@ -17,6 +20,7 @@ namespace MoG.Controllers
         // GET: /DEBUG/
         public ActionResult Index()
         {
+            Session["MagicKey"] = 1;
             return View();
         }
         public JsonResult SwitchUser()

@@ -51,7 +51,7 @@ namespace MoG.Domain.Repository
 
      
 
-        public bool Send(Message newMessage, IEnumerable<UserProfile> destinations, int? replyTo)
+        public bool Send(Message newMessage, IEnumerable<UserProfileInfo> destinations, int? replyTo)
         {
             bool result = true;
             string Tos = destinations.Select(u => u.DisplayName).Aggregate((current, next) => current + ", " + next);
@@ -60,7 +60,7 @@ namespace MoG.Domain.Repository
             {
                 MessageBox received = new MessageBox() 
                 { 
-                    MessageId = newMessage.Id, 
+                    MessageId = newMessage.Id,
                     UserId = sendTo.Id,
                     BoxType = BoxType.Inbox,
                     From = newMessage.CreatedBy.DisplayName,
@@ -71,7 +71,7 @@ namespace MoG.Domain.Repository
             }
             MessageBox sent = new MessageBox() 
             { 
-                MessageId = newMessage.Id, 
+                MessageId = newMessage.Id,
                 UserId = newMessage.CreatedBy.Id,
                 BoxType= BoxType.Outbox,
                 From = newMessage.CreatedBy.DisplayName,
@@ -81,7 +81,7 @@ namespace MoG.Domain.Repository
 
             if (replyTo.HasValue)
             {// reply to a message, set the repliedOn
-                var replyedMsg = this.GetBox(newMessage.CreatedBy.Id,BoxType.Inbox).Where(msg => msg.MessageId == replyTo.Value).FirstOrDefault();
+                var replyedMsg = this.GetBox(newMessage.CreatedBy.Id, BoxType.Inbox).Where(msg => msg.MessageId == replyTo.Value).FirstOrDefault();
                 if (replyedMsg != null)
                 {
                     replyedMsg.ReplyedOn = DateTime.Now;
@@ -150,7 +150,7 @@ namespace MoG.Domain.Repository
         bool Create(Models.Message newMessage);
 
 
-        bool Send(Message newMessage, IEnumerable<UserProfile> destinations, int? replyTo);
+        bool Send(Message newMessage, IEnumerable<UserProfileInfo> destinations, int? replyTo);
 
         Message GetById(int id);
 

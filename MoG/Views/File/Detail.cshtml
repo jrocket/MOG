@@ -1,26 +1,31 @@
-﻿@model MoG.Domain.Models.MoGFile
+﻿@model MoG.Domain.Models.VMFile
 
 <div class="col-md-8">
+ 
     @if (!String.IsNullOrEmpty(Model.ThumbnailUrl))
     {
-        @*<img class="img-responsive" src="@Url.Content(@Model.ThumbnailUrl)"><br />*@
+        <style>
+            ul.playlist li {
+                background-image: url('@Url.Content(Model.ThumbnailUrl)');
+            }
+        </style>
         <ul class="playlist">
-                        <li>
-                            <a href="@Url.Content("~/Content/data/07.mp3")">MaBenz</a>
-                            <div class="metadata">
-                                 <div class="duration">4:07</div>
-                                <ul>
-                                    <li><span>Electric razor</span><span>0:00</span></li>
-                                    <li><span>Water</span><span>2:00</span></li>
-                                    <li><span>More razor work</span><span>2:10</span></li>
-                                </ul>
-                            </div>
-                        </li>
-                    </ul>
+            <li>
+                <a href="@Url.Content(Model.PublicUrl)">@Model.DisplayName</a>
+                <div class="metadata">
+                    <div class="duration">
+                        @if (Model.GetMetadata() as MoG.Domain.Models.Mp3Metadata != null)
+                        {
+                            @(((MoG.Domain.Models.Mp3Metadata)Model.GetMetadata()).Duration);
+                        }
+                    </div>
+                </div>
+            </li>
+        </ul>
     }
     else
     {
-        <img class="img-responsive" src="http://placehold.it/750x200"><br />
+        <img class="img-responsive" src="@Url.Content("~/Content/Images/thumbnail_temp.png")"><br />
     }
     @Html.TagsLabelFor(Model.Tags, "")
 </div>
@@ -33,7 +38,7 @@
     </dl>
     <dl>
         <dt>@Html.LabelFor(model => model.Description)</dt>
-        <dd>@Html.DisplayFor(model => model.Description)</dd>
+        <dd><span style="white-space: pre-line">@Html.DisplayFor(model => model.Description)</span></dd>
     </dl>
     @*<dl>
             <dt>@Html.LabelFor(model => model.Tags)</dt>
@@ -41,6 +46,10 @@
         </dl>*@
     <dl>
         <dt>@Resource.FILE_Metrics</dt>
-        <dd>@Resource.FILE_Played @Model.PlayCount | @Resource.FILE_Likes @Model.Likes | @Resource.FILE_Downloaded @Model.DownloadCount</dd>
+        <dd>
+            @Resource.FILE_Played @Model.PlayCount |
+            @*@Resource.FILE_Likes @Model.Likes |*@
+            @Resource.FILE_Downloaded @Model.DownloadCount
+        </dd>
     </dl>
 </div>

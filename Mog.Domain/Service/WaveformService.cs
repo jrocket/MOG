@@ -3,6 +3,7 @@ using NAudio.Wave;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,6 +12,7 @@ namespace MoG.Domain.Service
 {
     public class WaveformService : IWaveformService
     {
+        #region Fields
         public int Width { get; set; }
         public int Height { get; set; }
 
@@ -21,43 +23,24 @@ namespace MoG.Domain.Service
         private int BORDER_WIDTH = 0;
 
 
-        public Metadata Metadata { get; set; }
-        private WaveStream reader = null;
+        private ILogService serviceLog = null;
 
+        #endregion fields
 
-        public WaveformService()
+        #region Constructors
+
+        public WaveformService(ILogService logservice)
         {
+            this.serviceLog = logservice;
             Width = 750;
             Height = 200;
             BackgroundColor = Color.WhiteSmoke;
             ForegroundColor = Color.DarkGray;
         }
 
+        #endregion Constructors
 
-
-        public Bitmap GetWaveform()
-        {
-
-            long sizeOfStream = reader.Length;
-            byte[] stream = new byte[sizeOfStream];
-            reader.Read(stream, 0, (int)sizeOfStream);
-
-            List<float> data = new List<float>();
-            for (int index = 0; index < sizeOfStream; index += 2)
-            {
-                short sample = (short)((stream[index + 1] << 8) |
-                                        stream[index]);
-                float sample32 = sample / 32768f;
-                data.Add(sample32);
-            }
-            reader.Close();
-
-            Bitmap image = DrawNormalizedAudio(data, this.ForegroundColor, this.BackgroundColor, new Size(this.Width, this.Height));
-            return image;
-        }
-
-
-
+        #region private  utils
         private Bitmap DrawNormalizedAudio(List<float> data, Color foreColor, Color backColor, Size imageSize)
         {
             Bitmap bmp = new Bitmap(imageSize.Width, imageSize.Height);
@@ -71,24 +54,35 @@ namespace MoG.Domain.Service
                 Pen pen = new Pen(foreColor);
                 Pen outsidePen = new Pen(outsideColor);
                 float size = data.Count;
-                for (float iPixel = 0; iPixel < width; iPixel += 1)
+                try
                 {
-                    // determine start and end points within WAV
-                    int start = (int)(iPixel * (size / width));
-                    int end = (int)((iPixel + 1) * (size / width));
-                    if (end > data.Count)
-                        end = data.Count;
+                    for (float iPixel = 0; iPixel < width; iPixel += 1)
+                    {
 
-                    float posAvg, negAvg;
-                    averages(data, start, end, out posAvg, out negAvg);
+                        // determine start and end points within WAV
+                        int start = (int)(iPixel * (size / width));
+                        int end = (int)((iPixel + 1) * (size / width));
+                        if (end > data.Count)
+                            end = data.Count;
 
-                    float yMax = BORDER_WIDTH + height - ((posAvg + 1) * .5f * height);
-                    float yMin = BORDER_WIDTH + height - ((negAvg + 1) * .5f * height);
+                        float posAvg, negAvg;
+                        averages(data, start, end, out posAvg, out negAvg);
 
-                    Brush b = Brushes.Black;
-                    g.FillRectangle(b, iPixel + BORDER_WIDTH, yMax - 1, 1, 1);
-                    g.DrawLine(outsidePen, iPixel + BORDER_WIDTH, yMax, iPixel + BORDER_WIDTH, yMin);
-                    g.FillRectangle(b, iPixel + BORDER_WIDTH, yMin, 1, 1);
+                        float yMax = BORDER_WIDTH + height - ((posAvg + 1) * .5f * height);
+                        float yMin = BORDER_WIDTH + height - ((negAvg + 1) * .5f * height);
+
+                        Brush b = Brushes.Black;
+                        g.FillRectangle(b, iPixel + BORDER_WIDTH, yMax - 1, 1, 1);
+                        g.DrawLine(outsidePen, iPixel + BORDER_WIDTH, yMax, iPixel + BORDER_WIDTH, yMin);
+                        g.FillRectangle(b, iPixel + BORDER_WIDTH, yMin, 1, 1);
+
+
+                    }
+                }
+                catch (Exception exc)
+                {
+                    this.serviceLog.LogError("waveformService::DrawNormalizedAudio", exc);
+
                 }
             }
 
@@ -125,58 +119,122 @@ namespace MoG.Domain.Service
             negAvg /= negCount;
         }
 
-
-
-
-
-
-
-        public void Initialize(string filename)
+        private WaveStream getReader(string filename, Stream inputStream)
         {
+           
+            WaveStream result = null;
             string extension = System.IO.Path.GetExtension(filename);
+            inputStream.Position = 0;
 
             switch (extension.ToLower())
             {
                 case ".mp3":
-                    Mp3FileReader mp3Reader = new Mp3FileReader(filename);
-                    extractMp3MetaData(mp3Reader);
+                    Mp3FileReader mp3Reader = new NAudio.Wave.Mp3FileReader(inputStream
+                        , new Mp3FileReader.FrameDecompressorBuilder
+                            (waveFormat =>
+                                new NLayer.NAudioSupport.Mp3FrameDecompressor
+                                    (waveFormat)));
 
-                    this.reader = mp3Reader;
+
+                    result = mp3Reader;
                     break;
                 case ".wav":
-                    this.reader = new WaveFileReader(filename);
-                    break;
-                default:
-                    this.reader = new Mp3FileReader(filename);
+                    result = new WaveFileReader(inputStream);
                     break;
             }
+            return result;
         }
-        private void extractMp3MetaData(Mp3FileReader mp3Reader)
+
+
+        #endregion 
+
+        #region GetWaveForm
+        private List<float> getWavWaveForm(WaveFileReader reader)
         {
-            Mp3Metadata mp3meta = new Mp3Metadata();
-            var duration = mp3Reader.TotalTime;
-            mp3meta.Duration = String.Format("{0:00}:{1:00}", duration.Minutes, duration.Seconds);
-            this.Metadata = mp3meta;
+            List<float> data = new List<float>();
+            float[] buffer;
+
+            while ((buffer = reader.ReadNextSampleFrame()) != null)
+            {
+                data.Add(buffer[0]);
+            }
+            return data;
+        }
+
+        private List<float> getMp3WaveForm(byte[] stream, long sizeOfStream)
+        {
+            List<float> data = new List<float>();
+            for (int index = 0; index < sizeOfStream; index += 4)
+            {
+                byte[] myData = new byte[4];
+                for (int i = 0; i < 4; i++)
+                {
+                    myData[i] = stream[index + i];
+                }
+
+                //Array.Reverse(myData);  // Deal with Endian issue?
+                Single myvalue = BitConverter.ToSingle(myData, 0);
+                data.Add((float)myvalue);
+                //short sample = (short)((stream[index + 1] << 8) |
+                //                        stream[index]);
+                //float sample32 = sample / 32768f;
+                //data.Add(sample32);
+            }
+            return data;
         }
 
 
 
+        public Bitmap GetWaveform(string filename, Stream inputStream)
+        {
+            WaveStream reader = getReader(filename, inputStream);
+
+            List<float> data = null;
+
+
+            if (reader is Mp3FileReader)
+            {
+                long sizeOfStream = reader.Length;
+                byte[] stream = new byte[sizeOfStream];
+                reader.Read(stream, 0, (int)sizeOfStream);
+                data = getMp3WaveForm(stream, sizeOfStream);
+                reader.Close();
+            }
+            else
+            {// we have a wav file reader
+                data = getWavWaveForm(reader as WaveFileReader);
+            }
+
+
+
+            Bitmap image = DrawNormalizedAudio(data, this.ForegroundColor, this.BackgroundColor, new Size(this.Width, this.Height));
+            return image;
+        }
+
+        #endregion getwaveform
+
+        #region GetMetadata
+        public Metadata GetMetadata(string filename, Stream inputStream)
+        {
+            WaveStream reader = getReader(filename, inputStream);
+            Mp3Metadata mp3meta = new Mp3Metadata();
+            var duration = reader.TotalTime;
+            mp3meta.Duration = String.Format("{0:00}:{1:00}", duration.Minutes, duration.Seconds);
+            return mp3meta;
+        }
+        #endregion 
     }
     public interface IWaveformService
     {
 
-        Bitmap GetWaveform();
+        Bitmap GetWaveform(string filename, Stream inputStream);
+        Metadata GetMetadata(string filename, Stream inputStream);
 
         int Width { get; set; }
         int Height { get; set; }
-        Metadata Metadata { get; set; }
         Color BackgroundColor { get; set; }
 
         Color ForegroundColor { get; set; }
-
-
-        void Initialize(string p);
-
 
     }
 }

@@ -28,7 +28,7 @@ namespace MoG.Domain.Service
             repoActivity.Create(act);
         }
 
-        public void LogFileCreation(MoGFile file)
+        public void LogFileCreation(ProjectFile file)
         {
             Activity act = new Activity();
             act.FileId = file.Id;
@@ -60,15 +60,37 @@ namespace MoG.Domain.Service
             return this.repoActivity.GetByProjectId(projectId).ToList();
         }
 
+
+
+        public List<Activity> GetByUserId(int id, int count = -1)
+        {
+            var result = this.repoActivity.GetByUserId(id);
+            if (count > 0)
+            {
+                result = result.Take(count);
+            }
+            return result.ToList();
+        }
+
+
+        public bool DeleteByCommentId(int id)
+        {
+            var activity = this.repoActivity.GetByCommentId(id);
+            return this.repoActivity.Delete(activity);
+        }
     }
     public interface IActivityService
     {
         void LogProjectCreation(Project project);
-        void LogFileCreation(MoGFile file);
+        void LogFileCreation(ProjectFile file);
 
         void LogCommentCreation(Comment newComment);
 
         IList<Activity> GetByProjectId(int projectId);
 
+
+        List<Activity> GetByUserId(int id, int count = -1);
+
+        bool DeleteByCommentId(int id);
     }
 }

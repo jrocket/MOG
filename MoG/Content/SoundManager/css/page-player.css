@@ -61,7 +61,7 @@ ul.playlist {
         padding: 0 0 0 0;
         border: none;
         letter-spacing: -1px; /* ZOMG WEB X.0. ;) */
-        background-image: url("/content/soundmanager/image/mabenz.png");
+        /*background-image: url("/content/soundmanager/image/mabenz.png");*/
         -webkit-transition-property: hover;
         -webkit-transition: background-color 0.15s ease-in-out;
         -moz-transition: background-color 0.15s linear 0s; /* firefox 4 */

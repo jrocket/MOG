@@ -1,69 +1,68 @@
-﻿@model MoG.Domain.Models.ViewModel.VMProjectList
-
-@{
-
-    int index = 0;
-}
+﻿
 <div class="container">
     <div class="row">
         <div class="col-lg-8">
             <h1 class="page-header">@ViewBag.Title</h1>
         </div>
-        <div class="col-lg-4">
-            <p>
-                &nbsp;<br /><br />
-                <a href="@Url.Action("Create")" class="btn btn-primary btn-lg btn-block btn-success">Créer un nouveau projet</a>
-            </p>
+        <div class="col-lg-4 MOG_UpperRightButton">
+
+            <a href="@Url.Action("Create")" class="btn btn-primary btn-lg btn-block btn-success">@Resource.COMMON_CreateNewProject.</a>
+
         </div>
     </div><!-- /.row -->
-    @{
-        var iterator = Model.Projects.GetEnumerator();
-        iterator.MoveNext();
-        do
-        {
-            
-            <div class="row">
-                @for (int j = 0; j < 3 && iterator.Current != null; j++)
-                {
-                    var project = iterator.Current;
+    <div class="row" data-bind="foreach: collection">
 
-                    <div class="col-sm-6 col-md-4">
-                        <div class="thumbnail">
-                            <a href="@Url.Action("detail", new { id = project.Id })">
-                                <img class="img-responsive" src="@project.ImageUrl">
+        <div class="col-sm-6 col-md-4" style="padding-top:14px">
+            <div class="thumbnail">
+                <a data-bind="attr: { href:$data.ProjectUrl}">
+                    <img class="img-responsive" data-bind="attr: { src: $data.ImageUrl}">
+                </a>
+                <div class="caption text-center">
+
+                    <div class="content-heading">
+                        <h4>
+                            <a data-bind="attr: { href:$data.ProjectUrl}">
+                                <span data-bind="text:$data.Name"></span> @Resource.COMMON_BY <span data-bind="text : $data.OwnerName"></span>
                             </a>
-                            <div class="caption">
+                        </h4>&nbsp;<span data-bind="visible:$data.IsPrivate" class="glyphicon glyphicon-lock"></span>
 
-                                <div class="content-heading">
-                                    <h4>@Html.ActionLink(project.Name, "detail", new { id = project.Id })</h4>
-
-                                </div><span class="badge  color_good  pull-right"><span class="glyphicon glyphicon-heart">@project.Likes</span></span>
-
-                                <p>@project.Description</p>
-
-                            </div>
-                        </div>
                     </div>
-                    iterator.MoveNext();
-                }
+
+                    <span class="badge  color_good  pull-right">
+                        <a href="#" data-bind="click : $parent.btnLikedClicked.bind($data,$data.Id)" style="color:white">
+                            <span class="glyphicon glyphicon-heart" data-bind="text:$data.Likes"></span>
+                        </a>
+                    </span>
+
+                    <p data-bind="text:$data.Description"></p>
+
+                </div>
+
             </div>
-
-        } while (iterator.Current != null);
-    }
-
-    <hr>
-    <div class="row text-center">
-
-        <div class="col-lg-12">
-            <ul class="pagination">
-                <li><a href="#">&laquo;</a></li>
-                <li class="active"><a href="#">1</a></li>
-                <li><a href="#">2</a></li>
-                <li><a href="#">3</a></li>
-                <li><a href="#">4</a></li>
-                <li><a href="#">5</a></li>
-                <li><a href="#">&raquo;</a></li>
-            </ul>
         </div>
+
+
     </div>
+    <hr>
+    <div class="alert center-block " id="loading" data-bind="scroll: collection().length < 1600, scrollOptions: { loadFunc: addSome, offset: 10 }">
+        <img class="center-block" src="@Url.Content("~/Content/Images/loading_.gif")" alt="loading..." />
+    </div>
+
+
+
+
 </div> <!--container-->
+@section scripts{
+
+    @Scripts.Render("~/bundles/knockout")
+    <script src="~/Scripts/Views/Project/ProjectList.js"></script>
+    <script>
+        var options = {
+            getDataUrl: '@ViewBag.GetDataUrl',
+            urlLike: '@Url.Action("ILike","Like")'
+
+        }
+        ko.applyBindings(new ProjectListVM(options));
+
+    </script>
+}

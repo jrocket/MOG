@@ -18,7 +18,7 @@ function MessageVM() {
     var self = this;
 
 
-    self.folders = ['Recus', 'Envoyé', 'Archives'/*, 'Recherche','Live CHat'*/];
+    self.folders = [i8n.MAIL_Inbox, i8n.MAIL_Sent, i8n.MAIL_Archive/*, 'Recherche','Live CHat'*/];
 
     self.controllerParam = new Object();
     self.controllerParam[self.folders[0]] = 'inbox';
@@ -164,7 +164,7 @@ function MessageVM() {
             },
             error: function (data) {
                 self.Loading(false);
-                alert("oups y'a eu une erreur");
+                alert(i8n.MAIL_SendError);
             }
         });
     }

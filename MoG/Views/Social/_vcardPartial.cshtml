@@ -1,0 +1,51 @@
+﻿@model MoG.Domain.Models.VMProfile
+<h2 class="page-header">
+    <a href="@Url.Action("AddInvit", new {id = Model.Id })" class="btn btn-default"><span class="glyphicon glyphicon-glass"></span> @Resource.SOCIAL_btnInvit</a>
+</h2>
+
+<div class="row">
+    <div class="col-lg-4"><img class="img-responsive" src="@Model.PictureUrl" /></div>
+    <div class="col-lg-8">
+        <a class="quick-btn" href="#">
+            <i class="glyphicon glyphicon-music" style="font-size:2em"></i>
+            <span>@Model.Stats.CountProject</span>
+            <span class="label label-default">projects</span>
+        </a>
+        <a class="quick-btn" href="#">
+            <i class="glyphicon glyphicon-envelope" style="font-size:2em"></i>
+            <span>@Model.Stats.CountComment</span>
+            <span class="label label-default">comments</span>
+        </a>
+        <a class="quick-btn" href="#">
+            <i class="glyphicon glyphicon-star" style="font-size:2em"></i>
+            <span>@Model.Stats.CountFile</span>
+            <span class="label label-default">files</span>
+        </a>
+        <a class="quick-btn" href="#">
+            <i class="glyphicon glyphicon-glass" style="font-size:2em"></i>
+            <span>@Model.Stats.CountInvit</span>
+            <span class="label label-default">invits</span>
+        </a>
+    </div>
+</div>
+
+
+<div class="row">
+    <div class="col-md-3" style="padding-left:55px">
+        <div class="easyPieChart" data-percent="@Model.Stats.RatioTrackAcceptance" style="width: 110px; height: 110px; line-height: 110px;">@Model.Stats.RatioTrackAcceptance %<canvas width="110" height="110"></canvas></div>
+        <div class="chart-bottom-heading"><span class="label label-info">Track acceptance</span><br />(ratio between accepted tracks and rejected on his project)</div>
+    </div>
+    <div class="col-md-3" style="padding-left:50px">
+        <div class="easyPieChart" data-percent="@Model.Stats.RatioAcceptedTracks" style="width: 110px; height: 110px; line-height: 110px;"> @Model.Stats.RatioAcceptedTracks %<canvas width="110" height="110"></canvas></div>
+        <div class="chart-bottom-heading"><span class="label label-info">Accepted tracks</span><br />(ratio of tracks accepted on others projects)</div>
+    </div>
+    @*<div class="col-md-3" style="padding-left:45px">
+        <div class="easyPieChart" data-percent="@Model.Stats.RatioFinishedProject" style="width: 110px; height: 110px; line-height: 110px;">@Model.Stats.RatioFinishedProject %<canvas width="110" height="110"></canvas></div>
+        <div class="chart-bottom-heading"><span class="label label-info">Finished project</span><br />% of finished projects</div>
+    </div>
+    <div class="col-md-3" style="padding-left:40px">
+        <div class="easyPieChart" data-percent="@Model.Stats.RatioCollaboration" style="width: 110px; height: 110px; line-height: 110px;">@Model.Stats.RatioCollaboration %<canvas width="110" height="110"></canvas></div>
+        <div class="chart-bottom-heading"><span class="label label-info">owner/collaborator</span><br />(ratio between number of own project Vs number of project collaborated to)</div>
+    </div>*@
+
+</div>

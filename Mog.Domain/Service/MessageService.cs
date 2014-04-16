@@ -37,12 +37,12 @@ namespace MoG.Domain.Service
        
 
 
-        public Message Send(Message newMessage, IEnumerable<int> destinationIds, int? replyTo = null)
+        public Message Send(Message newMessage, UserProfileInfo from, IEnumerable<int> destinationIds, int? replyTo = null)
         {
             bool result = true;
-            IEnumerable<UserProfile> destinations = serviceUser.GetByIds(destinationIds);
+            IEnumerable<UserProfileInfo> destinations = serviceUser.GetByIds(destinationIds);
 
-            newMessage.CreatedBy = serviceUser.GetCurrentUser();
+            newMessage.CreatedBy = from;
             newMessage.CreatedOn = DateTime.Now;
             newMessage.SentTo = destinations.Select(u => u.DisplayName).Aggregate((current, next) => current + ", " + next);
 
@@ -61,7 +61,7 @@ namespace MoG.Domain.Service
             string[] destinationsLogins = to.Split(';');
             foreach (var login in destinationsLogins)
             {
-                UserProfile user = this.serviceUser.GetByLogin(login);
+                UserProfileInfo user = this.serviceUser.GetByLogin(login);
                 if (user != null)
                     result.Add(user.Id);
             }
@@ -108,7 +108,7 @@ namespace MoG.Domain.Service
 
 
 
-        public Message Archive(int id, UserProfile currentUser)
+        public Message Archive(int id, UserProfileInfo currentUser)
         {
             //var message = GetById(id);
             Message result = null;
@@ -141,7 +141,7 @@ namespace MoG.Domain.Service
         //IList<Outbox> GetOutbox(int userId);
 
 
-        Message Send(Message message, IEnumerable<int> destinationIds, int?  replyTo);
+        Message Send(Message message,UserProfileInfo from, IEnumerable<int> destinationIds, int?  replyTo);
 
         IEnumerable<int> GetDestinationIds(string to);
 
@@ -149,7 +149,7 @@ namespace MoG.Domain.Service
 
         Message GetById(int id);
 
-        Message Archive(int id, UserProfile currentUser);
+        Message Archive(int id, UserProfileInfo currentUser);
 
 
 

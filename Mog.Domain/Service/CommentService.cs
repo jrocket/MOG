@@ -29,11 +29,30 @@ namespace MoG.Domain.Service
 
             return newComment;
         }
+
+
+        public List<Models.Comment> GetByProjectId(int id)
+        {
+            return this.repoComment.GetByProjectId(id).ToList();
+        }
+
+
+        public bool Delete(int id)
+        {
+            var flag = this.servActivity.DeleteByCommentId(id);
+            if (!flag)
+                return false;
+            return this.repoComment.DeleteById(id);
+        }
     }
 
     public interface ICommentService
     {
 
         Models.Comment Create(Models.Comment newComment);
+
+        List<Models.Comment> GetByProjectId(int id);
+
+        bool Delete(int id);
     }
 }

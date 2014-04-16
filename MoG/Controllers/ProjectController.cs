@@ -10,15 +10,24 @@ using System.Web.Mvc;
 
 namespace MoG.Controllers
 {
+    [MogAuthAttribut]
     public class ProjectController : MogController
     {
         private IProjectService serviceProject = null;
+        private ISecurityService serviceSecurity = null;
+        private IFollowService serviceFollow = null;
 
-        public ProjectController(IProjectService project, IUserService userService)
-            : base(userService)
+        public ProjectController(IProjectService project
+            , ISecurityService security
+            , IFollowService follow
+            , IUserService userService
+            , ILogService logService
+            )
+            : base(userService, logService)
         {
-
-            serviceProject = project;
+            this.serviceSecurity = security;
+            this.serviceProject = project;
+            this.serviceFollow = follow;
 
         }
         //
@@ -29,78 +38,139 @@ namespace MoG.Controllers
         }
 
         #region Project Lists
+        public List<VMProjectList> TodoUseAutomapper(List<Project> model)
+        {
+            int maxDescriptionLength = 25;
+            List<VMProjectList> viewmodel = new List<VMProjectList>();
+            foreach (var project in model)
+            {
+                VMProjectList item = new VMProjectList();
+                string projectDescription = project.Description;
+                if (!String.IsNullOrEmpty(projectDescription))
+                {
+                    if (projectDescription.Length > maxDescriptionLength)
+                    {
+                        projectDescription = projectDescription.Substring(0, maxDescriptionLength - 3) + "...";
+                    }
+
+
+                }
+                else
+                {
+                    projectDescription = "...";
+                }
+                item.Description = projectDescription;
+                item.Id = project.Id;
+                item.ImageUrl = Url.Content(project.ImageUrl);
+                item.Likes = project.Likes;
+                item.Name = project.Name;
+                item.IsPrivate = project.VisibilityType == Visibility.Private;
+                item.ProjectUrl = Url.Action("Detail", new { id = project.Id });
+                item.OwnerName = project.Creator.DisplayName;
+                viewmodel.Add(item);
+            }
+            return viewmodel;
+        }
+
+        public JsonResult GetNew(int PageNumber, int PageSize)
+        {
+            var projects = serviceProject.GetNew(PageNumber, PageSize, true, true);
+            return new JsonResult() { Data = TodoUseAutomapper(projects.ToList()) };
+        }
+
+
         public ActionResult New()
         {
-            var projects = serviceProject.GetNew(10);
-            VMProjectList vmodel = new VMProjectList();
-            vmodel.Projects = projects;
+            ViewBag.Title = Resources.Resource.COMMON_NewProjects;
+            ViewBag.GetDataUrl = Url.Action("GetNew");
 
-            ViewBag.Title = "Nouveaux projets";
+            return View("ProjectList");
+        }
 
-            return View("ProjectList", vmodel);
+        public JsonResult GetMy(int PageNumber, int PageSize)
+        {
+            var projects = this.serviceProject.GetByUserLogin(PageNumber, PageSize, CurrentUser.Login, false, true);
+            return new JsonResult() { Data = TodoUseAutomapper(projects.ToList()) };
+
+        }
+
+        public JsonResult GetMyProjectNames(string filter = null)
+        {
+            IQueryable<Project> data = this.serviceProject.GetByUserLogin(-1, -1, CurrentUser.Login, false, true);
+            var model = data.Select(p => new VMSelect2item() { id = p.Id, text = p.Name });
+
+
+            return new JsonResult() { Data = model, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
+
         }
 
         public ActionResult My()
         {
-            var user = CurrentUser;
-            var projects = this.serviceProject.GetByUserLogin(user.Login);
-            //  var viewModel = MogAutomapper.Map(projects);
-            VMProjectList vm = new VMProjectList();
-            vm.Projects = projects;
-            ViewBag.Title = "Mes Projets";
 
-            return View("ProjectList", vm);
+            ViewBag.Title = Resources.Resource.MAINMENU_MyProjects;
+            ViewBag.GetDataUrl = Url.Action("GetMy");
+
+            return View("ProjectList");
+
         }
+
+        public JsonResult GetPopular(int PageNumber, int PageSize)
+        {
+            var projects = serviceProject.GetPopular(PageNumber, PageSize, true, true);
+            return new JsonResult() { Data = TodoUseAutomapper(projects.ToList()) };
+        }
+
 
         public ActionResult Popular()
         {
-            var projects = serviceProject.GetPopular(10);
-            VMProjectList vmodel = new VMProjectList();
-            vmodel.Projects = projects;
 
-            ViewBag.Title = "Populaires";
+            ViewBag.Title = Resources.Resource.PROJECT_Popular;
+            ViewBag.GetDataUrl = Url.Action("GetPopular");
 
-            return View("ProjectList", vmodel);
+            return View("ProjectList");
+        }
+        public JsonResult GetRandom(int PageNumber, int PageSize)
+        {
+            var projects = serviceProject.GetRandom(10, true, true);
+            return new JsonResult() { Data = TodoUseAutomapper(projects.ToList()) };
         }
         public ActionResult Random()
         {
-            var projects = serviceProject.GetRandom(10);
-            VMProjectList vmodel = new VMProjectList();
-            vmodel.Projects = projects;
-
-            ViewBag.Title = "Au hasard";
-
-            return View("ProjectList", vmodel);
+            ViewBag.Title = Resources.Resource.PROJECT_Random;
+            ViewBag.GetDataUrl = Url.Action("GetRandom");
+            return View("ProjectList");
         }
 
         #endregion
 
         public ActionResult Detail(int id = -1)
         {
-            Project project = serviceProject.GetById(id);
-
-
             if (id < 0)
             {
-                // return RedirectToErrorPage("project not found");
+                return RedirectToErrorPage("project not found");
             }
-
-
-            return View(project);
+            VMProject model = this.getById(id);
+            if (!this.serviceSecurity.HasRight(SecureActivity.ProjectView, CurrentUser, model.Project))
+            {
+                return this.RedirectToErrorPage("I guess you don't have the right to do so...");
+            }
+            return View(model);
         }
 
         public ActionResult Edit(int id = -1)
         {
-            Project project = serviceProject.GetById(id);
-
-
             if (id < 0)
             {
-                // return RedirectToErrorPage("project not found");
+                return RedirectToErrorPage("project not found");
+            }
+            Project model = this.serviceProject.GetById(id);
+            if (!this.serviceSecurity.HasRight(SecureActivity.ProjectEdit, CurrentUser, model))
+            {
+                return this.RedirectToErrorPage("I guess you don't have the right to do so...");
             }
 
 
-            return PartialView(project);
+            return PartialView(model);
         }
 
 
@@ -129,24 +199,78 @@ namespace MoG.Controllers
             return View(project);
         }
 
+        public ActionResult Delete(int id = -1)
+        {
+            if (id < 0)
+                return RedirectToErrorPage("...?....");
+            var model = this.getById(id);
+            if (!this.serviceSecurity.HasRight(SecureActivity.ProjectDelete, CurrentUser, model.Project))
+            {
+                return this.RedirectToErrorPage("I guess you don't have the right to do so...");
+            }
+
+            return View(model);
+        }
+
+        public ActionResult DeleteConfirmed()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public JsonResult DeleteConfirmed(int id = -1)
+        {
+            JsonResult json = new JsonResult();
+
+            if (id < 0)
+            {
+                json.Data = new { Result = false };
+            }
+            var project = this.serviceProject.GetById(id);
+            if (!this.serviceSecurity.HasRight(SecureActivity.ProjectDelete, CurrentUser, project))
+            {
+                return JsonHelper.ResultError(null, null, "I guess you don't have the right to do so...");
+            }
+
+            bool result = this.serviceProject.Delete(id, CurrentUser);
+            string url = Url.Action("DeleteConfirmed");
+
+
+            json.Data = new { Url = url, Result = result };
+
+            return json;
+
+        }
 
         public ActionResult Activity(int id = 1)
         {
-            //VMProjectActivity model = new VMProjectActivity();
-            //if (id > 0)
-            //{
-            //    model.Project = serviceProject.GetById(id);
-            //    model.Activities = serviceProject.GetProjectActivity(id);
-            //}
-            Project model = this.serviceProject.GetById(id);
-
+            VMProject model = this.getById(id);
+            if (!this.serviceSecurity.HasRight(SecureActivity.ProjectView, CurrentUser, model.Project))
+            {
+                return this.RedirectToErrorPage("I guess you don't have the right to do so...");
+            }
             return View(model);
+        }
+
+        private VMProject getById(int id)
+        {
+            VMProject model = new VMProject();
+            model.Project = this.serviceProject.GetById(id);
+            model.HasEdit = this.serviceSecurity.HasRight(SecureActivity.ProjectEdit, CurrentUser, model.Project);
+            model.IsFollowed = this.serviceFollow.IsFollowed(model.Project, CurrentUser);
+            return model;
         }
 
 
         public JsonResult GetActivities(int id)
         {
             Project project = serviceProject.GetById(id);
+            if (!this.serviceSecurity.HasRight(SecureActivity.ProjectView, CurrentUser, project))
+            {
+                return JsonHelper.ResultError(null, null, "I guess you don't have the right to do so...", JsonRequestBehavior.AllowGet);
+            }
+
+
             IList<Activity> activities = serviceProject.GetProjectActivity(id);
             //todo : use automapper
             Root data = new Root();
@@ -200,112 +324,199 @@ namespace MoG.Controllers
 
             }
             VMProjectFiles model = new VMProjectFiles();
-            var project = serviceProject.GetById(id);
+
+
+
+            model.Project = this.getById(id);
+            var project = model.Project.Project;
+            if (!this.serviceSecurity.HasRight(SecureActivity.ProjectView, CurrentUser, project))
+            {
+                return this.RedirectToErrorPage("I guess you don't have the right to do so...");
+            }
+
             model.FilteredFiles = serviceProject.GetFilteredFiles(project, filterByAuthor, filterByStatus, filterByType);
-            model.Project = project;
             model.Statuses = serviceProject.GetFileStatuses(project);
             model.Authors = serviceProject.GetFileAuthors(project);
             model.Types = serviceProject.GetFileTags(project);
             model.filterByAuthor = filterByAuthor;
             model.filterByStatus = filterByStatus;
             model.filterByType = filterByType;
-
             return View(model);
         }
 
-        public ActionResult Administration(int id = 1)
+
+        [HttpPost]
+        public JsonResult Promote(int fileId)
         {
-            var project = new Project() { Id = id };
-            return View(project);
+            JsonResult result = new JsonResult();
+            if (this.serviceProject.Promote(fileId))
+            {
+                result.Data = true;
+            }
+            else
+            {
+                result.Data = false;
+            }
+            return result;
         }
+
 
         public JsonResult JSON(int id)
         {
             var project = serviceProject.GetById(id);
-            var projectVM = new Project() { Id = project.Id, Description = project.Description, Name = project.Name };
+
+            if (!this.serviceSecurity.HasRight(SecureActivity.ProjectView, CurrentUser, project))
+            {
+                return JsonHelper.ResultError(null, null, "I guess you don't have the right to do so...", JsonRequestBehavior.AllowGet);
+            }
+
+
+            var projectVM = new Project()
+            {
+                Id = project.Id,
+                Description = project.Description,
+                Name = project.Name,
+                VisibilityType = project.VisibilityType,
+                LicenceType = project.LicenceType
+            };
             return new JsonResult() { Data = projectVM, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
         }
 
-        [HttpPost]
-        public JsonResult SaveProjectSettings(Project model)
+
+
+
+        #region Administration
+
+        public ActionResult Administration(int id = 1)
         {
-            var project = serviceProject.GetById(model.Id);
-            project.Name = model.Name;
-            project.Description = model.Description;
-            Project result = serviceProject.SaveChanges(project);
-            return new JsonResult() { Data = true };
+            var model = this.getById(id);
+            if (!this.serviceSecurity.HasRight(SecureActivity.ProjectEdit, CurrentUser, model.Project))
+            {
+                return this.RedirectToErrorPage("I guess you don't have the right to do so...");
+            }
+
+            return View(model);
         }
+
 
         public ActionResult AdminSettings(int id)
         {
-            var project = serviceProject.GetById(id);
-            return PartialView("_AdminSettings",project);
+            var project = this.serviceProject.GetById(id);
+            if (!this.serviceSecurity.HasRight(SecureActivity.ProjectEdit, CurrentUser, project))
+            {
+                return this.RedirectToErrorPage("I guess you don't have the right to do so...");
+            }
+            return PartialView("_AdminSettings", project);
         }
         public ActionResult AdminCollabs(int id)
         {
+            Project p = this.serviceProject.GetById(id);
+            if (!this.serviceSecurity.HasRight(SecureActivity.ProjectEdit, CurrentUser, p))
+            {
+                return this.RedirectToErrorPage("I guess you don't have the right to do so...");
+            }
+            return PartialView("_AdminCollabs", id);
+        }
+
+        public JsonResult GetCollabs(int id)
+        {
             VMCollabs collabs = serviceProject.GetCollabs(id);
-            return PartialView("_AdminCollabs", collabs);
+            JsonResult result = new JsonResult() { Data = collabs, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
+            return result;
         }
 
 
-
-
-        public ActionResult AdminTracking(int id)
+        public ActionResult AdminFollow(int id)
         {
+            Project p = this.serviceProject.GetById(id);
 
-            return PartialView("_AdminTracking");
+            if (!this.serviceSecurity.HasRight(SecureActivity.ProjectEdit, CurrentUser, p))
+            {
+                return this.RedirectToErrorPage("I guess you don't have the right to do so...");
+            }
+
+            return PartialView("_AdminFollow", id);
         }
 
         public ActionResult AdminReports(int id)
         {
+            Project p = this.serviceProject.GetById(id);
+
+            if (!this.serviceSecurity.HasRight(SecureActivity.ProjectEdit, CurrentUser, p))
+            {
+                return this.RedirectToErrorPage("I guess you don't have the right to do so...");
+            }
 
             return PartialView("_AdminReports");
         }
 
         public ActionResult AdminComments(int id)
         {
+            Project p = this.serviceProject.GetById(id);
 
-            return PartialView("_AdminComments");
+            if (!this.serviceSecurity.HasRight(SecureActivity.ProjectEdit, CurrentUser, p))
+            {
+                return this.RedirectToErrorPage("I guess you don't have the right to do so...");
+            }
+
+            return PartialView("_AdminComments",id);
         }
 
 
 
         public ActionResult AdminNotes(int id)
         {
+            Project p = this.serviceProject.GetById(id);
 
-            return PartialView("_AdminNotes");
+            if (!this.serviceSecurity.HasRight(SecureActivity.ProjectEdit, CurrentUser, p))
+            {
+                return this.RedirectToErrorPage("I guess you don't have the right to do so...");
+            }
+
+            return PartialView("_AdminNotes",id);
         }
+
 
         public ActionResult AdminArtwork(int id)
         {
+            var project = serviceProject.GetById(id);
 
-            return PartialView("_AdminArtwork");
+            if (!this.serviceSecurity.HasRight(SecureActivity.ProjectEdit, CurrentUser, project))
+            {
+                return this.RedirectToErrorPage("I guess you don't have the right to do so...");
+            }
+            return PartialView("_AdminArtwork", project);
         }
 
         public ActionResult AdminInvits(int id)
         {
+            Project p = this.serviceProject.GetById(id);
+
+            if (!this.serviceSecurity.HasRight(SecureActivity.ProjectEdit, CurrentUser, p))
+            {
+                return this.RedirectToErrorPage("I guess you don't have the right to do so...");
+            }
 
             return PartialView("_AdminInvits");
         }
 
-        private VMProjectList getDummyProjects()
+        [HttpPost]
+        public JsonResult SaveProjectSettings(Project model)
         {
-            var result = new VMProjectList();
-            List<Project> projects = new List<Project>();
-            for (int i = 0; i < 20; i++)
-            {
-                projects.Add(new Project()
-                {
-                    Id = i,
-                    Description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam viverra euismod odio, gravida pellentesque urna varius vitae.",
-                    ImageUrl = "http://placehold.it/700x400",
-                    Name = "project name " + i
-                });
-            }
-            result.Projects = projects;
-            return result;
+            var project = serviceProject.GetById(model.Id);
 
+            if (!this.serviceSecurity.HasRight(SecureActivity.ProjectEdit, CurrentUser, project))
+            {
+                return new JsonResult() { Data = false };
+            }
+            project.Name = model.Name;
+            project.Description = model.Description;
+            project.VisibilityType = model.VisibilityType;
+            project.LicenceType = model.LicenceType;
+            Project result = serviceProject.SaveChanges(project);
+            return new JsonResult() { Data = true };
         }
+        #endregion Administration
 
     }
 }

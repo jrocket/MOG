@@ -1,9 +1,0 @@
-C:\Users\tberst\Documents\Visual Studio 2013\Projects\MogMockup\Resources\bin\Debug\Resources.dll
-C:\Users\tberst\Documents\Visual Studio 2013\Projects\MogMockup\Resources\bin\Debug\Resources.pdb
-C:\Users\tberst\Documents\Visual Studio 2013\Projects\MogMockup\Resources\bin\Debug\fr\Resources.resources.dll
-C:\Users\tberst\Documents\Visual Studio 2013\Projects\MogMockup\Resources\obj\Debug\Resources.Resource.resources
-C:\Users\tberst\Documents\Visual Studio 2013\Projects\MogMockup\Resources\obj\Debug\Resources.Resource.fr.resources
-C:\Users\tberst\Documents\Visual Studio 2013\Projects\MogMockup\Resources\obj\Debug\Resources.csproj.GenerateResource.Cache
-C:\Users\tberst\Documents\Visual Studio 2013\Projects\MogMockup\Resources\obj\Debug\fr\Resources.resources.dll
-C:\Users\tberst\Documents\Visual Studio 2013\Projects\MogMockup\Resources\obj\Debug\Resources.dll
-C:\Users\tberst\Documents\Visual Studio 2013\Projects\MogMockup\Resources\obj\Debug\Resources.pdb

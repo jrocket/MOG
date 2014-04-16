@@ -27,10 +27,10 @@ namespace MoG.Test.Service
         public void MessageService_TestArchiveInbox()
         {
             //Arrange
-            List<UserProfile> dummyUsers = serviceUser.GetAll().ToList();
+            List<UserProfileInfo> dummyUsers = serviceUser.GetAll().ToList();
             Message test = new Message() { Body = "TEST MessageService_TestArchiveInbox", Title = "Title", Tag = "tag1#tag2" };
             var destinationIds = dummyUsers.Select(x => x.Id).ToList();
-            serviceMessage.Send(test, destinationIds,null);
+            serviceMessage.Send(test, serviceUser.GetCurrentUser(),destinationIds,null);
             var currentUser = serviceUser.GetCurrentUser();
             var inbox = serviceMessage.GetFolder(currentUser.Id, MogConstants.MESSAGE_INBOX).ToList();
             var firstMessage = inbox[0];
@@ -49,10 +49,10 @@ namespace MoG.Test.Service
         public void MessageService_TestArchiveOutbox()
         {
             //Arrange
-            List<UserProfile> dummyUsers = serviceUser.GetAll().ToList();
+            List<UserProfileInfo> dummyUsers = serviceUser.GetAll().ToList();
             Message test = new Message() { Body = "TEST MessageService_TestArchiveOutbox", Title = "Title", Tag = "tag1#tag2" };
             var destinationIds = dummyUsers.Select(x => x.Id).ToList();
-            serviceMessage.Send(test, destinationIds,null);
+            serviceMessage.Send(test, serviceUser.GetCurrentUser(),destinationIds,null);
             var currentUser = serviceUser.GetCurrentUser();
             var outbox = serviceMessage.GetFolder(currentUser.Id, MogConstants.MESSAGE_OUTBOX).ToList();
             var firstMessage = outbox[0];
@@ -60,7 +60,7 @@ namespace MoG.Test.Service
 
             //Act
             serviceMessage.Archive(firstMessage.BoxId, currentUser);
-              var archives = serviceMessage.GetFolder(currentUser.Id, MogConstants.MESSAGE_ARCHIVE);
+            var archives = serviceMessage.GetFolder(currentUser.Id, MogConstants.MESSAGE_ARCHIVE);
 
             //Assert
             outbox = serviceMessage.GetFolder(currentUser.Id, MogConstants.MESSAGE_OUTBOX).ToList();
@@ -77,12 +77,12 @@ namespace MoG.Test.Service
         public void MessageService_Send()
         {
             //Arrange
-            List<UserProfile> dummyUsers = serviceUser.GetAll().ToList();
+            List<UserProfileInfo> dummyUsers = serviceUser.GetAll().ToList();
             Message test = new Message() { Body = "TEST", Title = "Title", Tag = "tag1#tag2" };
             var destinationIds = dummyUsers.Select(x => x.Id).ToList();
 
             //act
-            var result = serviceMessage.Send(test, destinationIds,null);
+            var result = serviceMessage.Send(test,serviceUser.GetCurrentUser(), destinationIds,null);
 
             Assert.IsTrue(result.Id > 0);
 

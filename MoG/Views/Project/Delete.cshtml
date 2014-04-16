@@ -1,0 +1,60 @@
+﻿@model MoG.Domain.Models.VMProject
+@{
+    ViewBag.Title = "View1";
+}
+<div class="container">
+
+
+    @Html.Partial("_TopNavigationTab", Model)
+    <div class="row">
+        <div class="col-md-12">
+
+        </div>
+    </div>
+    <div class="row" id="MainContent">
+        <div class="col-md-12">
+            <header>Delete @Model.Project.Name</header>
+        </div>
+        <div class="col-md-12">
+            <p> Are you sure you want to delete this project?</p>
+            <p>
+                <a href="#" class="btn btn-warning" data-bind="click:btnConfirmClicked">Delete</a>
+                <a href="@Url.Action("Administration", new { id = @Model.Project.Id})" class="btn btn-default">Cancel</a>
+            </p>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+
+    @Scripts.Render("~/bundles/knockout")
+
+
+    <script>
+        // Overall viewmodel for this screen, along with initial state
+        function DeleteProjectVM() {
+            var self = this;
+
+
+
+            self.btnConfirmClicked = function () {
+
+                var url = '@Url.Action("DeleteConfirmed")';
+                var json = { id: '@Model.Project.Id' };
+                $.post(url, json, function (data) {
+                    if (data.Result === true) {
+                        window.location.href = data.Url;
+                    }
+                    else {
+                        alert("Something bad happened");
+                    }
+                });
+
+            }
+
+
+        }
+
+        ko.applyBindings(new DeleteProjectVM());
+    </script>
+}

@@ -1,79 +1,104 @@
-﻿@model MoG.Domain.Models.Project
+﻿@model MoG.Domain.Models.VMProject
 @{
     ViewBag.Title = "Detail";
 }
+<link rel="stylesheet" href="/content/soundmanager/css/simpleplayer.css" type="text/css" />
 <div class="container">
 
 
     @Html.Partial("_TopNavigationTab", Model)
-    <div class="row">
-        <div class="col-md-12">
-            <hr>
-            <p>
-                <i class="icon-time"></i> Posted on @Html.DisplayFor(m => m.CreatedOn, "LongDateString")
-            </p>
-            <hr>
-        </div>
-    </div>
+   
     <div class="row" id="MainContent">
         <div class="col-md-12">
 
         </div>
         <div class="col-md-4">
-            <img class="img-responsive" src="@Model.ImageUrlThumb1">
-            ----------------- PLAYER  --------------
+            <img class="img-responsive" src="@Url.Content(Model.Project.ImageUrlThumb1)">
+            @if (Model.Project.PromotedId != null)
+            {
+                <div id="sm2-container">
+
+                </div>
+
+                <ul class="flat">
+                    <li><a href="@Url.Content(@Model.PromotedUrl)">Click to play</a></li>
+                </ul>
+
+            }
+            else
+            {
+                <span> ...</span>
+            }
         </div>
+
         <div class="col-md-4">
             <h3>Project Description</h3>
-            <p>@Model.Description</p>
-
+            <p><span style="white-space: pre-line">@Model.Project.Description</span></p>
+            <p><i class="icon-time"></i> Posted on @Html.DisplayFor(m => m.Project.CreatedOn, "LongDateString")</p>
         </div>
 
         <div class="col-md-4">
             <h3>Project Details</h3>
+
             <dl>
                 <dt>Licence</dt>
-                <dd>@Model.LicenceType</dd>
+                <dd>@Model.Project.LicenceType</dd>
             </dl>
 
             <dl>
                 <dt>Last Modification</dt>
-                <dd>@Html.DisplayFor(m => m.ModifiedOn, "ShortDateString") </dd>
+                <dd>@Html.DisplayFor(m => m.Project.ModifiedOn, "ShortDateString") </dd>
             </dl>
 
 
             <dl>
-                <dt>Likes</dt>
-                <dd>@Model.Likes </dd>
+                <dt>
+                    This project was liked
+                    <a href="#" data-bind="click:btnLikeClicked" style="color:white">
+                        <span class="badge  color_good "><span class="glyphicon glyphicon-heart" data-bind="text : likeCount"></span></span>
+                    </a>
+                    times
+                </dt>
+                <dd> </dd>
             </dl>
 
             <dl>
                 <dt>Tags</dt>
-                <dd>@Html.TagsLabelFor(@Model.Tags, "form-control")</dd>
+                <dd>@Html.TagsLabelFor(@Model.Project.Tags, "form-control")</dd>
             </dl>
         </div>
     </div>
 
-</div><!-- /.container -->
-@*@section scripts{
+</div>
+
+@section Scripts{
+    @Scripts.Render("~/bundles/soundmanager")
     @Scripts.Render("~/bundles/knockout")
+
+    <script type="text/javascript" src="/Scripts/Views/Project/Detail.js"></script>
+<script type="text/javascript" src="@Url.Content("~/Scripts/Views/Project/BtnFollow.js")"></script>
+
     <script>
+        var projectDetailBindingRoot = new ProjectDetailVM({
+            likes: '@Model.Project.Likes',
+            id: '@Model.Project.Id',
+            urlLike: '@Url.Action("ILike", "Like")',
+            urlFollow: '@Url.Action("Follow", "Follow")',
+            urlUnFollow: '@Url.Action("UnFollow", "Follow")',
+            isFollowed: '@Model.IsFollowed'
+        });
 
-        function DetailVM() {
-            var self = this;
-            self.displayMode = ko.observable("display");
+        var object = $.extend(projectDetailBindingRoot, new BtnFollowVM({
+            id: '@Model.Project.Id',
+            urlLike: '@Url.Action("ILike", "Like")',
+            urlFollow: '@Url.Action("Follow", "Follow")',
+            urlUnFollow: '@Url.Action("UnFollow", "Follow")',
+            isFollowed: '@Model.IsFollowed'
+        }));
 
-            self.btnEditClicked = function () {
-                self.displayMode("edit");
-                $.get('@Url.Action("Edit", new {id = Model.Id })', function (data) {
-                    $('#MainContent').replaceWith(data);
-                });
-            };
 
-        }
 
-        ko.applyBindings(new DetailVM());
+        ko.applyBindings(projectDetailBindingRoot);
 
     </script>
-}*@
-
+}

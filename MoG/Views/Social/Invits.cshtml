@@ -1,7 +1,131 @@
-﻿
-@{
+﻿@{
     ViewBag.Title = "Invits";
 }
 
-<h2>Invits</h2>
+<h2 class="page-header">@Resource.SOCIAL_Invits</h2>
 
+<table class="table table-condensed">
+    <thead>
+        <tr>
+            <th></th>
+            <th>Date</th>
+            <th>From</th>
+            <th>For</th>
+            <th>Status</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody data-bind="foreach: invits">
+        <tr>
+            <td><a href="#" data-bind="click:$root.btnDetailClicked"><span class="glyphicon glyphicon-zoom-in" </a></td>
+            <td data-bind="text: Date"></td>
+            <td><a data-bind="attr :{href : InviterUrl}"><span data-bind="text:InviterName"></span></a></td>
+            <td><a data-bind="attr :{href : ProjectUrl}"><span data-bind="text:ProjectName"></span></a></td>
+            <td data-bind="text: Status"></td>
+            <td>
+                <a href="#" data-bind="click: $root.btnActionClicked.bind($data,'@Url.Action("InvitAccept")')"><i class="glyphicon glyphicon-ok" data-bind="visible:$root.isPending($data)"></i></a>
+                &nbsp;<a href="#" data-bind="click: $root.btnActionClicked.bind($data,'@Url.Action("InvitReject")')"><i class="glyphicon glyphicon-remove" data-bind="visible:$root.isPending($data)"></i> </a>
+                &nbsp;<a href="#" data-bind="click: $root.btnActionClicked.bind($data,'@Url.Action("InvitDelete")')"><i class="glyphicon glyphicon-trash" data-bind="visible:!$root.isPending($data)"></i></a>
+            </td>
+        </tr>
+    </tbody>
+</table>
+<div class="modal fade" id="myModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" data-bind="text: selectedInvitTitle"></h4>
+            </div>
+            <div class="modal-body">
+                <p data-bind="text:selectedInviteMessage"></p>
+                <a data-bind="text:selectedInvitProjectName, attr :{href:selectedInvitProjectUrl}"></a>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                @*<button type="button" class="btn btn-primary">Save changes</button>*@
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+@section scripts{
+    @Scripts.Render("~/bundles/knockout")
+
+
+    <script>
+        function invitsVM() {
+
+            var self = this;
+            self.invits = new ko.observableArray();
+            self.acceptUrl = "/Social/InvitAccept";
+            self.rejectUrl = "/Social/InvitReject";
+            self.deleteUrl = "/Social/InvitDelete";
+
+            self.getData = function () {
+                $.post("/social/GetMyInvits", null, function (data) {
+                    self.invits(data);
+                });
+            };
+
+            self.selectedInvitTitle = ko.observable();
+            self.selectedInviteMessage = ko.observable();
+            self.selectedInvitProjectName = ko.observable();
+            self.selectedInvitProjectUrl = ko.observable();
+
+            self.isPending = function (data) {
+                return data.InvitStatus == 1;
+            }
+
+            self.btnActionClicked = function (url, data, event) {
+                
+                var postData = { id: data.Id };
+                $.post(url, postData,
+                    function (result) {
+                        self.invits(result);
+                    });
+
+            }
+
+            self.btnDetailClicked = function (data, event) {
+               
+                self.selectedInvitTitle('from ' + data.InviterName);
+                self.selectedInviteMessage(data.Message);
+                self.selectedInvitProjectName(data.ProjectName);
+                self.selectedInvitProjectUrl(data.ProjectUrl);
+                $('#myModal').modal('toggle');
+
+            }
+
+            //self.btnAcceptClicked = function (data) {
+            //    var postData = { id: data.Id };
+            //    $.post(self.acceptUrl, postData,
+            //        function (result) {
+            //            console.dir(result);
+            //        });
+            //}
+            //self.btnRejectClicked = function (data) {
+            //    var postData = { id: data.Id };
+            //    $.post(self.rejectUrl, postData,
+            //        function (result) {
+            //            console.dir(result);
+            //        });
+            //}
+            //self.btnDeleteClicked = function (data) {
+            //    var postData = { id: data.Id };
+            //    $.post(self.deleteUrl, postData,
+            //        function (result) {
+            //            console.dir(result);
+            //        });
+            //}
+
+            self.getData();
+
+
+        }
+
+        ko.applyBindings(new invitsVM());
+
+    </script>
+
+}

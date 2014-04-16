@@ -1,0 +1,100 @@
+﻿@model MoG.Domain.Models.VMAddInvit
+
+@{
+    ViewBag.Title = "AddInvit";
+}
+
+<h2 class="page-header">@Resource.INViT_InvitSomeone</h2>
+
+<div class="container">
+    <form class="well col-lg-8 col-lg-offset-4" data-bind="visible : !isMessageVisible()">
+        <div class="row">
+            <div class="col-lg-12 alert alert-danger" data-bind="visible:isErrorMessageVisible" style="display:none">
+                <span data-bind="text:errorMessage "></span>
+            </div>
+            <div class="col-lg-3">
+                <h4>Invit</h4>
+                <span data-bind="text:DisplayName"></span>
+                <br />
+                <img class="img-responsive" data-bind="attr : {src : ThumbnailUrl} "><br />
+            </div>
+
+            <div class="col-lg-9">
+                <h4>Project</h4>
+                <input type="hidden" class="bigdrop" id="e6" style="width:100%" value="" />
+
+                <label>Message</label>
+                <textarea class="form-control col-lg-12" id="message" name="message" rows="10" data-bind="value:Message"> </textarea><br />
+            </div>
+            <div class="col-lg-12">
+                <a href="#" class="btn btn-primary pull-right" data-bind="click : btnSendClicked">Send</a>
+            </div>
+
+        </div>
+    </form>
+    <div class="alert alert-success" data-bind="visible : isMessageVisible" style="display:none">Well done!.</div>
+
+</div>
+@section scripts{
+    @Scripts.Render("~/bundles/knockout")
+    <link href="@Url.Content("~/Content/Select2/select2.css")" rel="stylesheet" />
+    <link href="@Url.Content("~/Content/Select2/select2-bootstrap.css")" rel="stylesheet" />
+
+
+    <script src="@Url.Content("~/Scripts/Select2/select2.js")"></script>
+    <script>
+        $(document).ready(function () {
+
+            $.getJSON("/Project/GetMyProjectNames",null, function (result) {
+               
+                $("#e6").select2({
+                    data: result
+                });
+               
+            });
+        });
+
+
+
+
+        function AddInvitVM(model) {
+            var self = this;
+            self.DisplayName = ko.observable(model.DisplayName);
+            self.UserId = ko.observable(model.UserId);
+            self.ThumbnailUrl = ko.observable(model.ThumbnailUrl);
+            //self.ProjectId = model.ProjectId;
+            self.Message = ko.observable(model.Message);
+            self.isMessageVisible = ko.observable(false);
+            self.isErrorMessageVisible = ko.observable(false);
+            self.errorMessage = ko.observable();
+
+            self.btnSendClicked = function () {
+                var projectId = $("#e6").select2("val");
+                if (projectId < 1) {
+                    self.errorMessage("please select a project");
+                    self.isErrorMessageVisible(true);
+                }
+                else {
+                    self.isErrorMessageVisible(false);
+                }
+             
+                var data = {
+                    UserId: self.UserId(),
+                    ProjectId: projectId,
+                    Message : self.Message()
+                };
+               
+                $.post("/Social/AddInvit", data, function (result) {
+                    if (result) {
+                        self.isMessageVisible(true);
+                    }
+                });
+
+            }
+             
+        }
+
+        ko.applyBindings(new AddInvitVM(@Html.Raw(Model.JSON)));
+
+    </script>
+}

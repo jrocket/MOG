@@ -8,6 +8,6 @@ namespace MoG.Domain.Models
 {
     public class VMCollabs
     {
-        public List<UserProfile> Collabs;
+        public List<UserProfileInfo> Collabs;
     }
 }

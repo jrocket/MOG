@@ -13,10 +13,11 @@ namespace MoG.Controllers
 {
     public class MogController : Controller
     {
-        private IUserService serviceUser;
-        private UserProfile _currentUser;
+        protected IUserService serviceUser;
+        private UserProfileInfo _currentUser;
+        protected ILogService serviceLog; 
 
-        public UserProfile CurrentUser
+        public UserProfileInfo CurrentUser
         {
             get
             {
@@ -30,10 +31,11 @@ namespace MoG.Controllers
         }
 
 
-        public MogController(IUserService _userService)
+        public MogController(IUserService _userService, ILogService _logService)
         {
             serviceUser = _userService;
-            ViewBag.CurrentUserDisplayName = CurrentUser.DisplayName; //TODO : remove this line once the identity management is done!
+            this.serviceLog = _logService;
+            
         }
 
 
@@ -49,8 +51,18 @@ namespace MoG.Controllers
 
         }
 
+     
+
+        protected ActionResult RedirectToComingSoon()
+        {
+            return RedirectToAction("ComingSoon", "error");
+        }
+
         protected override IAsyncResult BeginExecuteCore(AsyncCallback callback, object state)
         {
+
+            //DEBUGREDIRECT();
+
             string cultureName = null;
 
             // Attempt to read the culture cookie from Request
@@ -68,8 +80,25 @@ namespace MoG.Controllers
             Thread.CurrentThread.CurrentCulture = new System.Globalization.CultureInfo(cultureName);
             Thread.CurrentThread.CurrentUICulture = Thread.CurrentThread.CurrentCulture;
 
+            // User management
+            if (User != null)
+            {
+                this.serviceUser.Identity = User.Identity;
+            }
+
+
             return base.BeginExecuteCore(callback, state);
         }
+
+        //private void DEBUGREDIRECT()
+        //{
+        //    if (!User.Identity.IsAuthenticated && !this.Request.Url.AbsolutePath.Contains("/account"))
+        //    //if (Session["MagicKey"]==null && !Request.Url.AbsolutePath.Contains("debug"))
+        //    {
+        //        HttpContext.Response.Redirect(Url.Action("login","account"));
+        //    }
+            
+        //}
 
 
     }

@@ -8,18 +8,12 @@
         </div>
         <div class="form-group col-lg-4">
             <label for="input2">Type</label>
-            <select class="form-control">
-                <option>Public</option>
-                <option>Privé</option>
-            </select>
+        
+            <select class="form-control" data-bind="options: availablePublicity, optionsText: 'Name', optionsValue:'Value', value: Project().VisibilityType"></select>
         </div>
         <div class="form-group col-lg-4">
             <label for="input3">Licence</label>
-            <select class="form-control">
-                <option>CC BY</option>
-                <option>CC BY-ND</option>
-                <option>CC BY-ND-NC</option>
-            </select>
+            <select class="form-control" data-bind="options: availableLicence, optionsText: 'Name', optionsValue:'Value', value: Project().LicenceType"></select>
         </div>
         <div class="clearfix"></div>
         <div class="form-group col-lg-12">
@@ -27,47 +21,13 @@
             <textarea name="description" class="form-control" rows="6" data-bind="value:Project().Description"></textarea>
         </div>
 
-        <div class="form-group col-lg-6">
-
-            <label for="Status">Status</label>
-            <select id="Status" class="form-control">
-
-                <option>In progress</option>
-                <option>Finished</option>
-                <option>Abandonned</option>
-            </select>
-        </div>
-        @*<div class="form-group col-lg-12">
-                <label for="input4">Pochette</label>
-                <input type="file" class="form-control" id="imageUpload" />
-
-            </div>*@
+      
         <div class="form-group col-lg-12">
-            <button type="button" class="btn btn-danger pull-right">Supprimer le projet</button>
+            <a href="@Url.Action("delete", new { id = Model.Id})" class="btn btn-danger pull-right">Supprimer</a>
 
             <input type="hidden" data-bind="value:Project().Id">
             <button type="button" class="btn btn-primary" data-bind="click: btnSaveClicked">Save</button>
+            <span data-bind="text : message(), visible : isMessageVisible"></span>
         </div>
     </form>
 </div>
-
-<script>
-
-    @*function AdminSettingsVM() {
-        var self = this;
-        var data = $.get('@Url.Action("JSON",new {id = @Model.Id})');
-        self.Project = ko.observable(data);
-        //self.Description = ko.observable(project.Description);
-        //self.Type = ko.observable(project.Type);
-        //self.Licence = ko.observable(project.Licence);
-        //self.Id = ko.observable(project.Id);
-        //        self.Status = ko.observable(project.Status);
-
-
-    }
-
-    ko.applyBindings(new AdminSettingsVM());*@
-
-
-</script>
-

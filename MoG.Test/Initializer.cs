@@ -9,19 +9,19 @@ using System.Threading.Tasks;
 
 namespace MoG.Test
 {
-  [TestClass()]
+    [TestClass()]
     public class Initializer
     {
-      [AssemblyInitialize()]
-      public static void AssemblyInit(TestContext context)
-      {
+        [AssemblyInitialize()]
+        public static void AssemblyInit(TestContext context)
+        {
 
-          Database.SetInitializer(new MyDataContextDbInitializer());
+            Database.SetInitializer(new MyDataContextDbInitializer());
 
-          MoG.Domain.Repository.MogDbContext dbContext = new MoG.Domain.Repository.MogDbContext();
-       
-          dbContext.Database.Initialize(false);
-         
-      }
+            MoG.Domain.Repository.MogDbContext dbContext = new MoG.Domain.Repository.MogDbContext();
+
+            dbContext.Database.Initialize(false);
+
+        }
     }
 }

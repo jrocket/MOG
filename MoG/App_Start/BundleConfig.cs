@@ -33,13 +33,6 @@ namespace MoG
             bundles.Add(new ScriptBundle("~/bundles/knockout").Include(
     "~/Scripts/knockout-3.0.0.js"
     ));
-#if DEBUG
-            bundles.Add(new ScriptBundle("~/bundles/debug").Include(
-    "~/Scripts/MOG/DEBUGUser.js"
-    ));
-
-#endif 
-
             
             bundles.Add(new StyleBundle("~/Content/jQuery.FileUpload/jQueryFileupload").Include(
                           "~/Content/jQuery.FileUpload/jquery.fileupload.css",
@@ -63,6 +56,7 @@ namespace MoG
             ));
 
 
+
             //SoundManager
             bundles.Add(new StyleBundle("~/Content/SndManager").Include(
                       "~/Content/SoundManager/css/demo.css",
@@ -71,6 +65,9 @@ namespace MoG
                         "~/Content/SoundManager/css/optional-themes.css"
                       ));
 
+            bundles.Add(new ScriptBundle("~/bundles/jqueryval").Include(
+                
+                "~/Scripts/jquery.validate.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/soundmanager").Include(
                         "~/Content/SoundManager/script/soundmanager2.js",
@@ -78,6 +75,9 @@ namespace MoG
                            "~/Content/SoundManager/script/optional-page-player-metadata.js"
                         ));
 
+            bundles.Add(new ScriptBundle("~/bundles/mog").Include(
+                        "~/Scripts/Moment.js/moment.min.js"
+                        ));
 
         }
     }

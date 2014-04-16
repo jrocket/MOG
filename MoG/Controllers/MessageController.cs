@@ -8,17 +8,23 @@ using System.Web.Mvc;
 
 namespace MoG.Controllers
 {
+    [MogAuthAttribut]
     public class MessageController : MogController
     {
       
         private IMessageService serviceMessage;
+        private ISocialService serviceSocial;
 
-        public MessageController(IMessageService _messageService, IUserService userService)
-            : base(userService)
+        public MessageController(IMessageService _messageService,
+            IUserService userService,
+            ISocialService socialService
+             , ILogService logService
+            )
+            : base(userService, logService)
         {
           
             serviceMessage = _messageService;
-
+            this.serviceSocial = socialService;
         }
         public ActionResult Index()
         {
@@ -40,7 +46,7 @@ namespace MoG.Controllers
           
             IEnumerable<int> destinationIds = this.serviceMessage.GetDestinationIds(to);
             Message message = new Message() { Body = body, Title = title };
-            message = this.serviceMessage.Send(message, destinationIds, replyTo);
+            message = this.serviceMessage.Send(message,CurrentUser, destinationIds, replyTo);
             //todo  : use automapper
             VMMessage vm = new VMMessage(message);
            
@@ -50,8 +56,8 @@ namespace MoG.Controllers
         }
         public JsonResult GetFolder(string folderName)
         {
-         
-            var folder = serviceMessage.GetFolder(CurrentUser.Id,folderName);
+
+            var folder = serviceMessage.GetFolder(CurrentUser.Id, folderName);
 
          
 
@@ -80,7 +86,9 @@ namespace MoG.Controllers
 
         public JsonResult GetFriends(int id =-1)
         {
-            string[] result = { "jrocket", "mvegas" };
+            var friends = this.serviceSocial.GetFriends(CurrentUser);
+            string[] result = friends.Select(f => f.Login).ToArray();
+            //string[] result = { "jrocket", "mvegas" };
             return new JsonResult() { Data = result, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
 
         }

@@ -22,7 +22,10 @@ namespace MoG
         [Description("CC BY-ND")]
         CCBYND = 2,
         [Description("CC BY-ND-NC")]
-        CCBYNDNC = 3
+        CCBYNDNC = 3,
+        [Description("Copyright")]
+        COPYRIGHT = 4
+
     }
 
     [Flags]

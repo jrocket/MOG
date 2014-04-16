@@ -1,5 +1,49 @@
-﻿<div class="row" id="PartialContent">
+﻿@model int
+
+<div class="row" id="PartialContent">
     <div class="col-md-12">
-        AdminComment
+        @{
+            ViewBag.Title = Resource.PROJECT_Admin_Comments;
+        }
+
+        <h2>@Resource.PROJECT_Admin_Comments</h2>
+        <div class="row" data-bind="foreach: comments">
+            <div class="well">
+                <h4>
+                    <span data-bind="text: CreatedBy"></span>@Resource.PROJECT_AdminOn
+                    <a href="#" data-bind="attr :  {href: Url}">
+                        <span data-bind="text: TargetName"></span>
+                    </a><small>(<span data-bind="text:CreatedOn"></span>)</small>
+                </h4>
+                <p><span data-bind="text: Comment"></span></p>
+
+            </div>
+        </div>
     </div>
 </div>
+
+@Scripts.Render("~/bundles/knockout")
+
+
+<script>
+    function CommentsVM() {
+        var self = this;
+
+        self.comments = new ko.observableArray();
+        self.projectId = '@Model';
+        self.getData = function () {
+            $.post("/Comment/GetComments", { id: self.projectId }, function (data) {
+                console.dir(data);
+                self.comments(data);
+            });
+        };
+
+        self.getData();
+    }
+    var object = $.extend(projectAdministrationBindingRoot, new CommentsVM());
+
+
+
+</script>
+
+

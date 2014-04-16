@@ -1,16 +1,18 @@
-﻿function FileVM(dbFileId, FileStatus) {
+﻿function FileVM(dbFileId, FileStatus, Promoted) {
 
     var self = this;
 
-    this.comments = new ko.observableArray();
-    this.newBody = new ko.observable();
-    this.fileId = new ko.observable(dbFileId);
-    this.DisplayMode = new ko.observable("DISPLAY");
+    this.comments =  ko.observableArray();
+    this.newBody =  ko.observable();
+    this.fileId =  ko.observable(dbFileId);
+    this.DisplayMode =  ko.observable("DISPLAY");
+    this.isAddToCartVisible =  ko.observable(true);
+    this.isPromoteVisible = ko.observable(Promoted === "False");
 
-    this.isDisplayMode = new ko.computed(function () {
+    this.isDisplayMode =  ko.computed(function () {
         return self.DisplayMode() == "DISPLAY";
     });
-    this.isEditMode = new ko.computed(function () {
+    this.isEditMode =  ko.computed(function () {
         return self.DisplayMode() == "EDIT";
     });
 
@@ -24,6 +26,25 @@
     this.isBtnRejectVisible = ko.computed(function () {
         return self.FileStatus() != 3;
     }, this);
+
+    this.btnPromoteClicked = function () {
+        $.ajax({
+            url: '/Project/Promote',
+            type: 'post',
+            dataType: 'json',
+            data: ko.toJSON({ "fileId": self.fileId }),
+            contentType: 'application/json',
+            success: function (result) {
+
+                if (result == true) {//Set promoted 
+                    self.isPromoteVisible(false);
+                }
+            },
+            error: function (err) {
+                alert(err.responseText);
+            }
+        });
+    }
 
     this.btnAcceptClicked = function () {
         $.ajax({
@@ -110,17 +131,19 @@
 
         var tags = $taginputControl.val();
         var description = $('#Description').val();
+        var name = $('#DisplayName').val();
         var url = "/File/Edit/" + self.fileId();
         $.post(url,
             {
                 "tags": tags,
-                "description": description
+                "description": description,
+                "name": name
             },
             function (data) {
                 self.DisplayMode("DISPLAY");
                 $("#mainContent").html(data);
             }
-            )
+            );
 
     };
 
@@ -133,8 +156,23 @@
 
     };
 
+    this.btnAddToCart = function () {
+        var url = "/DownloadCart/Create"
+        $.post(url,
+          {
+              "fileId": self.fileId()
+
+          },
+          function (data) {
+              self.isAddToCartVisible(false);
+              alert("result = " + data.result);
+          }
+          );
+
+    };
+
     $(document).ready(function () {
-        console.dir(ko.toJSON({ "id": self.fileId(), "_nocache": new Date().getMilliseconds() }));
+        //console.dir(ko.toJSON({ "id": self.fileId(), "_nocache": new Date().getMilliseconds() }));
         $.ajax({
             url: '/File/GetComments',
             dataType: 'json',
@@ -147,8 +185,35 @@
     });
 
 
+    this.btnDeleteComment = function (data) {
+        if (!confirm('Sure, you\'re sure?'))
+        {
+            return;
+        }
+        $.ajax({
+            url: '/Comment/Delete',
+            type: 'post',
+            dataType: 'json',
+            data: ko.toJSON({ "id": data.Id }),
+            contentType: 'application/json',
+            success: function (result) {
+                self.comments.remove(data);
+              
+            },
+            error: function (err) {
+                if (err.responseText == "success")
+                { window.location.href = urlPath + '/'; }
+                else {
+                    alert(err.responseText);
+                }
+            },
+            complete: function () {
+            }
+        })
+    }
+
     this.btnCreateComment = function () {
-        console.dir(self.fileId());
+        //console.dir(self.fileId());
         $.ajax({
             url: '/Comment/Create',
             type: 'post',
@@ -174,7 +239,7 @@
 
     };
 
-
+    $('#buttonRow').show();
 
 };
 

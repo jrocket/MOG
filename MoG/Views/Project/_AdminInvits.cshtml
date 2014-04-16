@@ -1,7 +1,79 @@
 ﻿<div class="row" id="PartialContent">
     <div class="col-md-12">
-        <div class="form-group">
-            Invits!
-        </div>
+        @{
+            ViewBag.Title = "Invits";
+        }
+
+        <h2>@Resource.SOCIAL_Invits</h2>
+
+        <table class="table table-condensed">
+            <thead>
+                <tr>
+                    <th>Sent</th>
+                    <th>To</th>
+
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody data-bind="foreach: invits">
+                <tr>
+                    <td data-bind="text: Date"></td>
+                    <td data-bind="text: InviteeName"></td>
+                    <td data-bind="text: Status"></td>
+                    <td>
+                        <a href="#" data-bind="click: $root.btnActionClicked.bind($data,'@Url.Action("InvitDelete","Social")')"><i class="glyphicon glyphicon-trash" @*data-bind="visible:!$root.isPending($data)*@"></i></a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        @Scripts.Render("~/bundles/knockout")
+
+
+        <script>
+           
+        
+          
+           
+            function InvitsVM() {
+
+                var self = this;
+              
+                self.invits = new ko.observableArray();
+                self.deleteUrl = "/Social/InvitDelete";
+
+                self.getData = function () {
+                    $.post("/social/GetMyInvits", null, function (data) {
+                        console.log(data);
+                        self.invits(data);
+                    });
+                };
+
+                self.isPending = function (data) {
+                    return data.InvitStatus == 1;
+                }
+
+                self.btnActionClicked = function (url, data, event) {
+                    console.log(url);
+                    var postData = { id: data.Id };
+                    $.post(url, postData,
+                        function (result) {
+                            self.invits(result);
+                        });
+
+                }
+
+
+                self.getData();
+
+
+            }
+            var object = $.extend(projectAdministrationBindingRoot, new InvitsVM());
+
+          
+
+        </script>
+
     </div>
 </div>

@@ -1,4 +1,5 @@
-﻿using MoG.Domain.Service;
+﻿using MoG.Domain.Models;
+using MoG.Domain.Service;
 using MoG.Helpers;
 using System;
 using System.Collections.Generic;
@@ -11,14 +12,20 @@ namespace MoG.Controllers
 {
     public class ProfileController : MogController
     {
-        public ProfileController(IUserService userService)
-            : base(userService)
-        { }
+        IDropBoxService serviceDropbox = null;
+        public ProfileController(IUserService userService, IDropBoxService dropboxService
+             , ILogService logService
+            )
+            : base(userService, logService)
+        {
+            this.serviceDropbox = dropboxService;
+        
+        }
         //
         // GET: /Profile/
         public ActionResult Index()
         {
-            return View();
+            return View(CurrentUser);
         }
 
         public ActionResult SetLanguage(string culture)
@@ -41,12 +48,68 @@ namespace MoG.Controllers
 
         public ActionResult Storage()
         {
-            return View();
+            UserStorageVM model = this.serviceUser.GetUserStorages(this.CurrentUser);
+            return View(model);
         }
-        public ActionResult Avatar()
+
+        public ActionResult RegisterStorage(CloudStorageServices service)
         {
-            return View();
+            string redirectUrl = "";
+            switch (service)
+            {
+                case CloudStorageServices.Dropbox :
+                    int credentialId = -1;
+                    string targetUrl = this.Url.Action("RegisterDropboxStorage", "Profile", null, this.Request.Url.Scheme);
+                    redirectUrl = this.serviceDropbox.AskForRegistrationUrl(this.CurrentUser, targetUrl, out credentialId);
+                    TempData["tempCredentialId"] = credentialId;
+                    break;
+                case CloudStorageServices.GoogleDrive :
+                    return  this.RedirectToComingSoon();
+                    
+            }
+            return Redirect(redirectUrl);
         }
+
+        public ActionResult RegisterDropboxStorage(string oauth_token)
+        {
+            String dropBoxToken = Request["oauth_token"];
+            int tempCredentialId = (int)TempData["tempCredentialId"];
+            if (String.IsNullOrEmpty(dropBoxToken))
+            {
+                RedirectToErrorPage("Dropbox authorization failed... your local account is not linked to dropbox");
+
+            }
+            this.serviceDropbox.RegisterAccount(tempCredentialId);
+            return RedirectToAction("Storage");
+        }
+
+        [HttpPost]
+        public JsonResult CancelRegistration(int id)
+        {
+            this.serviceUser.CancelRegistration(id);
+            var result = new {
+                result = true,
+                redirectUrl  =  Url.Action("Storage")
+            };
+
+            JsonResult json = new JsonResult() { Data = result };
+            return json;
+        }
+
+        public ActionResult Avatar(int id=-1)
+        {
+            UserProfileInfo model = null;
+            if (id>0)
+            {
+                model = this.serviceUser.GetById(id);
+            }
+            else
+            {
+                model = CurrentUser;
+            }
+            return View(model);
+        }
+
         public ActionResult Alert()
         {
             return View();

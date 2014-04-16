@@ -1,7 +1,42 @@
-﻿
-@{
+﻿@{
     ViewBag.Title = "Friends";
 }
 
-<h2>Friends</h2>
+<h2 class="page-header">Friends</h2>
 
+    <div class="row" data-bind="foreach: friends">
+        <div class="col-lg-2">
+            @Html.Partial("../Account/_profilSmall")
+        </div>
+
+    </div>
+
+
+@section scripts{
+@Scripts.Render("~/bundles/knockout")
+
+
+<script>
+    function friendsVM() {
+        var self = this;
+        self.friends = new ko.observableArray();
+
+        self.getData = function () {
+            $.post("/social/getMyFriends", null, function (data) {
+                self.friends(data);
+            });
+        };
+
+         self.getFriendUrl = function (data) {
+            var url = '@Url.Action("Profile","Social")';
+            return url + '/' + data.Login;
+        }
+        self.getData();
+
+    }
+
+    ko.applyBindings(new friendsVM());
+
+</script>
+
+}

@@ -4,68 +4,198 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using Microsoft.AspNet.Identity;
+using System.Threading.Tasks;
 
 namespace MoG.Domain.Service
 {
     public class UserService : IUserService
     {
-        IUserRepository repo = null;
+        IUserRepository repoUser = null;
+        IAuthCredentialRepository repoAuthCredential = null;
+        IRegistrationCodeService serviceRegistrationCode = null;
+        public UserManager<ApplicationUser> UserManager { get; set; }
 
-        public UserService(IUserRepository _repo)
+        public System.Security.Principal.IIdentity Identity { get; set; }
+
+        public UserService(IUserRepository _repo,
+            IRegistrationCodeService registrationService,
+            IAuthCredentialRepository _authCredentialRepo)
         {
-            this.repo = _repo;
+            this.repoUser = _repo;
+            this.repoAuthCredential = _authCredentialRepo;
+            this.serviceRegistrationCode = registrationService;
+
+
         }
 
-        public UserProfile GetCurrentUser()
+        public UserProfileInfo GetCurrentUser()
         {
-            int userId = 1;
-            if (HttpContext.Current != null && HttpContext.Current.Session != null)
+            if (Identity == null)
             {
-                if (HttpContext.Current.Session["CURRENTUSER"] != null)
+                throw new ArgumentNullException("Please initialize the 'Identity' property first! I need to user Identity.GetUserId() :) ");
+            }
+            UserProfileInfo result = null;
+            string userId = Identity.GetUserId();
+
+
+            result = repoUser.GetByAppUserId(userId);
+
+
+            return result;
+        }
+
+
+        public IQueryable<UserProfileInfo> GetAll()
+        {
+            return repoUser.GetAll();
+        }
+
+
+        public UserProfileInfo GetByLogin(string login)
+        {
+            return repoUser.GetByLogin(login);
+        }
+
+
+
+        public IEnumerable<UserProfileInfo> GetByIds(IEnumerable<int> destinationIds)
+        {
+            return repoUser.GetAll().Where(u => destinationIds.Contains(u.Id));
+        }
+
+        public UserStorageVM GetUserStorages(UserProfileInfo userProfile)
+        {
+            UserStorageVM model = new UserStorageVM();
+            List<AuthCredential> credentials = this.repoAuthCredential
+                .GetByUserId(userProfile.Id)
+                .Where(c => c.Status != CredentialStatus.Canceled)
+                .ToList();
+            var values = from MoG.Domain.Models.CloudStorageServices e in Enum.GetValues(typeof(MoG.Domain.Models.CloudStorageServices))
+                         select new { Id = e, Name = e.ToString() };
+            foreach (var cloudStorage in Enum.GetValues(typeof(MoG.Domain.Models.CloudStorageServices)))
+            {
+                CloudStorageServices currentCloudStorage = (CloudStorageServices)cloudStorage;
+                var userCredentials = credentials.Where(c => c.CloudService == currentCloudStorage).ToList();
+                if (userCredentials.Count > 0)
                 {
-                    userId = (int)HttpContext.Current.Session["CURRENTUSER"];
+                    model.CloudStorages.AddRange(userCredentials);
+                }
+                else
+                {
+                    model.CloudStorages.Add(new AuthCredential()
+                    {
+                        CloudService = currentCloudStorage,
+                        Status = CredentialStatus.NotRegistered
+                    });
                 }
 
             }
-            UserProfile result = repo.GetById(userId);
-            if (result == null)
-            {
-                return new UserProfile() { Id = 1, Login = "jrocket", DisplayName = "Johnny Rocket" };
 
 
+            return model;
+        }
+
+
+        public bool CancelRegistration(int id)
+        {
+            return this.repoAuthCredential.CancelCredential(id);
+        }
+
+
+
+
+        public int SaveChanges(UserProfileInfo user)
+        {
+            return this.repoUser.SaveChanges(user);
+        }
+
+
+
+
+
+        public async Task<IdentityResult> CreateAsync(ApplicationUser user,
+            string password,
+            string registrationCode,
+            string email,
+            UserManager<ApplicationUser> UserManager)
+        {
+
+
+            var result = await UserManager.CreateAsync(user, password);
+
+            if (result != null && result.Errors == null || result.Errors.Count() < 1)
+            {// user creation OK
+
+
+
+                UserProfileInfo infos = new UserProfileInfo()
+                {
+                    DisplayName = user.UserName,
+                    Login = user.UserName,
+                    AppUserId = user.Id,
+                    Email = email,
+                    PictureUrl = "/Content/Images/NoAvatar.png",
+                    CreatedOn = DateTime.Now
+                };
+                this.repoUser.CreateOrSave(infos);
+                this.serviceRegistrationCode.Register(infos, registrationCode);
             }
             return result;
         }
 
 
-        public IQueryable<UserProfile> GetAll()
+
+
+
+
+        public UserProfileInfo GetById(int userId)
         {
-            return repo.GetAll();
+            return this.repoUser.GetById(userId);
         }
 
 
-        public UserProfile GetByLogin(string login)
+        public List<UserProfileInfo> Search(string query, int page, int pageSize)
         {
-            return repo.GetByLogin(login);
-        }
-
-
-        public IEnumerable<UserProfile> GetByIds(IEnumerable<int> destinationIds)
-        {
-            return repo.GetAll().Where(u => destinationIds.Contains(u.Id));
+            IQueryable<UserProfileInfo> result = this.repoUser.Search(query);
+            int skip = (page - 1) * pageSize;
+            return result
+                .Skip(skip)
+                .Take(pageSize)
+                .ToList();
         }
     }
 
 
     public interface IUserService
     {
-        UserProfile GetCurrentUser();
+        System.Security.Principal.IIdentity Identity { get; set; }
+
+        UserProfileInfo GetCurrentUser();
 
 
-        IQueryable<UserProfile> GetAll();
+        IQueryable<UserProfileInfo> GetAll();
 
-        UserProfile GetByLogin(string login);
+        UserProfileInfo GetByLogin(string login);
 
-        IEnumerable<UserProfile> GetByIds(IEnumerable<int> destinationIds);
+        IEnumerable<UserProfileInfo> GetByIds(IEnumerable<int> destinationIds);
+
+        UserStorageVM GetUserStorages(UserProfileInfo userProfile);
+
+        bool CancelRegistration(int id);
+
+
+        int SaveChanges(UserProfileInfo user);
+
+
+
+
+        Task<IdentityResult> CreateAsync(ApplicationUser user, string password, string registrationcode, string email, UserManager<ApplicationUser> UserManager);
+
+        UserProfileInfo GetById(int userId);
+
+        UserManager<ApplicationUser> UserManager { get; set; }
+
+        List<UserProfileInfo> Search(string query, int page, int pageSize);
     }
 }

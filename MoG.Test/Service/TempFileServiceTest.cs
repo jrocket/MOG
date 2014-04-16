@@ -4,6 +4,7 @@ using MoG.Domain.Service;
 using MoG.App_Start;
 using Ninject;
 using MoG.Domain.Models;
+using MoG.Domain.Repository;
 
 namespace MoG.Test.Service
 {
@@ -12,6 +13,8 @@ namespace MoG.Test.Service
     {
         private ITempFileService serviceTempFile;
         private IUserService serviceUser;
+        private IAuthCredentialRepository repoAuthCredential;
+     
 
         [TestInitialize]
         public void MyTestInitialize()
@@ -19,8 +22,9 @@ namespace MoG.Test.Service
             var kernel = NinjectWebCommon.CreatePublicKernel();
             serviceTempFile = kernel.Get<ITempFileService>();
             serviceUser = kernel.Get<IUserService>();
+            repoAuthCredential = kernel.Get<IAuthCredentialRepository>();
             
-            serviceTempFile.DefaultSavePath = "/data";
+          
         }
 
 
@@ -30,14 +34,19 @@ namespace MoG.Test.Service
         {
             TempUploadedFile file = new TempUploadedFile();
             file.Description = "description";
-            file.Name = "Name" + DateTime.Now.Ticks.ToString() ;
-            file.Path = "Data/mabenz.mp3";
+            file.Name = "Test file Name"  ;
+            file.Path = "Data/mabenz.mp3"; 
             file.ProjectId = 1;
             file.Tags = "tag1,tag2";
+            file.AuthCredentialId = 1;
+            file.Creator = serviceUser.GetCurrentUser();
+            file.StorageCredential = repoAuthCredential.GetById(1);
 
             var result = serviceTempFile.Process(file);
 
             Assert.IsTrue(result);
         }
+
+      
     }
 }

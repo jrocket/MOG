@@ -1,0 +1,72 @@
+﻿@model int
+<div class="row" id="PartialContent">
+    <div class="col-md-12">
+        @{
+            ViewBag.Title = "Follows";
+        }
+
+        <h2>@Resource.PROJECT_Follows</h2>
+
+
+        <div class="row" data-bind="foreach: followers">
+            <div class="col-lg-2">
+                <div class="thumbnail">
+                    <a data-bind="attr : {href: '/Account/Profile/'+ $data.Follower.Id}">
+                        <img class="img-responsive" data-bind="attr : {src : $data.Follower.PictureUrl}" />
+                    </a>
+                    <div class="caption text-center">
+
+                        <div class="content-heading">
+                            <a data-bind="attr : {href: '/Account/Profile/'+ $data.Follower.Id}"><h4 data-bind="text:$data.Follower.DisplayName"></h4></a>
+
+                            <p>
+                                <small>(<span data-bind="text:$data.Follower.Login"></span>)</small>
+                            </p>
+
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        @Scripts.Render("~/bundles/knockout")
+
+
+        <script>
+
+
+
+
+            function FollowsVM() {
+
+                var self = this;
+
+                self.followers = new ko.observableArray();
+                self.deleteUrl = "/Follow/Delete";
+                self.projectId = '@Model';
+                self.getData = function () {
+                    console.log(self.projectId);
+                    $.post("/Follow/GetFollowers", { id: self.projectId }, function (data) {
+                        console.log(data);
+                        self.followers(data);
+                    });
+                };
+
+
+
+                self.getData();
+
+
+            }
+            var object = $.extend(projectAdministrationBindingRoot, new FollowsVM());
+
+
+
+        </script>
+
+    </div>
+</div>

@@ -1,4 +1,4 @@
-﻿@model MoG.Domain.Models.Project
+﻿@model MoG.Domain.Models.VMProject
 @{
     ViewBag.Title = "Activity";
 }
@@ -19,7 +19,7 @@
         var timeline_config = {
             width:              '100%',
             height:             '600',
-            source:             '@Url.Action("GetActivities", "Project", new { id= @Model.Id})',
+            source:             '@Url.Action("GetActivities", "Project", new { id = @Model.Project.Id })',
             embed_id:           'timeline-embed',               //OPTIONAL USE A DIFFERENT DIV ID FOR EMBED
             //start_at_end:       true,                          //OPTIONAL START AT LATEST DATE
             //start_at_slide:     '4',                            //OPTIONAL START AT SPECIFIC SLIDE
@@ -34,4 +34,24 @@
         }
     </script>
     <script type="text/javascript" src="~/Scripts/timeline/storyjs-embed.js"></script>
+
+    @Scripts.Render("~/bundles/knockout")
+
+<script type="text/javascript" src="@Url.Content("~/Scripts/Views/Project/BtnFollow.js")"></script>
+
+    <script>
+        var projectDetailBindingRoot = new BtnFollowVM({
+            id: '@Model.Project.Id',
+            urlLike: '@Url.Action("ILike", "Like")',
+            urlFollow: '@Url.Action("Follow", "Follow")',
+            urlUnFollow: '@Url.Action("UnFollow", "Follow")',
+            isFollowed: '@Model.IsFollowed'
+        });
+
+
+
+            ko.applyBindings(projectDetailBindingRoot);
+
+    </script>
+
 }

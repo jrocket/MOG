@@ -1,66 +1,91 @@
 ﻿@{
     ViewBag.Title = "Home Page";
 }
-@section Carousel
-{
-    <div id="myCarousel" class="carousel slide">
-        <!-- Indicators -->
-        <ol class="carousel-indicators">
-            <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
-            <li data-target="#myCarousel" data-slide-to="1"></li>
-            <li data-target="#myCarousel" data-slide-to="2"></li>
-        </ol>
 
-        <!-- Wrapper for slides -->
-        <div class="carousel-inner">
-            <div class="item active">
-                <div class="fill" style="background-image:url('http://placehold.it/1900x1080&text=Slide One');"></div>
-                <div class="carousel-caption">
-                    <h1>@Resource.HOME_CAROUSEL_1</h1>
-                </div>
-            </div>
-            <div class="item">
-                <div class="fill" style="background-image:url('http://placehold.it/1900x1080&text=Slide Two');"></div>
-                <div class="carousel-caption">
-                    <h1>@Resource.HOME_CAROUSEL_2</h1>
-                </div>
-            </div>
-            <div class="item">
-                <div class="fill" style="background-image:url('http://placehold.it/1900x1080&text=Slide Three');"></div>
-                <div class="carousel-caption">
-                    <h1>@Resource.HOME_CAROUSEL_3</h1>
-                </div>
-            </div>
-        </div>
 
-        <!-- Controls -->
-        <a class="left carousel-control" href="#myCarousel" data-slide="prev">
-            <span class="icon-prev"></span>
-        </a>
-        <a class="right carousel-control" href="#myCarousel" data-slide="next">
-            <span class="icon-next"></span>
-        </a>
-    </div>
+@section Carousel{
+    <div id="headerwrap">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-6">
+                    <h1 data-bind="visible : !registered()">
+                        Hi there ! <br />
+                        How are you?
+                    </h1>
+                    <h1 data-bind="visible : registered">
+                        thank you :) <br />
+                        We'll keep in touch soon.
+                    </h1>
+                    <div data-bind="visible : !registered()">
+                        <form class="form-inline" role="form">
+                            <div class="form-group">
+                                <input type="email" class="form-control" id="exampleInputEmail1" data-bind="value:email" placeholder="Enter your email address">
+                            </div>
+                            <button data-bind="click : btnInviteMeClicked,enable : !isLoading()" class="btn btn-warning btn-lg">Invite Me!</button>
+                        </form>
+                    </div>
+
+
+                </div><!-- /col-lg-6 -->
+                <div class="col-lg-6">
+                    <img class="img-responsive" src="@Url.Content("~/Content/Images/ipad-hand1.png")" alt="">
+                </div><!-- /col-lg-6 -->
+
+            </div><!-- /row -->
+        </div><!-- /container -->
+    </div><!-- /headerwrap -->
 }
 
 
-<div class="section">
+@section Scripts
+{
+    @Scripts.Render("~/bundles/knockout")
 
-    <div class="container">
+    <script>
+        function HomeVM() {
+            var self = this;
+            self.email = ko.observable();
+            self.registered = ko.observable();
+            self.isLoading = ko.observable(false)
 
-        <div class="row">
+            self.btnInviteMeClicked = function () {
+                self.isLoading(true);
 
-            <div class="col-lg-4 col-md-4 col-sm-6">
-                <a href="@Url.Action("My","Project")"><img class="img-responsive img-home-portfolio" src="http://placehold.it/700x450&text=Mes+projets"></a>
-            </div>
-            <div class="col-lg-4 col-md-4 col-sm-6">
-                <a href="@Url.Action("Index","Message")"><img class="img-responsive img-home-portfolio" src="http://placehold.it/700x450&text=Mes+messages"></a>
-            </div>
-            <div class="col-lg-4 col-md-4 col-sm-6">
-                <a href="@Url.Action("Index","Profile")"><img class="img-responsive img-home-portfolio" src="http://placehold.it/700x450&text=Mon+profil"></a>
-            </div>
-        </div><!-- /.row -->
+                if (self.email() && self.validateEmail(self.email())) {
+                    var url = '/Home/InviteMe';
+                    var data = { email: self.email() };
 
-    </div><!-- /.container -->
 
-</div><!-- /.section -->
+                    $.ajax(url,
+                        {
+                            type: 'POST',
+                            data: JSON.stringify(data),
+                            contentType: "application/json",
+                            dataType: 'json',
+                            error: function (data) { alert(data); },
+                            success: function (data) {
+                                if (data) {
+                                    self.registered(true);
+                                }
+                            }
+                        }
+                   );
+
+
+                }
+                self.isLoading(false);
+            }
+            self.validateEmail = function (email) {
+
+                var filter = /^([a-zA-Z0-9_\.\-])+\@@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+                
+                return filter.test(email);
+            }
+
+        }
+
+        ko.applyBindings(new HomeVM());
+    </script>
+
+
+}

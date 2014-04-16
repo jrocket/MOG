@@ -1,29 +1,188 @@
-﻿@using MoG.Domain.Models;
-@using Microsoft.AspNet.Identity;
+﻿@model MoG.Domain.Models.ManageUserViewModel
 @{
-    ViewBag.Title = "Manage Account";
+    ViewBag.Title = @Resource.PROFILE_PageTitle;
+    var culture = System.Threading.Thread.CurrentThread.CurrentUICulture.Name.ToLowerInvariant();
 }
 
-<h2>@ViewBag.Title.</h2>
+@helper selected(string c, string culture)
+{
+    if (c == culture)
+    {
+        @:checked="checked"
+    }
+}
 
-<p class="text-success">@ViewBag.StatusMessage</p>
+
 <div class="row">
     <div class="col-md-12">
-        @if (ViewBag.HasLocalPassword)
-        {
-            @Html.Partial("_ChangePasswordPartial")
-        }
-        else
-        {
-            @Html.Partial("_SetPasswordPartial")
-        }
 
-        <section id="externalLogins">
-            @Html.Action("RemoveAccountList")
-            @Html.Partial("_ExternalLoginsListPartial", new { Action = "LinkLogin", ReturnUrl = ViewBag.ReturnUrl })
-        </section>
+        <h1 class="page-header">@Resource.MAINMENU_Profile</h1>
+
     </div>
 </div>
+<style>
+    .glyphicon {
+        margin-bottom: 10px;
+        margin-right: 10px;
+    }
+
+    small {
+        display: block;
+        line-height: 1.428571429;
+        color: #999;
+    }
+
+    ul {
+        list-style-type: none;
+    }
+</style>
+
+<div class="row">
+    @Html.Partial("_LeftMenu")
+
+    <div class="col-lg-10">
+
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-12 col-sm-12 col-md-12">
+                    <div class="panel-group" id="accordion">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h4 class="panel-title">
+                                    <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
+                                        General
+                                    </a>
+                                </h4>
+                            </div>
+                            <div id="collapseOne" class="panel-collapse collapse in">
+                                <div class="panel-body">
+                                    <div class="col-sm-6 col-md-4">
+                                        <img src="@Model.User.PictureUrl" alt="" class="img-rounded img-responsive" />
+                                        <a href="@Url.Action("Avatar")">@Resource.PROFILE_ChangeAvatar</a>
+                                    </div>
+                                    <div class="col-sm-6 col-md-8">
+                                        <h4>
+                                            @Model.User.DisplayName
+                                        </h4>
+                                        <small>
+                                            <cite title="@Model.User.Login">
+                                                @Model.User.Login @*<i class="glyphicon glyphicon-map-marker"></i>*@
+                                            </cite>
+                                        </small>
+                                        <p>
+                                            @*<i class="glyphicon glyphicon-envelope"></i>email@example.com
+                                                <br />
+                                                <i class="glyphicon glyphicon-globe"></i><a href="http://www.jquery2dotnet.com">www.jquery2dotnet.com</a>*@
+                                            <br />
+                                            <i class="glyphicon glyphicon-gift"></i> @Resource.PROFILE_JoinedOn : @Model.User.CreatedOn
+                                        </p>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div><!--end first panel-->
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h4 class="panel-title">
+                                    <a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo">
+                                        Password
+                                    </a>
+                                </h4>
+                            </div>
+                            <div id="collapseTwo" class="panel-collapse collapse ">
+                                <div class="panel-body">
+                                    @if (ViewBag.HasLocalPassword)
+                                    {
+                                        @Html.Partial("_ChangePasswordPartial")
+                                    }
+                                    else
+                                    {
+                                        @Html.Partial("_SetPasswordPartial")
+                                    }
+
+
+                                </div>
+                            </div>
+                        </div><!--end panel section-->
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h4 class="panel-title">
+                                    <a data-toggle="collapse" data-parent="#accordion" href="#collapseThree">
+                                        @Resource.PROFILE_Language
+                                    </a>
+                                </h4>
+                            </div>
+                            <div id="collapseThree" class="panel-collapse collapse">
+                                <div class="panel-body">
+                                    @using (Html.BeginForm("SetLanguage", "Account"))
+                                    {
+                                        <p>
+                                            <i class="glyphicon glyphicon-globe"></i>@Resource.PROFILE_Language
+                                            <ul>
+                                                <li>
+                                                    <label for="en-us">
+                                                        <input name="culture" id="en-us" value="en-us" type="radio" @selected("en-us", culture) /> English
+                                                    </label>
+                                                </li>
+                                                <li>
+                                                    <label for="fr">
+                                                        <input name="culture" id="fr" value="fr" type="radio" @selected("fr", culture) /> Français
+                                                    </label>
+                                                </li>
+                                            </ul>
+
+
+                                        </p>
+                                    }
+                                </div>
+                            </div>
+                        </div><!--end panel section-->
+                        @*<div class="row">*@
+
+                            <!-- Split button -->
+                            @*<div class="btn-group">
+                                    <button type="button" class="btn btn-primary">
+                                        Social
+                                    </button>
+                                    <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+                                        <span class="caret"></span><span class="sr-only">Social</span>
+                                    </button>
+                                    <ul class="dropdown-menu" role="menu">
+                                        <li><a href="#">Twitter</a></li>
+                                        <li><a href="https://plus.google.com/+Jquery2dotnet/posts">Google +</a></li>
+                                        <li><a href="https://www.facebook.com/jquery2dotnet">Facebook</a></li>
+                                        <li class="divider"></li>
+                                        <li><a href="#">Github</a></li>
+                                    </ul>
+                                </div>*@
+                        @*</div>*@
+                        @*<div class="row">
+                            <div class="col-sm-6 col-md-4"></div>
+                            <div class="col-sm-6 col-md-8">
+                            </div>
+                        </div>
+                        <div class="row">
+                            @*<section id="externalLogins">
+                                    @Html.Action("RemoveAccountList")
+                                    @Html.Partial("_ExternalLoginsListPartial", new { Action = "LinkLogin", ReturnUrl = ViewBag.ReturnUrl })
+                                </section>
+
+                        </div>*@
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
+    <script type="text/javascript">
+        (function ($) {
+            $("input[type = 'radio']").click(function () {
+                $(this).parents("form").submit(); // post form
+            });
+
+        })(jQuery);
+    </script>
 }

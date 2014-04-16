@@ -16,7 +16,7 @@ namespace MoG.Domain.Models
         [Key] 
         public int Id { get; set; }
         public DateTime When { get; set; }
-        public virtual UserProfile Who { get; set; }
+        public virtual UserProfileInfo Who { get; set; }
 
        // public string What { get; set; }
 
@@ -28,7 +28,7 @@ namespace MoG.Domain.Models
         public int? FileId { get; set; }
 
         [ForeignKey("FileId")]
-        public virtual MoGFile File { get; set; }
+        public virtual ProjectFile File { get; set; }
 
         public ActivityType Type { get; set; }
 

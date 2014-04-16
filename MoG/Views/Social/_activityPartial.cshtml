@@ -1,0 +1,39 @@
+﻿@model List<MoG.Domain.Models.Activity>
+<h2 class="page-header">
+    Activity feed
+</h2>
+
+@foreach (var activity in Model)
+{
+    <div class="row">
+        <div class="col-lg-12">
+            <h4><span class="js_date">@activity.When.ToString("yyyyMMdd")</span></h4>
+            <div class="row">
+                <div class="col-lg-2">
+                    <img class="img-thumbnail" src="@activity.Who.PictureUrl" />
+                </div>
+                <div class="col-lg-10">
+                    <p>
+                        I did something
+                    </p>
+                </div>
+            </div>
+
+
+        </div>
+        <hr/>
+    </div>
+
+}
+
+
+
+
+</div>
+<script>
+    $(".js_date").each(function () {
+        var date = $(this).html();
+        var timespan = moment(date, "YYYYMMDD").fromNow();
+        $(this).html(timespan);
+    });
+</script>

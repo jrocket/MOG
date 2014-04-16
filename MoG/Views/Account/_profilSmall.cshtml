@@ -1,0 +1,25 @@
+﻿<div class="thumbnail">
+    <a data-bind="attr : {href: $root.getFriendUrl($data)}">
+        <img class="img-responsive" data-bind="attr : {src : $data.PictureUrl}" />
+    </a>
+    <div class="caption text-center">
+
+        <div class="content-heading">
+            <a data-bind="attr : {href: $root.getFriendUrl($data)}"><h4 data-bind="text:$data.DisplayName"></h4></a>
+            @*<p> 3 projects<br /> 4 files </p>*@
+            <p>
+                <small>(<span data-bind="text:$data.Login"></span>)</small>
+            </p>
+            @*<p>
+                    <span class="badge  ">
+                        <a href="#" style="color:white">
+                            <span class="glyphicon glyphicon-envelope"></span>
+                        </a>
+                    </span>
+                </p>*@
+
+        </div>
+
+    </div>
+</div>
+

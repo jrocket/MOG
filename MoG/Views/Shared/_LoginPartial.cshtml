@@ -1,22 +1,51 @@
 ﻿@using Microsoft.AspNet.Identity
 @if (Request.IsAuthenticated)
 {
+    <li class="dropdown">
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Hello @User.Identity.GetUserName() !<b class="caret"></b></a>
+        <ul class="dropdown-menu">
+            <li>@Html.ActionLink(@Resource.MAINMENU_Profile, "Manage", "Account")</li>
+            <li>@Html.ActionLink(@Resource.MAINMENU_Projects, "My", "Project")</li>
+            <li>@Html.ActionLink(@Resource.COMMON_Messages, "Index", "Message")</li>
+            <li>@Html.ActionLink(@Resource.COMMON_Friends, "Friends", "Social")</li>
+            <li>@Html.ActionLink(@Resource.COMMON_Invits, "Invits", "Social")</li>
+            <li>@Html.ActionLink(@Resource.COMMON_DownloadCart, "Index", "downloadcart")</li>
+
+        </ul>
+    </li>
+    <li>
+        <a href="javascript:document.getElementById('logoutForm').submit()">
+            <span class="glyphicon glyphicon-log-out"></span>
+        </a>
+
+
+    </li>
     using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
     {
-    @Html.AntiForgeryToken()
-
-    <ul class="nav navbar-nav navbar-right">
-        <li>
-            @Html.ActionLink("Hello " + User.Identity.GetUserName() + "!", "Manage", "Account", routeValues: null, htmlAttributes: new { title = "Manage" })
-        </li>
-        <li><a href="javascript:document.getElementById('logoutForm').submit()">Log off</a></li>
-    </ul>
+        @Html.AntiForgeryToken()
     }
+    @*<ul class="nav navbar-nav navbar-right">
+            <li>
+                @Html.ActionLink("Hello " + User.Identity.GetUserName() + "!", "Manage", "Account", routeValues: null, htmlAttributes: new { title = "Manage" })
+            </li>
+            <li></li>
+        </ul>*@
+
 }
 else
 {
-    <ul class="nav navbar-nav navbar-right">
-        <li>@Html.ActionLink("Register", "Register", "Account", routeValues: null, htmlAttributes: new { id = "registerLink" })</li>
-        <li>@Html.ActionLink("Log in", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink" })</li>
-    </ul>
+    @*<ul class="nav navbar-nav navbar-right">*@
+    <li>
+        <a id="registerLink" href="@Url.Action( "Register", "Account", routeValues: null)">
+            <span class="glyphicon glyphicon-user"> 
+            </span>
+        </a>
+    </li>
+    <li>
+        <a id="loginLink" href="@Url.Action("Login", "Account", routeValues: null)">
+            <span class="glyphicon glyphicon-log-in">
+            </span>
+        </a>
+    </li>
+    @*</ul>*@
 }

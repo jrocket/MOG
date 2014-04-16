@@ -5,49 +5,50 @@
 
 <div class="container">
 
-    <div class="row">
+    @*<div class="row">
 
         <div class="col-lg-12">
             <ol class="breadcrumb">
                 <li><a href="index.html">Home</a></li>
-                <li class="active">Nouveau projet</li>
+                <li class="active">@Resource.PROJECT_NewProject</li>
             </ol>
         </div>
 
-    </div><!-- /.row -->
+    </div>*@
+    <!-- /.row -->
     <div class="row">
         <div class="col-lg-12">
-            <h1 class="page-header">Créer un projet </h1>
+            <h1 class="page-header">@Resource.COMMON_CreateNewProject</h1>
         </div>
     </div><!-- /.row -->
     <div class="row">
 
         <div class="col-sm-8">
-            <h4>Trouver un titre</h4>
-            <p>Lid est laborum dolo rumes fugats untras. Etharums ser quidem rerum facilis dolores nemis omnis fugats vitaes nemo minima rerums unsers sadips amets. Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.</p>
+            <h4>@Resource.PROJECT_Create_Title</h4>
+            <p>@Resource.COMMON_LoremIpsum</p>
             @using (Html.BeginForm())
             {
                 @Html.AntiForgeryToken()
                 <div class="form-group col-md-4">
                     @Html.LabelFor(model => model.Name, new { @class = "control-label" })
-                  
+
                     @Html.TextBoxFor(model => model.Name, new { @class = "form-control" })
                     @Html.ValidationMessageFor(model => model.Name)
                 </div>
                 <div class="form-group col-lg-4">
                     @Html.LabelFor(model => model.VisibilityType, new { @class = "control-label" })
                     @Html.EnumDropDownListFor(model => model.VisibilityType, new { @Class = "form-control" })
-                  
+
                 </div>
                 <div class="form-group col-lg-4">
                     @Html.LabelFor(model => model.LicenceType, new { @class = "control-label" })
                     @Html.EnumDropDownListFor(model => model.LicenceType, new { @Class = "form-control" })
-                    
+
                 </div>
                 <div class="clearfix"></div>
                 <div class="form-group col-lg-12">
                     @Html.LabelFor(model => model.Description, new { @class = "control-label" })
-                    @Html.TextAreaFor(model => model.Description, 6, 80, new { @class = "form-control"})                    
+                    @Html.TextAreaFor(model => model.Description, 6, 80, new { @class = "form-control" })
                 </div>
                 <div class="form-group col-lg-12">
                     @Html.LabelFor(model => model.Tags, new { @class = "control-label" })
@@ -62,15 +63,13 @@
         </div>
 
         <div class="col-sm-4">
-            <h3>Licences</h3>
-            <h4>Ci-dessous l'explication de la licence que vous avez choisie</h4>
+            <h3>@Resource.PROJECT_Create_Licence</h3>
+            <h4>@Resource.PROJECT_Create_LicenceExplain</h4>
             <p>
                 <br>
 
             </p>
-            <p><i class="icon-phone"></i> <abbr title="Phone">BY</abbr>Attribution — Vous devez attribuer l’œuvre de la manière indiquée par l’auteur de l’œuvre ou le titulaire des droits (mais pas d’une manière qui suggérerait qu’ils vous approuvent, vous ou votre utilisation de l’œuvre).</p>
-            <p><i class="icon-envelope-alt"></i> <abbr title="Email">NC</abbr>Pas d’Utilisation Commerciale — Vous n’avez pas le droit d’utiliser cette œuvre à des fins commerciales.</p>
-            <p><i class="icon-time"></i> <abbr title="Hours">ND</abbr>Pas d’œuvres dérivées — Vous n’avez pas le droit de modifier, de transformer ou d’adapter cette œuvre.</p>
+            @Html.Raw(Resource.PROJECT_Create_LicenceDescription)
             <!--  <ul class="list-unstyled list-inline list-social-icons">
                 <li class="tooltip-social facebook-link"><a href="#facebook-page" data-toggle="tooltip" data-placement="top" title="Facebook"><i class="icon-facebook-sign icon-2x"></i></a></li>
                 <li class="tooltip-social linkedin-link"><a href="#linkedin-company-page" data-toggle="tooltip" data-placement="top" title="LinkedIn"><i class="icon-linkedin-sign icon-2x"></i></a></li>

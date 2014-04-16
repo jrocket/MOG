@@ -8,6 +8,13 @@ using System.Threading.Tasks;
 
 namespace MoG.Domain.Models
 {
+    public enum ProcessStatus
+    {
+        NotStarted,
+        InProgress,
+        Failed,
+        Completed
+    }
     public class TempUploadedFile
     {
         [Key]
@@ -18,11 +25,9 @@ namespace MoG.Domain.Models
         public string Url { get; set; }
 
         public string Path { get; set; }
-        public string ThumbnailUrl { get; set; }
+       
 
-        public string ThumbnailPath { get; set; }
-
-        public virtual UserProfile Creator { get; set; }
+        public virtual UserProfileInfo Creator { get; set; }
 
         public int ProjectId { get; set; }
 
@@ -30,13 +35,18 @@ namespace MoG.Domain.Models
 
         public string Tags { get; set; }
 
+        public ProcessStatus Status { get; set; }
+
+        public int FailedCount { get; set; }
+
 
         [NotMapped]
         public byte[] Data { get; set; }
 
 
+        public int AuthCredentialId { get; set; }
 
-
-
+        [ForeignKey("AuthCredentialId")]
+        public virtual AuthCredential StorageCredential { get; set; }
     }
 }

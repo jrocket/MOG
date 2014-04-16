@@ -1,4 +1,4 @@
-﻿@model MoG.Domain.Models.MoGFile
+﻿@model MoG.Domain.Models.VMFile
 @{
     ViewBag.Title = @Resource.FILE_DetailTitle;
 }
@@ -8,32 +8,37 @@
         <div class="col-lg-12">
             <h1 class="page-header">
                 @Html.ActionLink(Model.Project.Name, "Files", "Project", new { id = @Model.ProjectId }, null) /
-                @Html.DisplayFor(model => model.Name) <small>by @Html.DisplayFor(model => model.Creator.DisplayName)</small>
+                @Html.DisplayFor(model => model.DisplayName) <small>by @Html.DisplayFor(model => model.Creator.DisplayName)</small>
             </h1>
         </div>
     </div>
     @*@Html.Partial("_TopNavigationTab",Model.Project)*@
 
-    <div class="row">
+    <div class="row " id="buttonRow" style="display:none">
         <div class="col-md-8" data-bind="visible : isDisplayMode">
-            <button type="button" class="btn btn-default">@Resource.FILE_Download</button>
-            <button type="button" class="btn btn-primary" data-bind="visible : isBtnAcceptVisible, click:btnAcceptClicked">@Resource.FILE_Accept</button>
-            <button type="button" class="btn btn-primary" data-bind="visible : isBtnRejectVisible, click:btnRejectClicked">@Resource.FILE_Reject</button>
-            <button type="button" class="btn btn-success">Promouvoir</button>
+            @if (!Model.isPendingProcessing)
+            {
+
+                <button type="button" class="btn btn-primary" data-bind="visible : isAddToCartVisible, click:btnAddToCart">@Resource.FILE_AddToDownloadCart</button>
+                <button type="button" class="btn btn-primary" data-bind="visible : isBtnAcceptVisible, click:btnAcceptClicked">@Resource.FILE_Accept</button>
+                <button type="button" class="btn btn-primary" data-bind="visible : isBtnRejectVisible, click:btnRejectClicked">@Resource.FILE_Reject</button>
+    <button type="button" class="btn btn-success" data-bind="visible : isPromoteVisible, click : btnPromoteClicked">@Resource.FILE_Promote</button>
+            }
             <button type="button" class="btn btn-danger" data-bind="click:btnDeleteClicked">@Resource.FILE_Delete</button>
             <button type="button" class="btn btn-warning" data-bind="click:btnEditClicked ">@Resource.FILE_Edit</button>
+
         </div>
         <div class="col-md-8" data-bind="visible : isEditMode">
             <button type="button" class="btn btn-primary" data-bind="click:btnSaveClicked">@Resource.COMMON_Save</button>
             <button type="button" class="btn btn-danger" data-bind="click:btnCancelClicked">@Resource.COMMON_Cancel</button>
         </div>
-<div class="col-md-4">
+        <div class="col-md-4">
         </div>
 
     </div>
     <div class="row"><div class="col-md-12">&nbsp;</div></div>
     <div class="row" id="mainContent">
-        @Html.Partial("Detail", Model);
+        @Html.Partial("Detail", Model)
     </div>
     <div class="row">
         <hr />
@@ -42,7 +47,7 @@
     <div data-bind="foreach: comments">
         <div class="row">
             <div class="col-md-1">
-                <img src="http://placehold.it/75x75&text=john+smith" />
+                <img data-bind="attr : {src:Creator.PictureUrl}" class="img-responsive" />
             </div>
             <div class="col-md-7">
                 <div class="panel panel-default">
@@ -51,7 +56,8 @@
                             <h4 data-bind="text: CreatorName"></h4>
                             <span data-bind="text: Body"></span>
                             <br /><small data-bind="text: CreatedOnAsString"></small>
-                        </p>
+                            <div class="pull-right"><a href="javascript:void(0)" data-bind="click: $root.btnDeleteComment"><span class="glyphicon glyphicon-trash"></span></a></div>
+                        </p>                       
                     </div>
                 </div>
             </div>
@@ -74,13 +80,14 @@
 
 </div><!-- /.container -->
 @section Scripts{
-@Scripts.Render("~/bundles/soundmanager")
+    @Scripts.Render("~/bundles/soundmanager")
 
 
     @Scripts.Render("~/bundles/knockout")
     <script type="text/javascript" src="/Scripts/Views/File/Display.js"></script>
     <script>
-        ko.applyBindings(new FileVM( @Model.Id, @Model.FileStatusAsInt));
+
+        ko.applyBindings(new FileVM('@Model.Id', '@Model.FileStatusAsInt', '@Model.Promoted'));
 
     </script>
 }

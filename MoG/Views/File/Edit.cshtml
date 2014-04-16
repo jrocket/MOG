@@ -1,16 +1,20 @@
-﻿@model MoG.Domain.Models.MoGFile
+﻿@model MoG.Domain.Models.VMFile
 
 
     @using (Html.BeginForm())
     {
         <div class="row">
             <div class="col-md-8">
-                <img class="img-responsive" src="http://placehold.it/750x200"><br />
+                <img class="img-responsive" src="@Model.ThumbnailUrl"><br />
                 @Html.TagsInputFor(f => f.Tags, "form-control")
             </div>
 
             <div class="col-md-4">
                 <h4>Detail de la piste</h4>
+                <dl>
+                    <dt>@Html.LabelFor(model => model.DisplayName)</dt>
+                    <dd>@Html.TextBoxFor(model => model.DisplayName, new { @class = "form-control" })</dd>
+                </dl>
                 <dl>
                     <dt>@Html.LabelFor(model => model.CreatedOn)</dt>
                     <dd>@Html.DisplayFor(model => model.CreatedOn, "LongDateString")</dd>

@@ -18,40 +18,87 @@
         <div class="col-md-2 col-sm-4">
             <div class="bs-sidebar">
                 <!-- sidebar -->
-               @Html.Partial("_trackRefinementPanel",Model)
+                @Html.Partial("_trackRefinementPanel", Model)
 
             </div>
 
         </div><!-- endof sidebar -->
         <div class="col-md-10">
-            @{
+            @if (Model.FilteredFiles.Count == 0)
+            {
+                <h3>@Resource.PROJECT_NoFiles</h3>
+            }
+            else
+            {
+                <div class="row center-block">
+                    <div class="col-md-1 center-block">
+
+                        <span class="glyphicon glyphicon-time "></span>
+                    </div>
+                    <div class="col-md-2">
+
+                    </div>
+                    <div class="col-md-4">
+                    </div>
+                    <div class="col-md-1 center-block"><span class="glyphicon glyphicon-cloud-download"></span> </div>
+                    <div class="col-md-1 center-block"><span class="glyphicon glyphicon-info-sign"></span></div>
+                    @*<div class="col-md-1"><span class="glyphicon glyphicon-tags"></span></div>*@
+                    @*<div class="col-md-1"><span class="glyphicon glyphicon-heart"></span></div>*@
+                    <div class="col-md-1 center-block"><span class="glyphicon glyphicon-play-circle"></span></div>
+                </div>
+              
                 int counter = 0;
                 foreach (var file in Model.FilteredFiles.ToList())
                 {
                     <div class="row">
                         <div class="col-md-1">
-                            <p><i class="icon-camera icon-2x"></i></p>
+
                             <p>@Html.DisplayFor(model => model.FilteredFiles[counter].CreatedOn) </p>
                         </div>
                         <div class="col-md-2">
-                            <a href="track-detail.html"><img src="http://placehold.it/100x100" class="img-responsive"></a>
+                            <a href="@Url.Action("Display","File",new { id=file.Id})"><img src="http://placehold.it/100x100" class="img-responsive"></a>
                         </div>
                         <div class="col-md-4">
-                            <h3><a href="@Url.Action("Display","File",new { id=file.Id})">@file.Name</a></h3>
-                            <p>---------------PLAYER ----------- <i class="icon-cloud-download"></i>&nbsp;<i class="icon-trash"></i>&nbsp;<i class="icon-heart"></i></p>
+                            <h3><a href="@Url.Action("Display","File",new { id=file.Id})">@file.DisplayName</a></h3>
+                            <p>@file.Tags</p>
+
 
                         </div>
                         <div class="col-md-1">@file.DownloadCount</div>
                         <div class="col-md-1">@file.FileStatus</div>
-                        <div class="col-md-1">@file.Tags</div>
-                        <div class="col-md-1">@file.Likes</div>
+                        @*<div class="col-md-1"></div>*@
+                        @*<div class="col-md-1">@file.Likes</div>*@
                         <div class="col-md-1">@file.PlayCount</div>
                     </div>
 
                     <hr>
                     counter++;
                 }
+               
             }
         </div>
     </div><!-- /.container -->
 </div>
+
+
+@section Scripts{
+    @Scripts.Render("~/bundles/knockout")
+
+    @*<script type="text/javascript" src="/Scripts/Views/Project/Detail.js"></script>*@
+    <script type="text/javascript" src="@Url.Content("~/Scripts/Views/Project/BtnFollow.js")"></script>
+
+    <script>
+        var projectDetailBindingRoot = new BtnFollowVM({
+            id: '@Model.Project.Project.Id',
+            urlLike: '@Url.Action("ILike", "Like")',
+            urlFollow: '@Url.Action("Follow", "Follow")',
+            urlUnFollow: '@Url.Action("UnFollow", "Follow")',
+            isFollowed: '@Model.Project.IsFollowed'
+        });
+
+
+
+        ko.applyBindings(projectDetailBindingRoot);
+
+    </script>
+}

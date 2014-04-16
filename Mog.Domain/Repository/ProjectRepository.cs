@@ -14,7 +14,7 @@ namespace MoG.Domain.Repository
         public ProjectRepository(IdbContextProvider provider)
             : base(provider)
         {
-          
+
         }
 
         public bool Create(Project p)
@@ -27,53 +27,87 @@ namespace MoG.Domain.Repository
 
 
 
-        public IQueryable<Project> GetByUserLogin(string login)
+        public IQueryable<Project> GetByUserLogin(int page, int pagesize, string login, bool bExcludePrivate, bool bExcludeDelete = true)
         {
-            return dbContext.Projects.Where(p => p.Creator.Login == login);
+            IQueryable<Project> allProjects = getAll(bExcludePrivate, bExcludeDelete);
+            allProjects = allProjects
+               .Where(p => p.Creator.Login == login)
+                .OrderByDescending(p => p.CreatedOn);
+            if (page > 0)
+            {
+                allProjects = allProjects
+
+                    .Skip((page - 1) * pagesize)
+                    .Take(pagesize);
+            }
+            return allProjects;
+        }
+
+        public IQueryable<Project> GetByUserId(int userID)
+        {
+            IQueryable<Project> allProjects = getAll(true, true);
+            allProjects = allProjects
+               .Where(p => p.Creator.Id == userID)
+                .OrderByDescending(p => p.CreatedOn);
+          
+            return allProjects;
         }
 
 
-        public IQueryable<Project> GetNew(int limit)
+        public IQueryable<Project> GetNew(int page, int pagesize, bool bExcludePrivate, bool bExcludeDelete = true)
         {
+            IQueryable<Project> allProjects = getAll(bExcludePrivate, bExcludeDelete);
+            return allProjects
+                .OrderByDescending(p => p.CreatedOn)
+                .Skip((page - 1) * pagesize)
+                .Take(pagesize);
+        }
 
-            if (limit > 0)
-                return dbContext.Projects.OrderByDescending(p => p.CreatedOn).Take(limit);
+
+        public IQueryable<Project> GetPopular(int page, int pagesize, bool bExcludePrivate, bool bExcludeDelete = true)
+        {
+            IQueryable<Project> allProjects = getAll(bExcludePrivate, bExcludeDelete);
+
+            int skip = (page - 1) * pagesize;
+            if (pagesize > 0)
+                return allProjects
+
+                     .OrderByDescending(p => p.Likes)
+                     .Skip(skip)
+                     .Take(pagesize);
             else
-                return dbContext.Projects.OrderByDescending(p => p.CreatedOn);
+                return allProjects
+
+                     .OrderByDescending(p => p.Likes)
+                       .Skip(skip);
         }
 
 
-        public IQueryable<Project> GetPopular(int limit)
+        public ICollection<Project> GetRandom(int pagesize, bool bExcludePrivate, bool bExcludeDelete = true)
         {
-            if (limit > 0)
-                return dbContext.Projects.OrderByDescending(p => p.Likes).Take(limit);
-            else
-                return dbContext.Projects.OrderByDescending(p => p.Likes);
-        }
 
 
-        public ICollection<Project> GetRandom(int limit)
-        {
-            if (limit < 0)
+            if (pagesize < 0)
                 throw new RepositoryException("GetRandom must specify a valid limit");
+            IQueryable<Project> allProjects = getAll(bExcludePrivate, bExcludeDelete);
+
             List<Project> result = new List<Project>();
             var rndGen = new Random();
-            int projectCount = dbContext.Projects.Count();
+            int projectCount = allProjects.Count();
 
-            if (limit >=projectCount)
+            if (pagesize >= projectCount)
             {//return all the projects
-                return dbContext.Projects.ToArray();
+                return allProjects.ToArray();
             }
 
-            for (int i=0;i<limit && i<projectCount;i++)
+            for (int i = 0; i < pagesize && i < projectCount; i++)
             {
 
                 int random = rndGen.Next(0, projectCount);
-                Project p = dbContext
-                    .Projects
+                Project p = allProjects
                     .OrderBy(itm => itm.Id)
                     .Skip(random).First();
-                if (result.Where (itm=>itm.Id == p.Id).Count<Project>() ==0)
+                if (result.Where(itm => itm.Id == p.Id).Count<Project>() == 0)
                 {
                     result.Add(p);
                 }
@@ -86,7 +120,21 @@ namespace MoG.Domain.Repository
             return result;
         }
 
+        private IQueryable<Project> getAll(bool bExcludePrivate, bool bExcludeDelete)
+        {
+            IQueryable<Project> result = dbContext.Projects;
+            if (bExcludePrivate)
+            {
+                result = result.Where(p => p.VisibilityType != Visibility.Private);
+            }
+            if (bExcludeDelete)
+            {
+                result = result.Where(p => p.Deleted == false);
 
+            }
+            return result;
+
+        }
 
 
         public Project GetById(int id)
@@ -101,23 +149,51 @@ namespace MoG.Domain.Repository
             dbContext.SaveChanges();
             return project;
         }
+
+        public IQueryable<Project> Search(string searchQuery, bool includePrivate, bool includeDeleted)
+        {
+            searchQuery = searchQuery.ToLower();
+            var result = this.dbContext.Projects
+                 .Where(f => f.Name.ToLower().Contains(searchQuery));
+                 
+
+            if (!includeDeleted)
+            {
+                result = result.Where(x => !x.Deleted);
+            }
+
+            if (!includePrivate)
+            {
+                result = result.Where(x => x.VisibilityType ==Visibility.Public );
+            }
+            result = result.OrderByDescending(p => p.CreatedOn);
+
+            return result;
+            ;
+        }
+      
     }
 
     public interface IProjectRepository
     {
         bool Create(Project p);
-        IQueryable<Project> GetByUserLogin(string login);
+        IQueryable<Project> GetByUserLogin(int pageNumber, int pageSize, string login, bool bExcludePrivate, bool bExcludeDelete = true);
 
-        IQueryable<Project> GetNew(int limit);
+        IQueryable<Project> GetByUserId(int userID);
+        IQueryable<Project> GetNew(int page, int pagesize, bool bExcludePrivate, bool bExcludeDelete = true);
 
-        IQueryable<Project> GetPopular(int limit);
+        IQueryable<Project> GetPopular(int page, int pagesize, bool bExcludePrivate, bool bExcludeDelete = true);
 
-        ICollection<Project> GetRandom(int limit);
+        ICollection<Project> GetRandom(int limit, bool bExcludePrivate, bool bExcludeDelete = true);
 
 
 
         Project GetById(int id);
 
         Project SaveChanges(Project project);
+
+
+
+        IQueryable<Project> Search(string searchQuery, bool includePrivate, bool includeDeleted);
     }
 }

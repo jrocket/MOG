@@ -123,8 +123,14 @@
   <data name="COMMON_Cancel" xml:space="preserve">
     <value>Cancel</value>
   </data>
+  <data name="COMMON_CreateNewProject" xml:space="preserve">
+    <value>Create a new project</value>
+  </data>
   <data name="COMMON_Description" xml:space="preserve">
     <value>Description</value>
+  </data>
+  <data name="COMMON_DownloadCart" xml:space="preserve">
+    <value>My cart</value>
   </data>
   <data name="COMMON_Files" xml:space="preserve">
     <value>Files</value>
@@ -138,8 +144,14 @@
   <data name="COMMON_Latest" xml:space="preserve">
     <value>Latest</value>
   </data>
+  <data name="COMMON_LoremIpsum" xml:space="preserve">
+    <value>Lid est laborum dolo rumes fugats untras. Etharums ser quidem rerum facilis dolores nemis omnis fugats vitaes nemo minima rerums unsers sadips amets. Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.</value>
+  </data>
   <data name="COMMON_Messages" xml:space="preserve">
     <value>Messages</value>
+  </data>
+  <data name="COMMON_NewProjects" xml:space="preserve">
+    <value>New Projects</value>
   </data>
   <data name="COMMON_Save" xml:space="preserve">
     <value>Save</value>
@@ -158,6 +170,9 @@
   </data>
   <data name="FILE_AddFiles" xml:space="preserve">
     <value>Add files...</value>
+  </data>
+  <data name="FILE_AddToDownloadCart" xml:space="preserve">
+    <value>Add to cart</value>
   </data>
   <data name="FILE_Administration" xml:space="preserve">
     <value>Administration</value>
@@ -193,7 +208,7 @@
     <value>General</value>
   </data>
   <data name="FILE_Likes" xml:space="preserve">
-    <value>Likes</value>
+    <value>Liked</value>
   </data>
   <data name="FILE_Metrics" xml:space="preserve">
     <value>Metrics</value>
@@ -206,6 +221,9 @@
   </data>
   <data name="FILE_Processing" xml:space="preserve">
     <value>Processing...</value>
+  </data>
+  <data name="FILE_Promote" xml:space="preserve">
+    <value>Promote</value>
   </data>
   <data name="FILE_Reject" xml:space="preserve">
     <value>Reject</value>
@@ -261,16 +279,156 @@
   <data name="PROFILE_Avatar" xml:space="preserve">
     <value>Avatar</value>
   </data>
+  <data name="PROFILE_ChangeAvatar" xml:space="preserve">
+    <value>Update your avatar</value>
+  </data>
   <data name="PROFILE_Dashboard" xml:space="preserve">
     <value>Dashboard</value>
   </data>
+  <data name="PROFILE_FOLLOWED" xml:space="preserve">
+    <value>Followed</value>
+  </data>
+  <data name="PROFILE_JoinedOn" xml:space="preserve">
+    <value>Joined on</value>
+  </data>
+  <data name="PROFILE_Language" xml:space="preserve">
+    <value>Language</value>
+  </data>
   <data name="PROFILE_MySettings" xml:space="preserve">
     <value>My settings</value>
+  </data>
+  <data name="PROFILE_NoFileInCart" xml:space="preserve">
+    <value>You don't have any file in your cart!</value>
   </data>
   <data name="PROFILE_PageTitle" xml:space="preserve">
     <value>Profile</value>
   </data>
   <data name="PROFILE_Storage" xml:space="preserve">
     <value>Storage</value>
+  </data>
+  <data name="PROJECT_Activity" xml:space="preserve">
+    <value>Activities</value>
+  </data>
+  <data name="PROJECT_Administration" xml:space="preserve">
+    <value>Administration</value>
+  </data>
+  <data name="PROJECT_Admin_Artwork" xml:space="preserve">
+    <value>Artwork</value>
+  </data>
+  <data name="PROJECT_Admin_Collabs" xml:space="preserve">
+    <value>Collabs</value>
+  </data>
+  <data name="PROJECT_Admin_Comments" xml:space="preserve">
+    <value>Comments</value>
+  </data>
+  <data name="PROJECT_Admin_Follow" xml:space="preserve">
+    <value>Followers</value>
+  </data>
+  <data name="PROJECT_Admin_Invits" xml:space="preserve">
+    <value>Invits</value>
+  </data>
+  <data name="PROJECT_Admin_Notes" xml:space="preserve">
+    <value>Notes</value>
+  </data>
+  <data name="PROJECT_Admin_Parameters" xml:space="preserve">
+    <value>Parameters</value>
+  </data>
+  <data name="PROJECT_Admin_Reports" xml:space="preserve">
+    <value>Reports</value>
+  </data>
+  <data name="PROJECT_By" xml:space="preserve">
+    <value>By</value>
+  </data>
+  <data name="PROJECT_Create_Licence" xml:space="preserve">
+    <value>Licence</value>
+  </data>
+  <data name="PROJECT_Create_LicenceDescription" xml:space="preserve">
+    <value>&lt;p&gt;&lt;i class="icon-phone"&gt;&lt;/i&gt; &lt;abbr title="CC-BY"&gt;BY&lt;/abbr&gt; Attribution — This license lets others distribute, remix, tweak, and build upon your work, even commercially, as long as they credit you for the original creation. This is the most accommodating of licenses offered. Recommended for maximum dissemination and use of licensed materials.&lt;/p&gt;
+            &lt;p&gt;&lt;i class="icon-envelope-alt"&gt;&lt;/i&gt; &lt;abbr title="CC-NC"&gt;NC&lt;/abbr&gt; NonCommercial - This license lets others remix, tweak, and build upon your work non-commercially, and although their new works must also acknowledge you and be non-commercial, they don’t have to license their derivative works on the same terms.&lt;/p&gt;
+            &lt;p&gt;&lt;i class="icon-time"&gt;&lt;/i&gt; &lt;abbr title="BY-ND"&gt;ND&lt;/abbr&gt; NoDerivs - This license allows for redistribution, commercial and non-commercial, as long as it is passed along unchanged and in whole, with credit to you&lt;/p&gt;</value>
+  </data>
+  <data name="PROJECT_Create_LicenceExplain" xml:space="preserve">
+    <value>Below is an explaination of the licences....</value>
+  </data>
+  <data name="PROJECT_Create_Title" xml:space="preserve">
+    <value>Explaination...</value>
+  </data>
+  <data name="PROJECT_Files" xml:space="preserve">
+    <value>Files</value>
+  </data>
+  <data name="PROJECT_Follows" xml:space="preserve">
+    <value>Followed by</value>
+  </data>
+  <data name="PROJECT_General" xml:space="preserve">
+    <value>General</value>
+  </data>
+  <data name="PROJECT_NewProject" xml:space="preserve">
+    <value>New project</value>
+  </data>
+  <data name="PROJECT_UploadFile" xml:space="preserve">
+    <value>Upload file</value>
+  </data>
+  <data name="SOCIAL_Invits" xml:space="preserve">
+    <value>Invits</value>
+  </data>
+  <data name="PROJECT_Popular" xml:space="preserve">
+    <value>Popular</value>
+  </data>
+  <data name="PROJECT_Random" xml:space="preserve">
+    <value>Random</value>
+  </data>
+  <data name="PROJECT_Files_Owner" xml:space="preserve">
+    <value>Owner</value>
+  </data>
+  <data name="FILE_Create_NoCloudStorage" xml:space="preserve">
+    <value>&lt;strong&gt;Please, bring your own cloud :) &lt;/strong&gt;&lt;br/&gt; Files are yours, you have to register an online storage account before uploading anything...</value>
+  </data>
+  <data name="FILE_Create_StorageLink" xml:space="preserve">
+    <value>Manage your account</value>
+  </data>
+  <data name="COMMON_BY" xml:space="preserve">
+    <value>by</value>
+  </data>
+  <data name="COMMON_CreatedOn" xml:space="preserve">
+    <value>Created on</value>
+  </data>
+  <data name="INViT_InvitSomeone" xml:space="preserve">
+    <value>Invit someone</value>
+  </data>
+  <data name="SOCIAL_btnInvit" xml:space="preserve">
+    <value>Send invit</value>
+  </data>
+  <data name="PROJECT_NoFiles" xml:space="preserve">
+    <value>There is no file to show...</value>
+  </data>
+  <data name="PROJECT_AdminOn" xml:space="preserve">
+    <value>on</value>
+  </data>
+  <data name="MAIL_Inbox" xml:space="preserve">
+    <value>Inbox</value>
+  </data>
+  <data name="MAIL_Sent" xml:space="preserve">
+    <value>Sent</value>
+  </data>
+  <data name="MAIL_Archive" xml:space="preserve">
+    <value>Archive</value>
+  </data>
+  <data name="MAIL_NewMessage" xml:space="preserve">
+    <value>New Message</value>
+  </data>
+  <data name="MAIL_For" xml:space="preserve">
+    <value>For</value>
+  </data>
+  <data name="MAIL_Subject" xml:space="preserve">
+    <value>Subject</value>
+  </data>
+  <data name="MAIL_Message" xml:space="preserve">
+    <value>Message</value>
+  </data>
+  <data name="MAIL_BtnSend" xml:space="preserve">
+    <value>Send</value>
+  </data>
+  <data name="MAIL_SendError" xml:space="preserve">
+    <value>Argh! you broke it.</value>
   </data>
 </root>

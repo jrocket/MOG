@@ -8,7 +8,7 @@ namespace MoG.Domain.Models
 {
     public class VMProjectFiles
     {
-        public Project Project {get ; set;}
+        public VMProject Project {get ; set;}
       
         public ICollection<String> Statuses { get; set; }
 
@@ -16,7 +16,7 @@ namespace MoG.Domain.Models
 
         public ICollection<String> Authors { get; set; }
 
-        public IList<MoGFile> FilteredFiles { get; set; }
+        public IList<ProjectFile> FilteredFiles { get; set; }
 
         public string filterByStatus { get; set; }
         public string filterByType { get; set; }

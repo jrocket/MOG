@@ -22,12 +22,21 @@ namespace MoG.Test.Service
             serviceProject = kernel.Get<IProjectService>();
             serviceUser = kernel.Get<IUserService>();
         }
+        [TestMethod]
+        public void ProjectService_Search()
+        {
+            string searchQuery = "project";
+
+            List<Project> result = serviceProject.Search(searchQuery, 1, 10);
+
+            Assert.IsTrue(result.Count > 0);
+        }
 
 
         [TestMethod]
         public void ProjectService_GetMyProject()
         {
-            var collection = serviceProject.GetByUserLogin("jrocket");
+            var collection = serviceProject.GetByUserLogin(1,10,"jrocket",false,false);
 
             Assert.IsTrue(collection != null, "result must be different from null");
 
@@ -43,8 +52,9 @@ namespace MoG.Test.Service
         [TestMethod]
         public void ProjectService_GetNew()
         {
-            int limit = 10;
-            var collection = serviceProject.GetNew(limit);
+            int page = 1;
+            int pagesize = 10;
+            var collection = serviceProject.GetNew(page,pagesize,false,false);
             Assert.IsTrue(collection != null, "result must be different from null");
 
             Assert.IsTrue(collection.Count(p => true) > 0, "collection size must be >0 - check your sample data");
@@ -59,17 +69,15 @@ namespace MoG.Test.Service
                 Assert.IsTrue(item.Id > 0, "each project must have an id > 0");
 
             }
-            Assert.IsTrue(count <= limit, "must no retrieve more result than asked");
+            Assert.IsTrue(count <= pagesize, "must no retrieve more result than asked");
         }
 
         [TestMethod]
         public void ProjectService_GetPopular()
         {
-            //Arrange
-            int limit = 10;
-
+            int pageSize = 10;
             //Act
-            var collection = serviceProject.GetPopular(limit);
+            var collection = serviceProject.GetPopular(1, pageSize,false,false);
             
             //Assert
             Assert.IsTrue(collection != null, "result must be different from null");
@@ -81,12 +89,12 @@ namespace MoG.Test.Service
             foreach (var item in collection)
             {
                 count++;
-                Assert.IsTrue(item.Likes < testLike, "project must be ordered in descending like order");
+                Assert.IsTrue(item.Likes <= testLike, "project must be ordered in descending like order");
                 testLike = item.Likes;
                 Assert.IsTrue(item.Id > 0, "each project must have an id > 0");
 
             }
-            Assert.IsTrue(count <= limit, "must no retrieve more result than asked");
+            Assert.IsTrue(count <= pageSize, "must no retrieve more result than asked");
         }
 
         [TestMethod]
@@ -96,7 +104,7 @@ namespace MoG.Test.Service
             int limit = 10;
 
             //Act
-            var collection = serviceProject.GetRandom(limit);
+            var collection = serviceProject.GetRandom(limit,false,false);
 
             //Assert
             Assert.IsTrue(collection != null, "result must be different from null");
@@ -162,7 +170,7 @@ namespace MoG.Test.Service
         {
             var project = serviceProject.GetById(1);
 
-            ICollection<MoGFile> files = project.Files;
+            ICollection<ProjectFile> files = project.Files;
 
             Assert.IsNotNull(files);
             Assert.IsTrue(files.Count > 0);

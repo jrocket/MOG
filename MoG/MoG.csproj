@@ -7,7 +7,7 @@
     <ProductVersion>
     </ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{D389F85F-E3EA-4A68-B1A6-684E51012E00}</ProjectGuid>
+    <ProjectGuid>{298870DF-C27B-4BF5-A741-7B8095CE7118}</ProjectGuid>
     <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
@@ -20,7 +20,10 @@
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
-    <TargetFrameworkProfile />
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -41,34 +44,34 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="AutoMapper">
-      <HintPath>..\packages\AutoMapper.3.0.0\lib\net40\AutoMapper.dll</HintPath>
+      <HintPath>..\packages\AutoMapper.3.1.1\lib\net40\AutoMapper.dll</HintPath>
     </Reference>
     <Reference Include="AutoMapper.Net4">
-      <HintPath>..\packages\AutoMapper.3.0.0\lib\net40\AutoMapper.Net4.dll</HintPath>
+      <HintPath>..\packages\AutoMapper.3.1.1\lib\net40\AutoMapper.Net4.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="Ninject, Version=3.0.0.0, Culture=neutral, PublicKeyToken=c7192dc5380945e7, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Ninject.3.0.2-unstable-9038\lib\net45-full\Ninject.dll</HintPath>
+    <Reference Include="Ninject">
+      <HintPath>..\packages\Ninject.3.0.1.10\lib\net45-full\Ninject.dll</HintPath>
     </Reference>
-    <Reference Include="Ninject.Web.Common, Version=3.0.0.0, Culture=neutral, PublicKeyToken=c7192dc5380945e7, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Ninject.Web.Common.3.0.2-unstable-9012\lib\net45-full\Ninject.Web.Common.dll</HintPath>
+    <Reference Include="Ninject.Web.Common">
+      <HintPath>..\packages\Ninject.Web.Common.3.0.0.7\lib\net45-full\Ninject.Web.Common.dll</HintPath>
     </Reference>
     <Reference Include="Ninject.Web.Mvc">
-      <HintPath>..\packages\Ninject.MVC3.3.0.2-unstable-9010\lib\net45-full\Ninject.Web.Mvc.dll</HintPath>
+      <HintPath>..\packages\Ninject.MVC3.3.0.0.6\lib\net45-full\Ninject.Web.Mvc.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
-    <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Web" />
-    <Reference Include="System.Web.Abstractions" />
     <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Abstractions" />
     <Reference Include="System.Web.Routing" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Configuration" />
@@ -113,7 +116,6 @@
       <Private>True</Private>
       <HintPath>..\packages\Newtonsoft.Json.5.0.6\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
-    <Reference Include="System.Xml.Linq" />
     <Reference Include="WebActivator">
       <HintPath>..\packages\WebActivator.1.5.3\lib\net40\WebActivator.dll</HintPath>
     </Reference>
@@ -182,19 +184,26 @@
     <Compile Include="App_Start\NinjectWebCommon.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
-    <Compile Include="Code\automapperSettings.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="Code\automapperSettings.cs" />
+    <Compile Include="Code\JsonHelper.cs" />
+    <Compile Include="Code\MogAuthAttribut.cs" />
+    <Compile Include="Code\ScheduledTaskService.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\CommentController.cs" />
     <Compile Include="Controllers\DEBUGController.cs" />
+    <Compile Include="Controllers\DownloadCartController.cs" />
     <Compile Include="Controllers\ErrorController.cs" />
     <Compile Include="Controllers\FileController.cs" />
+    <Compile Include="Controllers\FollowController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\LikeController.cs" />
+    <Compile Include="Controllers\LogController.cs" />
     <Compile Include="Controllers\MessageController.cs" />
     <Compile Include="Controllers\MogController.cs" />
+    <Compile Include="Controllers\NoteController.cs" />
     <Compile Include="Controllers\ProfileController.cs" />
     <Compile Include="Controllers\ProjectController.cs" />
+    <Compile Include="Controllers\SearchController.cs" />
     <Compile Include="Controllers\SocialController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -202,28 +211,57 @@
     <Compile Include="Helpers\CultureHelper.cs" />
     <Compile Include="HtmlExtensions\ComplexEnum.cs" />
     <Compile Include="HtmlExtensions\MenuItem.cs" />
+    <Compile Include="HtmlExtensions\SecurityExtension.cs" />
     <Compile Include="HtmlExtensions\TagsInputFor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="..\packages\AutoMapper.3.1.1\lib\net40\AutoMapper.Net4.dll">
+      <Link>AutoMapper.Net4.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\Data\tempfile_sound.mp3" />
+    <Content Include="Content\EasyPieChart\easypiechart.js" />
+    <Content Include="Content\EasyPieChart\easypiechart.min.js" />
+    <Content Include="Content\EasyPieChart\jquery.easy-pie-chart.css" />
+    <Content Include="Content\EasyPieChart\jquery.easypiechart.js" />
+    <Content Include="Content\EasyPieChart\jquery.easypiechart.min.js" />
     <Content Include="Content\font-awesome\css\font-awesome-ie7.css" />
     <Content Include="Content\font-awesome\css\font-awesome-ie7.min.css" />
     <Content Include="Content\font-awesome\css\font-awesome.css" />
     <Content Include="Content\font-awesome\css\font-awesome.min.css" />
     <Content Include="Content\font-awesome\font\fontawesome-webfont.svg" />
+    <Content Include="Content\Images\dropbox_logo.svg" />
+    <Content Include="Content\Images\Favicon.ico" />
+    <Content Include="Content\Images\GoogleDriveLogo.png" />
+    <Content Include="Content\Images\ipad-hand1.png" />
     <Content Include="Content\Images\loading.gif" />
+    <Content Include="Content\Images\loading_.gif" />
+    <Content Include="Content\Images\loading__.gif" />
+    <Content Include="Content\Images\NoAvatar.png" />
+    <Content Include="Content\Images\NothingYet.png" />
+    <Content Include="Content\Images\NothingYetbw.png" />
+    <Content Include="Content\Images\SkyDriveLogo.png" />
+    <Content Include="Content\Images\thumbnail_error.png" />
+    <Content Include="Content\Images\thumbnail_temp.png" />
     <Content Include="Content\jQuery.FileUpload\jquery.fileupload-ui.css" />
     <Content Include="Content\jQuery.FileUpload\jquery.fileupload.css" />
     <Content Include="Content\jQuery.FileUpload\loading.gif" />
     <Content Include="Content\jQuery.FileUpload\progressbar.gif" />
-    <Content Include="Content\modern-business.css" />
+    <Content Include="Content\QuickButton.css" />
+    <Content Include="Content\Select2\select2-bootstrap.css" />
+    <Content Include="Content\Select2\select2-spinner.gif" />
+    <Content Include="Content\Select2\select2.css" />
+    <Content Include="Content\Select2\select2.png" />
+    <Content Include="Content\Select2\select2x2.png" />
     <Content Include="Content\SoundManager\css\demo.css" />
     <Content Include="Content\SoundManager\css\optional-annotations.css" />
     <Content Include="Content\SoundManager\css\optional-themes.css" />
     <Content Include="Content\SoundManager\css\page-player.css" />
+    <Content Include="Content\SoundManager\css\simplePlayer.css" />
     <Content Include="Content\SoundManager\image\divot-bottom.png" />
     <Content Include="Content\SoundManager\image\divot.png" />
     <Content Include="Content\SoundManager\image\mabenz.png" />
@@ -238,18 +276,18 @@
     <Content Include="Content\SoundManager\swf\soundmanager2_debug.swf" />
     <Content Include="Content\SoundManager\swf\soundmanager2_flash9.swf" />
     <Content Include="Content\SoundManager\swf\soundmanager2_flash9_debug.swf" />
+    <Content Include="Content\Static\ComingSoon.html" />
     <Content Include="Content\TagInput\bootstrap-tagsinput-custom.css" />
     <Content Include="Content\TagInput\bootstrap-tagsinput.css" />
     <Content Include="Content\Timeline\loading.gif" />
     <Content Include="Content\Timeline\timeline%402x.png" />
     <Content Include="Content\Timeline\timeline.css" />
     <Content Include="Content\Timeline\timeline.png" />
-    <Content Include="Data\mabenz.mp3" />
-    <Content Include="Data\mabenz.png" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="Scripts\bootstrap-tagsinput.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Content\font-awesome\font\fontawesome-webfont.eot" />
@@ -275,9 +313,9 @@
     <Content Include="Content\font-awesome\scss\_path.scss" />
     <Content Include="Content\font-awesome\scss\_variables.scss" />
     <Content Include="Content\SoundManager\swf\soundmanager2_flash_xdomain.zip" />
+    <None Include="Properties\PublishProfiles\mogstaging - FTP.pubxml" />
+    <None Include="Properties\PublishProfiles\mogstaging - Web Deploy.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
-    <Content Include="Scripts\Views\File\Create.js" />
-    <Content Include="Scripts\Views\File\Display.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
@@ -300,17 +338,67 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\knockout-3.0.0.debug.js" />
     <Content Include="Scripts\knockout-3.0.0.js" />
-    <Content Include="Scripts\Views\Message\Index.js" />
     <Content Include="Scripts\modern-business.js" />
     <Content Include="Scripts\modernizr-2.6.2.js" />
     <Content Include="Scripts\MOG\DEBUGUser.js" />
+    <Content Include="Scripts\Moment.js\moment.min.js" />
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
+    <Content Include="Scripts\Select2\select2.js" />
+    <Content Include="Scripts\Select2\select2.min.js" />
+    <Content Include="Scripts\Select2\select2_locale_ar.js" />
+    <Content Include="Scripts\Select2\select2_locale_bg.js" />
+    <Content Include="Scripts\Select2\select2_locale_ca.js" />
+    <Content Include="Scripts\Select2\select2_locale_cs.js" />
+    <Content Include="Scripts\Select2\select2_locale_da.js" />
+    <Content Include="Scripts\Select2\select2_locale_de.js" />
+    <Content Include="Scripts\Select2\select2_locale_el.js" />
+    <Content Include="Scripts\Select2\select2_locale_es.js" />
+    <Content Include="Scripts\Select2\select2_locale_et.js" />
+    <Content Include="Scripts\Select2\select2_locale_eu.js" />
+    <Content Include="Scripts\Select2\select2_locale_fa.js" />
+    <Content Include="Scripts\Select2\select2_locale_fi.js" />
+    <Content Include="Scripts\Select2\select2_locale_fr.js" />
+    <Content Include="Scripts\Select2\select2_locale_gl.js" />
+    <Content Include="Scripts\Select2\select2_locale_he.js" />
+    <Content Include="Scripts\Select2\select2_locale_hr.js" />
+    <Content Include="Scripts\Select2\select2_locale_hu.js" />
+    <Content Include="Scripts\Select2\select2_locale_id.js" />
+    <Content Include="Scripts\Select2\select2_locale_is.js" />
+    <Content Include="Scripts\Select2\select2_locale_it.js" />
+    <Content Include="Scripts\Select2\select2_locale_ja.js" />
+    <Content Include="Scripts\Select2\select2_locale_ko.js" />
+    <Content Include="Scripts\Select2\select2_locale_lt.js" />
+    <Content Include="Scripts\Select2\select2_locale_lv.js" />
+    <Content Include="Scripts\Select2\select2_locale_mk.js" />
+    <Content Include="Scripts\Select2\select2_locale_ms.js" />
+    <Content Include="Scripts\Select2\select2_locale_nl.js" />
+    <Content Include="Scripts\Select2\select2_locale_no.js" />
+    <Content Include="Scripts\Select2\select2_locale_pl.js" />
+    <Content Include="Scripts\Select2\select2_locale_pt-BR.js" />
+    <Content Include="Scripts\Select2\select2_locale_pt-PT.js" />
+    <Content Include="Scripts\Select2\select2_locale_ro.js" />
+    <Content Include="Scripts\Select2\select2_locale_ru.js" />
+    <Content Include="Scripts\Select2\select2_locale_sk.js" />
+    <Content Include="Scripts\Select2\select2_locale_sv.js" />
+    <Content Include="Scripts\Select2\select2_locale_th.js" />
+    <Content Include="Scripts\Select2\select2_locale_tr.js" />
+    <Content Include="Scripts\Select2\select2_locale_ua.js" />
+    <Content Include="Scripts\Select2\select2_locale_vi.js" />
+    <Content Include="Scripts\Select2\select2_locale_zh-CN.js" />
+    <Content Include="Scripts\Select2\select2_locale_zh-TW.js" />
     <Content Include="Scripts\TagInput\bootstrap-tagsinput.js" />
     <Content Include="Scripts\TagInput\typeahead.min.js" />
     <Content Include="Scripts\Timeline\storyjs-embed.js" />
     <Content Include="Scripts\Timeline\timeline-min.js" />
     <Content Include="Scripts\Timeline\timeline.js" />
+    <Content Include="Scripts\Views\File\Create.js" />
+    <Content Include="Scripts\Views\File\Display.js" />
+    <Content Include="Scripts\Views\Message\index.js" />
+    <Content Include="Scripts\Views\Project\BtnFollow.js" />
+    <Content Include="Scripts\Views\Project\Detail.js" />
+    <Content Include="Scripts\Views\Project\ProjectList.js" />
+    <Content Include="Scripts\Views\Search\Index.js" />
     <Content Include="Scripts\_references.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
@@ -337,19 +425,42 @@
     <Content Include="Views\Account\Manage.cshtml" />
     <Content Include="Views\Account\Register.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
+    <Content Include="Scripts\Select2\select2_locale_en.js.template" />
+    <Content Include="Views\Account\_leftMenu.cshtml" />
+    <Content Include="Views\Account\_profilSmall.cshtml" />
+    <Content Include="Views\Account\Alert.cshtml" />
+    <Content Include="Views\Account\Avatar.cshtml" />
+    <Content Include="Views\Account\Dashboard.cshtml" />
+    <Content Include="Views\Account\Followed.cshtml" />
+    <Content Include="Views\Account\Storage.cshtml" />
+    <Content Include="Views\DownloadCart\Index.cshtml" />
+    <Content Include="Views\Error\ComingSoon.cshtml" />
     <Content Include="Views\Error\ERror.cshtml" />
     <Content Include="Views\Error\NotFound.cshtml" />
+    <Content Include="Views\File\CancelUpload.cshtml" />
+    <Content Include="Views\File\Create.cshtml" />
+    <Content Include="Views\File\Create2.cshtml" />
     <Content Include="Views\File\Detail.cshtml" />
-    <Content Include="Views\Profile\Alert.cshtml" />
-    <Content Include="Views\Profile\Avatar.cshtml" />
-    <Content Include="Views\Profile\Dashboard.cshtml" />
-    <Content Include="Views\Profile\Index.cshtml" />
-    <Content Include="Views\Profile\Storage.cshtml" />
-    <Content Include="Views\Profile\_leftMenu.cshtml" />
+    <Content Include="Views\File\Display.cshtml" />
+    <Content Include="Views\File\Edit.cshtml" />
+    <Content Include="Views\Log\Delete.cshtml" />
+    <Content Include="Views\Log\Details.cshtml" />
+    <Content Include="Views\Log\Index.cshtml" />
+    <Content Include="Views\Message\Chat.cshtml" />
+    <Content Include="Views\Message\Index.cshtml" />
+    <Content Include="Views\Message\Mention.cshtml" />
+    <Content Include="Views\Message\Received.cshtml" />
+    <Content Include="Views\Message\Search.cshtml" />
+    <Content Include="Views\Message\Sent.cshtml" />
+    <Content Include="Views\Message\_leftMenu.cshtml" />
     <Content Include="Views\Project\Activity.cshtml" />
     <Content Include="Views\Project\Administration.cshtml" />
     <Content Include="Views\Project\Create.cshtml" />
+    <Content Include="Views\Project\Delete.cshtml" />
+    <Content Include="Views\Project\DeleteConfirmed.cshtml" />
     <Content Include="Views\Project\Detail.cshtml" />
+    <Content Include="Views\Project\Display.cshtml" />
+    <Content Include="Views\Project\Edit.cshtml" />
     <Content Include="Views\Project\Files.cshtml" />
     <Content Include="Views\Project\New.cshtml" />
     <Content Include="Views\Project\ProjectList.cshtml" />
@@ -357,28 +468,28 @@
     <Content Include="Views\Project\_AdminArtwork.cshtml" />
     <Content Include="Views\Project\_AdminCollabs.cshtml" />
     <Content Include="Views\Project\_AdminComments.cshtml" />
+    <Content Include="Views\Project\_AdminFollow.cshtml" />
+    <Content Include="Views\Project\_AdminInvits.cshtml" />
     <Content Include="Views\Project\_AdminNotes.cshtml" />
     <Content Include="Views\Project\_AdminReports.cshtml" />
-    <Content Include="Views\Project\_AdminInvits.cshtml" />
+    <Content Include="Views\Project\_AdminSettings.cshtml" />
+    <Content Include="Views\Project\_AdminTags.cshtml" />
     <Content Include="Views\Project\_AdminTracking.cshtml" />
-    <Content Include="Views\Social\Friends.cshtml" />
-    <Content Include="Views\Social\Invits.cshtml" />
+    <Content Include="Views\Project\_trackRefinementPanel.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\LongDateString.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\ShortDateString.cshtml" />
-    <Content Include="Views\Project\_trackRefinementPanel.cshtml" />
     <Content Include="Views\Shared\_TopNavigationTab.cshtml" />
-    <Content Include="Views\Message\Index.cshtml" />
-    <Content Include="Views\File\Create.cshtml" />
-    <Content Include="Views\File\Create2.cshtml" />
-    <Content Include="Views\File\CancelUpload.cshtml" />
-    <Content Include="Views\File\Edit.cshtml" />
-    <Content Include="Views\File\Display.cshtml" />
-    <Content Include="Views\Project\_AdminSettings.cshtml" />
+    <Content Include="Views\Social\AddInvit.cshtml" />
+    <Content Include="Views\Social\Friends.cshtml" />
+    <Content Include="Views\Social\Invits.cshtml" />
+    <Content Include="Views\Social\Profile.cshtml" />
+    <Content Include="Views\Social\_vcardPartial.cshtml" />
+    <Content Include="Views\Social\_projectPartial.cshtml" />
+    <Content Include="Views\Social\_activityPartial.cshtml" />
+    <Content Include="Views\Search\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Views\Comment\" />
-    <Folder Include="Views\DEBUG\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
@@ -388,12 +499,12 @@
     <None Include="Project_Readme.html" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Mog.Domain\MoG.Domain.csproj">
-      <Project>{d8ff9bb2-6538-470e-90ff-5ed41a8c90c1}</Project>
+    <ProjectReference Include="..\MoG.Domain\MoG.Domain.csproj">
+      <Project>{5fa790ca-5fe9-4175-b3cd-fcf9cc544db3}</Project>
       <Name>MoG.Domain</Name>
     </ProjectReference>
     <ProjectReference Include="..\MoG.Resources\MoG.Resources.csproj">
-      <Project>{9db0db5b-275c-4db7-a87e-f25d5ce5d973}</Project>
+      <Project>{25e449e1-c5ca-4dc5-9006-ee52df0fabe6}</Project>
       <Name>MoG.Resources</Name>
     </ProjectReference>
   </ItemGroup>
@@ -413,9 +524,9 @@
         <WebProjectProperties>
           <UseIIS>True</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
-          <DevelopmentServerPort>3344</DevelopmentServerPort>
+          <DevelopmentServerPort>14489</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:3222/</IISUrl>
+          <IISUrl>http://localhost:14489/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

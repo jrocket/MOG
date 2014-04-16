@@ -1,0 +1,101 @@
+﻿@model MoG.Domain.Models.VMProfile
+@{
+    ViewBag.Title = "Profile";
+}
+<link href="/Content/QuickButton.css" rel="stylesheet" type="text/css">
+<link href="/Content/EasyPieChart/jquery.easy-pie-chart.css" rel="stylesheet" type="text/css">
+<div class="container">
+    <div class="row">
+        @if (Model != null)
+        {
+
+            @*<div class="col-md-12">
+                    <h1 class="page-header">Profile</h1>
+                </div>*@
+            <div class="col-lg-4" id="leftbar">
+
+                <div data-spy="affix" data-offset-top="60" data-offset-bottom="200">
+                    <h1 class="page-header">
+                        @Model.DisplayName
+                    </h1>
+
+                    <p>
+                        Joined on : @Model.CreatedOn
+                    </p>
+                    <ul class="nav">
+                        <li><a href="#" data-bind="click : btnProfileClicked">V-Card</a></li>
+                        <li><a href="#" data-bind="click : btnProjectClicked">Projects</a></li>
+                        <li><a href="#" data-bind="click : btnActivityClicked">Activity</a></li>
+                    </ul>
+
+                </div>
+
+            </div>
+
+            <div class="col-lg-8" id="rightbar">
+
+                @Html.Partial("_vcardPartial",  Model);
+            </div>
+        }
+    </div>
+
+</div>
+@section Scripts
+{
+    @Scripts.Render("~/bundles/knockout")
+
+
+    <script>
+        function ProfileVm() {
+            var self = this;
+            self.btnProfileClicked = function () {
+                var url = '@Url.Action("GetVcard", new { id = Model.Id })';
+                self.getPartialContent(url, function () {
+                    $('.easyPieChart').easyPieChart({
+                        animate: 1000,
+                        trackColor: "#999",
+                        scaleColor: "#AAA",
+                    });
+
+                }
+                );
+
+
+            }
+            self.btnProjectClicked = function () {
+                var url = '@Url.Action("GetProjects", new { id = Model.Login })';
+                self.getPartialContent(url);
+            }
+
+            self.btnActivityClicked = function () {
+                var url = '@Url.Action("GetActivity", new { id = Model.Id })';
+                self.getPartialContent(url);
+            }
+
+            self.getPartialContent = function (url, callback) {
+                $.get(url, null, function (data) {
+                    $("#rightbar").html(data);
+                    if (callback !== undefined) {
+                        callback();
+                    }
+                });
+            }
+        }
+
+        ko.applyBindings(new ProfileVm());
+
+    </script>
+
+
+    <script type="text/javascript" src="/Content/EasyPieChart/jquery.easypiechart.min.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            // Easy pie charts
+            $('.easyPieChart').easyPieChart({
+                animate: 1000,
+                trackColor: "#999",
+                scaleColor: "#AAA",
+            });
+        });
+    </script>
+}

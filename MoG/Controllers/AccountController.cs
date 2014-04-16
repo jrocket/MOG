@@ -9,24 +9,210 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.Owin.Security;
 using MoG.Domain.Models;
+using MoG.Domain.Service;
+using MoG.Helpers;
+using MoG.Domain.Skydrive;
 
 namespace MoG.Controllers
 {
     [Authorize]
-    public class AccountController : Controller
+    public class AccountController : MogController
     {
-        public AccountController()
-            : this(new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(new ApplicationDbContext())))
-        {
-        }
-
-        public AccountController(UserManager<ApplicationUser> userManager)
-        {
-            UserManager = userManager;
-        }
-
+        IDropBoxService serviceDropbox = null;
+             ISkydriveService serviceSkydrive = null;
+        IRegistrationCodeService serviceRegistrationCode = null;
         public UserManager<ApplicationUser> UserManager { get; private set; }
 
+
+        public AccountController(IUserService userService, 
+            IDropBoxService dropboxService, 
+            ISkydriveService skydriveService,
+            IRegistrationCodeService registrationService
+             , ILogService logService
+           
+            )
+            : this(userService
+            ,dropboxService
+            , skydriveService
+            ,registrationService
+            , new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(new ApplicationDbContext()))
+            , logService
+            )
+        {
+           
+        }
+
+        public AccountController(IUserService userService
+            ,IDropBoxService dropboxService
+            ,ISkydriveService skydriveService
+            ,IRegistrationCodeService registrationService
+            ,  UserManager<ApplicationUser> userManager
+             , ILogService logService
+            )
+            : base(userService, logService)
+        {
+            this.serviceDropbox = dropboxService;
+            this.serviceSkydrive = skydriveService;
+            UserManager = userManager;
+            userService.UserManager = userManager;
+            this.serviceRegistrationCode = registrationService;
+        }
+
+        #region Profile Management
+        ////
+        //// GET: /Account/
+        //public ActionResult Index(ManageMessageId? message)
+        //{
+        //    ViewBag.StatusMessage =
+        //       message == ManageMessageId.ChangePasswordSuccess ? "Your password has been changed."
+        //       : message == ManageMessageId.SetPasswordSuccess ? "Your password has been set."
+        //       : message == ManageMessageId.RemoveLoginSuccess ? "The external login was removed."
+        //       : message == ManageMessageId.Error ? "An error has occurred."
+        //       : "";
+        //    ViewBag.HasLocalPassword = HasPassword();
+        //    ViewBag.ReturnUrl = Url.Action("Manage");
+        //    return View(CurrentUser);
+        //}
+
+        public ActionResult SetLanguage(string culture)
+        {
+            // Validate input
+            culture = CultureHelper.GetImplementedCulture(culture);
+            // Save culture in a cookie
+            HttpCookie cookie = Request.Cookies["_culture"];
+            if (cookie != null)
+                cookie.Value = culture;   // update cookie value
+            else
+            {
+                cookie = new HttpCookie("_culture");
+                cookie.Value = culture;
+                cookie.Expires = DateTime.Now.AddYears(1);
+            }
+            Response.Cookies.Add(cookie);
+            return RedirectToAction("Manage");
+        }
+        public ActionResult Followed()
+        {
+            return View();
+        }
+
+
+        public ActionResult Storage()
+        {
+            UserStorageVM model = this.serviceUser.GetUserStorages(this.CurrentUser);
+            return View(model);
+        }
+
+        public ActionResult RegisterStorage(CloudStorageServices service)
+        {
+            string redirectUrl = "";
+            string targetUrl = "";
+            switch (service)
+            {
+                case CloudStorageServices.Dropbox:
+                    int credentialId = -1;
+                     targetUrl = this.Url.Action("RegisterDropboxStorage", "Account", null, this.Request.Url.Scheme);
+                    redirectUrl = this.serviceDropbox.AskForRegistrationUrl(this.CurrentUser, targetUrl, out credentialId);
+                    TempData["tempCredentialId"] = credentialId;
+                    break;
+                case CloudStorageServices.GoogleDrive:
+                    return this.RedirectToComingSoon();
+                    break;
+                case CloudStorageServices.Skydrive :
+                    return this.RedirectToComingSoon();
+                     targetUrl = this.Url.Action("RegisterSkydriveStorage", "Account", null, this.Request.Url.Scheme);
+                    redirectUrl = this.serviceSkydrive.AskForRegistrationUrl(this.CurrentUser, targetUrl, out credentialId);
+                    break;
+
+            }
+            return Redirect(redirectUrl);
+        }
+
+        public ActionResult RegisterSkydriveStorage(string oauth_token)
+        {
+            string redirectUrl = this.Url.Action("RegisterSkydriveStorage", "Account", null, this.Request.Url.Scheme);
+            if (!string.IsNullOrEmpty(Request.QueryString[OAuthConstants.AccessToken]))
+            {
+                // There is a token available already. It should be the token flow. Ignore it.
+                return  RedirectToAction("Storage");
+            }
+            string verifier = Request.QueryString[OAuthConstants.Code];
+            OAuthToken token;
+            OAuthError error;
+            if (!string.IsNullOrEmpty(verifier))
+            {
+                serviceSkydrive.RequestAccessTokenByVerifier(verifier, redirectUrl,out token, out error);
+                serviceSkydrive.RegisterAccount(token,CurrentUser);
+                return RedirectToAction("Storage");
+            }
+
+
+
+            string errorCode = Request.QueryString[OAuthConstants.Error];
+            string errorDesc = Request.QueryString[OAuthConstants.ErrorDescription];
+
+            if (!string.IsNullOrEmpty(errorCode))
+            {
+               //todo : do something
+            }
+            return RedirectToAction("Storage");
+        }
+
+        public ActionResult RegisterDropboxStorage(string oauth_token)
+        {
+            String dropBoxToken = Request["oauth_token"];
+            int tempCredentialId = (int)TempData["tempCredentialId"];
+            if (String.IsNullOrEmpty(dropBoxToken))
+            {
+                RedirectToErrorPage("Dropbox authorization failed... your local account is not linked to dropbox");
+
+            }
+            this.serviceDropbox.RegisterAccount(tempCredentialId);
+            return RedirectToAction("Storage");
+        }
+
+        [HttpPost]
+        public JsonResult CancelRegistration(int id)
+        {
+            this.serviceUser.CancelRegistration(id);
+            var result = new
+            {
+                result = true,
+                redirectUrl = Url.Action("Storage")
+            };
+
+            JsonResult json = new JsonResult() { Data = result };
+            return json;
+        }
+
+        public ActionResult Avatar(int id = -1)
+        {
+            UserProfileInfo model = null;
+            if (id > 0)
+            {
+                model = this.serviceUser.GetById(id);
+            }
+            else
+            {
+                model = CurrentUser;
+            }
+            return View(model);
+        }
+
+        public ActionResult Alert()
+        {
+            return View();
+        }
+
+        public ActionResult Dashboard()
+        {
+            return View();
+        }
+
+
+        #endregion 
+
+        #region Login / register
         //
         // GET: /Account/Login
         [AllowAnonymous]
@@ -79,9 +265,22 @@ namespace MoG.Controllers
             if (ModelState.IsValid)
             {
                 var user = new ApplicationUser() { UserName = model.UserName };
-                var result = await UserManager.CreateAsync(user, model.Password);
+                var registrationCode = this.serviceRegistrationCode.GetByCode(model.RegistrationCode);
+                if (registrationCode ==null || registrationCode.UserId!=null)
+                {
+                   return  this.RedirectToErrorPage("wrong registration code....");
+                }
+                //var result = await UserManager.CreateAsync(user, model.Password);
+                var result = await this.serviceUser.CreateAsync(user, 
+                    model.Password,
+                    model.RegistrationCode,
+                    model.Email,
+                    UserManager);
+
+                //var result = await  UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
+                    
                     await SignInAsync(user, isPersistent: false);
                     return RedirectToAction("Index", "Home");
                 }
@@ -126,7 +325,9 @@ namespace MoG.Controllers
                 : "";
             ViewBag.HasLocalPassword = HasPassword();
             ViewBag.ReturnUrl = Url.Action("Manage");
-            return View();
+            ManageUserViewModel model = new ManageUserViewModel();
+            model.User = CurrentUser;
+            return View(model);
         }
 
         //
@@ -177,6 +378,7 @@ namespace MoG.Controllers
             }
 
             // If we got this far, something failed, redisplay form
+            model.User = CurrentUser;
             return View(model);
         }
 
@@ -318,6 +520,7 @@ namespace MoG.Controllers
             }
             base.Dispose(disposing);
         }
+        #endregion
 
         #region Helpers
         // Used for XSRF protection when adding external logins
@@ -334,6 +537,7 @@ namespace MoG.Controllers
         private async Task SignInAsync(ApplicationUser user, bool isPersistent)
         {
             AuthenticationManager.SignOut(DefaultAuthenticationTypes.ExternalCookie);
+
             var identity = await UserManager.CreateIdentityAsync(user, DefaultAuthenticationTypes.ApplicationCookie);
             AuthenticationManager.SignIn(new AuthenticationProperties() { IsPersistent = isPersistent }, identity);
         }
@@ -378,7 +582,8 @@ namespace MoG.Controllers
 
         private class ChallengeResult : HttpUnauthorizedResult
         {
-            public ChallengeResult(string provider, string redirectUri) : this(provider, redirectUri, null)
+            public ChallengeResult(string provider, string redirectUri)
+                : this(provider, redirectUri, null)
             {
             }
 

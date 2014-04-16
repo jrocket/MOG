@@ -1,5 +1,130 @@
-﻿<div class="row" id="PartialContent">
+﻿@model int
+<div class="row" id="PartialContent">
     <div class="col-md-12">
-        AdminNotes
-    </div>
+        @{
+            ViewBag.Title = "Notes";
+        }
+
+        <h2>Notes</h2>
+
+        <form role="form">
+            <div class="form-group">
+              
+                <textarea  class="form-control" id="NewNote" placeholder="Enter note" data-bind="value:newNote" />
+            </div>
+            <button type="submit" class="btn btn-default" data-bind="click:btnSaveClicked">Save</button>
+        </form>
+
+            <div class="row" data-bind="foreach: notes">
+                <div class="col-lg-12">
+                    <div class="well">
+                        <h4><span data-bind="text:$root.getDate(CreatedOn)"></span> <small><button data-bind="click: $root.btnDeleteClicked"><span class="glyphicon glyphicon-trash"></span>&nbsp;Delete</button></small></h4>
+                      
+                        <p>
+                            <span data-bind="text:Message"></span>
+                        </p>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            @Scripts.Render("~/bundles/knockout")
+
+
+            <script>
+
+
+
+
+                function NotesVM() {
+
+                    var self = this;
+
+                    self.notes = new ko.observableArray();
+                    self.newNote = new ko.observable();
+                    self.deleteUrl = "/Notes/Delete";
+                    self.projectId = '@Model';
+
+                    self.getData = function () {
+
+                        $.post("/Note/GetNotes", { id: self.projectId }, function (data) {
+
+                            self.notes(data);
+                        });
+                    };
+
+                    self.getDate = function (csharpDate) {
+                        
+                        var date = new Date(parseInt(csharpDate.substr(6)));
+                        return date;
+                    }
+                    self.btnSaveClicked = function () {
+                        var noteText = self.newNote();
+                        var url = '@Url.Action("Note","Note")';
+                        if (noteText && noteText != "") {
+                            var payload = {
+                                id: self.projectId,
+                                message : noteText
+                            };
+
+                            $.ajax({
+                                url: url,
+                                type: 'post',
+                                dataType: 'json',
+                                data: ko.toJSON(payload),
+                                contentType: 'application/json',
+                                success: function (result) {
+
+                                    if (result == true) {
+                                        self.newNote("");
+                                        self.getData();
+                                    }
+                                },
+                                error: function (err) {
+                                    alert(err.responseText);
+                                }
+                            });
+                        }
+                    }
+                    self.btnDeleteClicked = function(item) {
+                        if (confirm('Are you sure'))
+                        {
+                            var url = '@Url.Action("Delete", "Note")';
+                            var data = { id: item.Id};
+                            $.post(url, data, function result(data) {
+                                
+                                if (data)
+                                {
+                                    self.getData();
+                                }
+                            });
+                        }
+                    }
+
+
+
+                    //self.btnActionClicked = function (url, data, event) {
+                    //    console.log(url);
+                    //    var postData = { id: data.Id };
+                    //    $.post(url, postData,
+                    //        function (result) {
+                    //            self.invits(result);
+                    //        });
+
+                    //}
+
+
+                    self.getData();
+
+
+                }
+                var object = $.extend(projectAdministrationBindingRoot, new NotesVM());
+
+
+
+            </script>
+
+</div>
 </div>

@@ -82,7 +82,25 @@ namespace MoG.App_Start
             kernel.Bind<IActivityService>().To<ActivityService>();
             kernel.Bind<ITempFileService>().To<TempFileService>();
             kernel.Bind<IWaveformService>().To<WaveformService>();
-
+            kernel.Bind<IDropBoxService>().To<DropBoxService>();
+            kernel.Bind<IDownloadCartService>().To<DownloadCartService>();
+            kernel.Bind<ILocalStorageService>().To<AzureStorageService>();
+            kernel.Bind<IThumbnailService>().To<ThumbnailService>();
+            kernel.Bind<ILikeService>().To<LikeService>();
+            kernel.Bind<ILogService>().To<LogService>();
+            kernel.Bind<ISocialService>().To<SocialService>();
+            kernel.Bind<IInvitService>().To<InvitService>();
+            kernel.Bind<INoteService>().To<NoteService>();
+            kernel.Bind<IFollowService>().To<FollowService>();
+            kernel.Bind<IScheduledTaskService>().To<ScheduledTaskService>().WithConstructorArgument("_cache", HttpRuntime.Cache);
+            kernel.Bind<ISecurityService>().To<SecurityService>();
+            kernel.Bind<IRegistrationCodeService>().To<RegistrationCodeService>();
+            kernel.Bind<ISkydriveService>().To<SkydriveService>();
+            kernel.Bind<IInviteMeService>().To<InviteMeService>();
+            kernel.Bind<IParameterService>().To<ParameterService>();
+            kernel.Bind<IMailService>().To<MailService>();
+            kernel.Bind<IUserStatisticsService>().To<UserStatisticsService>();
+            
 
             kernel.Bind<IProjectRepository>().To<ProjectRepository>();
             kernel.Bind<IActivityRepository>().To<ActivityRepository>();
@@ -91,6 +109,17 @@ namespace MoG.App_Start
             kernel.Bind<IUserRepository>().To<UserRepository>();
             kernel.Bind<IMessageRepository>().To<MessageRepository>();
             kernel.Bind<ITempFileRepository>().To<TempFileRepository>();
+            kernel.Bind<IThumbnailRepository>().To<ThumbnailRepository>();
+            kernel.Bind<IAuthCredentialRepository>().To<AuthCredentialRepository>();
+            kernel.Bind<IDownloadCartRepository>().To<DownloadCartRepository>();
+            kernel.Bind<ILikeRepository>().To<LikeRepository>();
+            kernel.Bind<ILogRepository>().To<LogRepository>();
+            kernel.Bind<IInvitRepository>().To<InvitRepository>();
+            kernel.Bind<INoteRepository>().To<NoteRepository>();
+            kernel.Bind<IFollowRepository>().To<FollowRepository>();
+            kernel.Bind<IRegistrationCodeRepository>().To<RegistrationCodeRepository>();
+            kernel.Bind<IInviteMeRepository>().To<InviteMeRepository>();
+            kernel.Bind<IParameterRepository>().To<ParameterRepository>();
 
             kernel.Bind<IdbContextProvider>().To<dbContextProvider>();
 

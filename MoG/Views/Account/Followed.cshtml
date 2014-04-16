@@ -1,0 +1,78 @@
+﻿
+@{
+    ViewBag.Title = @Resource.PROFILE_FOLLOWED;
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <h1 class="page-header">@Resource.PROFILE_PageTitle</h1>
+    </div>
+</div>
+
+
+
+<div class="row">
+    @Html.Partial("_LeftMenu")
+
+    <div class="col-lg-10">
+        <div class="row" data-bind="foreach: followed">
+            <div class="col-lg-2">
+                <div class="thumbnail">
+                    <a data-bind="attr : {href: '@Url.Action("Detail","Project")'+ '/'+ $data.Follower.Id}">
+                        <img class="img-responsive" data-bind="attr : {src : $data.Project.ImageUrlThumb1}" />
+                    </a>
+                    <div class="caption text-center">
+
+                        <div class="content-heading">
+                            <a data-bind="attr : {href: '@Url.Action("Detail","Project")'+ '/'+$data.Project.Id}"><h4 data-bind="text:$data.Project.Name"></h4></a>
+
+                            <p>
+                                <small><button data-bind="click : $root.btnUnfollowClicked"><span class="glyphicon glyphicon-eye-close "></span>&nbsp;Unfollow</button></small>
+                            </p>
+
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+
+    </div>
+</div>
+
+@section scripts
+{
+@Scripts.Render("~/bundles/knockout")
+    <script>
+        function FollowedVM() {
+            var self = this;
+            self.followed = ko.observableArray();
+
+            self.btnUnfollowClicked = function (data) {
+                console.dir(data);
+                var url = '@Url.Action("unfollow","follow")';
+                var data = {id : data.ProjectId};
+                $.post(url, data, function (result) {
+                    if (result) {
+                        alert("successfully unfollowed");
+                        self.getData();
+                    }
+                });
+            }
+
+            self.getData = function () {
+                $.post("/follow/GetFollowed", null, function (data) {
+                    self.followed(data);
+                });
+            };
+            self.getData();
+
+        }
+        
+        ko.applyBindings(new FollowedVM());
+    </script>
+
+}

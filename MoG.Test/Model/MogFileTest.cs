@@ -13,7 +13,7 @@ namespace MoG.Test.Model
             Mp3Metadata data = new Mp3Metadata();
             data.Duration = "4:07";
 
-            MoGFile file = new MoGFile();
+            ProjectFile file = new ProjectFile();
             file.SetMetadata(data);
 
             var retrievedMetadata  = file.GetMetadata() as Mp3Metadata;

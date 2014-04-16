@@ -123,8 +123,14 @@
   <data name="COMMON_Cancel" xml:space="preserve">
     <value>Annuler</value>
   </data>
+  <data name="COMMON_CreateNewProject" xml:space="preserve">
+    <value>Créer un nouveau projet</value>
+  </data>
   <data name="COMMON_Description" xml:space="preserve">
     <value>Description</value>
+  </data>
+  <data name="COMMON_DownloadCart" xml:space="preserve">
+    <value>Panier de téléchargement</value>
   </data>
   <data name="COMMON_Files" xml:space="preserve">
     <value>Fichiers</value>
@@ -138,8 +144,14 @@
   <data name="COMMON_Latest" xml:space="preserve">
     <value>Derniers</value>
   </data>
+  <data name="COMMON_LoremIpsum" xml:space="preserve">
+    <value>Lid est laborum dolo rumes fugats untras. Etharums ser quidem rerum facilis dolores nemis omnis fugats vitaes nemo minima rerums unsers sadips amets. Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.</value>
+  </data>
   <data name="COMMON_Messages" xml:space="preserve">
     <value>Messages</value>
+  </data>
+  <data name="COMMON_NewProjects" xml:space="preserve">
+    <value>Nouveaux projets</value>
   </data>
   <data name="COMMON_Save" xml:space="preserve">
     <value>Sauver</value>
@@ -158,6 +170,9 @@
   </data>
   <data name="FILE_AddFiles" xml:space="preserve">
     <value>Ajouter un fichier...</value>
+  </data>
+  <data name="FILE_AddToDownloadCart" xml:space="preserve">
+    <value>Ajouter au panier</value>
   </data>
   <data name="FILE_Administration" xml:space="preserve">
     <value>Administration</value>
@@ -206,6 +221,9 @@
   </data>
   <data name="FILE_Processing" xml:space="preserve">
     <value>Traitement...</value>
+  </data>
+  <data name="FILE_Promote" xml:space="preserve">
+    <value>Promouvoir</value>
   </data>
   <data name="FILE_Reject" xml:space="preserve">
     <value>Rejeter</value>
@@ -261,16 +279,156 @@
   <data name="PROFILE_Avatar" xml:space="preserve">
     <value>Avatar</value>
   </data>
+  <data name="PROFILE_ChangeAvatar" xml:space="preserve">
+    <value>Modifier</value>
+  </data>
   <data name="PROFILE_Dashboard" xml:space="preserve">
     <value>Tableau de bord</value>
   </data>
+  <data name="PROFILE_FOLLOWED" xml:space="preserve">
+    <value>Suivis</value>
+  </data>
+  <data name="PROFILE_JoinedOn" xml:space="preserve">
+    <value>Inscrit le </value>
+  </data>
+  <data name="PROFILE_Language" xml:space="preserve">
+    <value>Langue</value>
+  </data>
   <data name="PROFILE_MySettings" xml:space="preserve">
     <value>Mes parametres</value>
+  </data>
+  <data name="PROFILE_NoFileInCart" xml:space="preserve">
+    <value>Vous n'avez pas de fichier dans votre panier</value>
   </data>
   <data name="PROFILE_PageTitle" xml:space="preserve">
     <value>Profil</value>
   </data>
   <data name="PROFILE_Storage" xml:space="preserve">
     <value>Stockage</value>
+  </data>
+  <data name="PROJECT_Activity" xml:space="preserve">
+    <value>Activités</value>
+  </data>
+  <data name="PROJECT_Administration" xml:space="preserve">
+    <value>Administration</value>
+  </data>
+  <data name="PROJECT_Admin_Artwork" xml:space="preserve">
+    <value>Artwork</value>
+  </data>
+  <data name="PROJECT_Admin_Collabs" xml:space="preserve">
+    <value>Collabs</value>
+  </data>
+  <data name="PROJECT_Admin_Comments" xml:space="preserve">
+    <value>Commentaires</value>
+  </data>
+  <data name="PROJECT_Admin_Follow" xml:space="preserve">
+    <value>Followers</value>
+  </data>
+  <data name="PROJECT_Admin_Invits" xml:space="preserve">
+    <value>Invits</value>
+  </data>
+  <data name="PROJECT_Admin_Notes" xml:space="preserve">
+    <value>Notes</value>
+  </data>
+  <data name="PROJECT_Admin_Parameters" xml:space="preserve">
+    <value>Paramètres</value>
+  </data>
+  <data name="PROJECT_Admin_Reports" xml:space="preserve">
+    <value>Rapports</value>
+  </data>
+  <data name="PROJECT_By" xml:space="preserve">
+    <value>de</value>
+  </data>
+  <data name="PROJECT_Create_Licence" xml:space="preserve">
+    <value>Licence</value>
+  </data>
+  <data name="PROJECT_Create_LicenceDescription" xml:space="preserve">
+    <value>&lt;p&gt;&lt;i class="icon-phone"&gt;&lt;/i&gt; &lt;abbr title="Phone"&gt;BY&lt;/abbr&gt;Attribution — Vous devez attribuer l’œuvre de la manière indiquée par l’auteur de l’œuvre ou le titulaire des droits (mais pas d’une manière qui suggérerait qu’ils vous approuvent, vous ou votre utilisation de l’œuvre).&lt;/p&gt;
+            &lt;p&gt;&lt;i class="icon-envelope-alt"&gt;&lt;/i&gt; &lt;abbr title="Email"&gt;NC&lt;/abbr&gt;Pas d’Utilisation Commerciale — Vous n’avez pas le droit d’utiliser cette œuvre à des fins commerciales.&lt;/p&gt;
+            &lt;p&gt;&lt;i class="icon-time"&gt;&lt;/i&gt; &lt;abbr title="Hours"&gt;ND&lt;/abbr&gt;Pas d’œuvres dérivées — Vous n’avez pas le droit de modifier, de transformer ou d’adapter cette œuvre.&lt;/p&gt;</value>
+  </data>
+  <data name="PROJECT_Create_LicenceExplain" xml:space="preserve">
+    <value>Ci-dessous l'explication de la licence que vous avez choisie</value>
+  </data>
+  <data name="PROJECT_Create_Title" xml:space="preserve">
+    <value>Explication</value>
+  </data>
+  <data name="PROJECT_Files" xml:space="preserve">
+    <value>Fichiers</value>
+  </data>
+  <data name="PROJECT_Follows" xml:space="preserve">
+    <value>Suivis par</value>
+  </data>
+  <data name="PROJECT_General" xml:space="preserve">
+    <value>Général</value>
+  </data>
+  <data name="PROJECT_NewProject" xml:space="preserve">
+    <value>Nouveau projet</value>
+  </data>
+  <data name="PROJECT_Popular" xml:space="preserve">
+    <value>Populaire</value>
+  </data>
+  <data name="PROJECT_Random" xml:space="preserve">
+    <value>Au hasard</value>
+  </data>
+  <data name="PROJECT_UploadFile" xml:space="preserve">
+    <value>Uploader un fichier</value>
+  </data>
+  <data name="SOCIAL_Invits" xml:space="preserve">
+    <value>Invitations</value>
+  </data>
+  <data name="PROJECT_Files_Owner" xml:space="preserve">
+    <value>Propriétaire</value>
+  </data>
+  <data name="FILE_Create_NoCloudStorage" xml:space="preserve">
+    <value>&lt;strong&gt;Ramène ton clau(ou)de :)&lt;/strong&gt;&lt;br/&gt; Il faut un service de stockage en ligne pour pouvoir uploader un fichier...</value>
+  </data>
+  <data name="FILE_Create_StorageLink" xml:space="preserve">
+    <value>Gerer mon compte </value>
+  </data>
+  <data name="COMMON_BY" xml:space="preserve">
+    <value>par</value>
+  </data>
+  <data name="COMMON_CreatedOn" xml:space="preserve">
+    <value>Créé le</value>
+  </data>
+  <data name="INViT_InvitSomeone" xml:space="preserve">
+    <value>Inviter quelqu'un</value>
+  </data>
+  <data name="SOCIAL_btnInvit" xml:space="preserve">
+    <value>Envoyer invit'</value>
+  </data>
+  <data name="PROJECT_NoFiles" xml:space="preserve">
+    <value>Il n'y a pas de fichiers...</value>
+  </data>
+  <data name="PROJECT_AdminOn" xml:space="preserve">
+    <value>sur</value>
+  </data>
+  <data name="MAIL_Inbox" xml:space="preserve">
+    <value>Reçus</value>
+  </data>
+  <data name="MAIL_Sent" xml:space="preserve">
+    <value>Envoyés</value>
+  </data>
+  <data name="MAIL_Archive" xml:space="preserve">
+    <value>Archive</value>
+  </data>
+  <data name="MAIL_NewMessage" xml:space="preserve">
+    <value>Nouveau message</value>
+  </data>
+  <data name="MAIL_For" xml:space="preserve">
+    <value>Pour</value>
+  </data>
+  <data name="MAIL_Subject" xml:space="preserve">
+    <value>Sujet</value>
+  </data>
+  <data name="MAIL_Message" xml:space="preserve">
+    <value>Message</value>
+  </data>
+  <data name="MAIL_BtnSend" xml:space="preserve">
+    <value>Envoyer</value>
+  </data>
+  <data name="MAIL_SendError" xml:space="preserve">
+    <value>Oups, y'a eu une erreur</value>
   </data>
 </root>

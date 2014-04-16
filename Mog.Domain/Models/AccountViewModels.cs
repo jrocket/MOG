@@ -26,6 +26,8 @@ namespace MoG.Domain.Models
         [Display(Name = "Confirm new password")]
         [Compare("NewPassword", ErrorMessage = "The new password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
+
+        public UserProfileInfo User { get; set; }
     }
 
     public class LoginViewModel
@@ -55,9 +57,19 @@ namespace MoG.Domain.Models
         [Display(Name = "Password")]
         public string Password { get; set; }
 
+        [Required]
+        [DataType(DataType.EmailAddress)]
+        [Display(Name = "Email")]
+        public string Email { get; set; }
+
+        [Required]
+        [Display(Name = "Registration code")]
+        public string RegistrationCode { get; set; }
+
+
         [DataType(DataType.Password)]
         [Display(Name = "Confirm password")]
         [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
-        public string ConfirmPassword { get; set; }
+        public string ConfirmPassword { get; set; } 
     }
 }

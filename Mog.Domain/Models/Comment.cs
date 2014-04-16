@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MoG.Domain.Models
 {
@@ -15,18 +16,22 @@ namespace MoG.Domain.Models
 
         public DateTime CreatedOn { get; set; }
         public DateTime? ModifiedOn { get; set; }
-        public virtual UserProfile Creator { get; set; }
+        public virtual UserProfileInfo Creator { get; set; }
 
         public int? ProjectId { get; set; }
 
+
         public int? FileId { get; set; }
 
+        [ForeignKey("FileId")]
+        public virtual ProjectFile File { get; set; }
 
         public string CreatorName
         {
             get
             {
-                return Creator.DisplayName;
+
+                return (Creator!=null ? Creator.DisplayName : String.Empty);
             }
         }
 

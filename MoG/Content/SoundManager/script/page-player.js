@@ -364,7 +364,7 @@ function PagePlayer() {
       pl.addClass(this._data.oLI,this._data.className);
     },
 
-    finish: function() {
+    finish: function () {
       pl.removeClass(this._data.oLI,this._data.className);
       this._data.className = '';
       this._data.oPosition.style.width = '0px';
@@ -375,6 +375,22 @@ function PagePlayer() {
         self.setPageTitle();
         self.resetPageIcon();
       }
+      var payload = JSON.stringify(          {
+          url : self.sounds[0].url,
+          _nocache: new Date().getMilliseconds()
+      }
+);
+
+      $.ajax({
+          url: '/file/played/',
+          method : 'POST',
+          dataType: 'json',
+          data: payload,
+          contentType: 'application/json',
+          success: function (result) {
+              console.dir(result)          }
+      });
+
     },
 
     whileloading: function() {

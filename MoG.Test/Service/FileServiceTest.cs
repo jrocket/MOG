@@ -6,6 +6,7 @@ using MoG.Domain.Service;
 using MoG.App_Start;
 using Ninject;
 using System.Linq;
+using MoG.Domain.Repository;
 
 namespace MoG.Test.Service
 {
@@ -17,6 +18,10 @@ namespace MoG.Test.Service
         private IUserService serviceUser;
 
         private IProjectService serviceProject;
+
+        private IAuthCredentialRepository repoCredential;
+
+     
         
         [TestInitialize]
         public void MyTestInitialize()
@@ -25,6 +30,7 @@ namespace MoG.Test.Service
             serviceFile = kernel.Get<IFileService>();
             serviceUser = kernel.Get<IUserService>();
             serviceProject = kernel.Get<IProjectService>();
+            repoCredential = kernel.Get<IAuthCredentialRepository>();
         }
 
 
@@ -32,7 +38,7 @@ namespace MoG.Test.Service
         [TestMethod]
         public void FileService_GetProjectFiles()
         {
-            List<MoGFile> files = serviceFile.GetProjectFile(1);
+            List<ProjectFile> files = serviceFile.GetProjectFile(1);
 
             Assert.IsNotNull(files);
             Assert.IsTrue(files.Count > 0);
@@ -69,14 +75,17 @@ namespace MoG.Test.Service
         [TestMethod]
         public void FileService_Create()
         {
-            var project = serviceProject.GetNew(10).ToList();
-            var user = serviceUser.GetCurrentUser();
-            MoGFile f = new MoGFile();
+            var project = serviceProject.GetNew(1,10,false,false).ToList();
+            var storageCredential = this.repoCredential.GetById(1);
+            var user = serviceUser.GetAll().FirstOrDefault();
+            ProjectFile f = new ProjectFile();
             f.Description = "Test + " + DateTime.Now.ToString();
             f.Tags = FileType.Drums.ToString();
             f.Likes = 42;
-            f.Name = "TEST FILE " + DateTime.Now.Ticks;
+            f.DisplayName = "TEST FILE " + DateTime.Now.Ticks;
+            f.InternalName = "TEST FILE INTERNAL " + DateTime.Now.Ticks;
             f.ProjectId = project[0].Id;
+            f.AuthCredentialId = storageCredential.Id;
 
 
 

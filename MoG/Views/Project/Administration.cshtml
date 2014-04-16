@@ -1,4 +1,4 @@
-﻿@model MoG.Domain.Models.Project
+﻿@model MoG.Domain.Models.VMProject
 @{
     ViewBag.Title = "Administration";
 }
@@ -25,7 +25,6 @@
                 <a href="#" data-bind="click : $parent.btnAdminClicked , css: button" role="button"><span data-bind="css: icon"></span> <br /><span data-bind="text: text "></span></a>
 
             </div>
-            @*<a href="http://www.jquery2dotnet.com/" class="btn btn-success btn-lg btn-block" role="button"><span class="glyphicon glyphicon-globe"></span> Website</a>*@
         </div>
 
         <div class="col-md-9">
@@ -35,11 +34,20 @@
 
     @section scripts
     {
-        @Scripts.Render("~/bundles/knockout")
+  
 
+        @Scripts.Render("~/bundles/knockout")
+    <script type="text/javascript" src="@Url.Content("~/Scripts/Views/Project/BtnFollow.js")"></script>
 
         <script>
-            function menuEntry(text, icon, url, button) {
+
+            // Constructor for an object with two properties
+            var SelectItem = function (name, value) {
+                this.Name = name;
+                this.Value = value;
+            };
+
+           function menuEntry(text, icon, url, button) {
                 var self = this;
                 self.text = text;
                 self.icon = icon;
@@ -51,43 +59,49 @@
             function ProjectAdministrationVM() {
 
                 var self = this;
+              
 
-                $.getJSON('@Url.Action("JSON",new {id = @Model.Id})', function (data) {
+                $.getJSON('@Url.Action("JSON",new {id = @Model.Project.Id})', function (data) {
                     self.Project = ko.observable(data);
-                    console.dir(data);
+                   
                 });
 
 
+                this.availablePublicity  =  ko.observableArray([
+           new SelectItem("Public", 1),
+           new SelectItem("Private", 2)
+                ]);
+
+                this.availableLicence =  ko.observableArray([
+           new SelectItem("CC BY", 1),
+           new SelectItem("CC BY-ND", 2),
+           new SelectItem("CC BY-ND-NC",3)
+                ]);
+           
+                this.message = ko.observable();
+                this.isMessageVisible = ko.observable(false);
+
+
                 self.menuEntries = ko.observableArray([
-                new menuEntry("Reports", "glyphicon glyphicon-signal", '@Url.Action("AdminReports", "Project", new { id = Model.Id })', "btn btn-primary btn-lg"),
-                new menuEntry("Parametres", "glyphicon glyphicon-list-alt", '@Url.Action("AdminSettings","Project", new { id = Model.Id } )', "btn btn-danger btn-lg"),
-                new menuEntry("Suivi", "glyphicon glyphicon-eye-open", '@Url.Action("AdminTracking", "Project", new { id = Model.Id })', "btn btn-warning btn-lg"),
-                new menuEntry("Comments", "glyphicon glyphicon-comment", '@Url.Action("AdminComments", "Project", new { id = Model.Id })', "btn btn-primary btn-lg"),
-                new menuEntry("Collabs", "glyphicon glyphicon-user", '@Url.Action("AdminCollabs", "Project", new { id = Model.Id })', "btn btn-success btn-lg"),
-                new menuEntry("Notes", "glyphicon glyphicon-file", '@Url.Action("AdminNotes", "Project", new { id = Model.Id })', "btn btn-info btn-lg"),
-                new menuEntry("Artwork", "glyphicon glyphicon-picture", '@Url.Action("AdminArtwork", "Project", new { id = Model.Id })', "btn btn-primary btn-lg"),
-                new menuEntry("Invits", "glyphicon glyphicon-tag", '@Url.Action("AdminInvits", "Project", new { id = Model.Id })', "btn btn-primary btn-lg")
+                @*new menuEntry('@Resource.PROJECT_Admin_Reports', "glyphicon glyphicon-signal", '@Url.Action("AdminReports", "Project", new { id = Model.Project.Id })', "btn btn-primary btn-lg"),*@
+                new menuEntry('@Resource.PROJECT_Admin_Parameters', "glyphicon glyphicon-list-alt", '@Url.Action("AdminSettings","Project", new { id = Model.Project.Id } )', "btn btn-danger btn-lg"),
+                new menuEntry('@Resource.PROJECT_Admin_Follow', "glyphicon glyphicon-eye-open", '@Url.Action("AdminFollow", "Project", new { id = Model.Project.Id })', "btn btn-warning btn-lg"),
+                new menuEntry('@Resource.PROJECT_Admin_Comments', "glyphicon glyphicon-comment", '@Url.Action("AdminComments", "Project", new { id = Model.Project.Id })', "btn btn-primary btn-lg"),
+                new menuEntry('@Resource.PROJECT_Admin_Collabs', "glyphicon glyphicon-user", '@Url.Action("AdminCollabs", "Project", new { id = Model.Project.Id })', "btn btn-success btn-lg"),
+                new menuEntry('@Resource.PROJECT_Admin_Notes', "glyphicon glyphicon-file", '@Url.Action("AdminNotes", "Project", new { id = Model.Project.Id })', "btn btn-info btn-lg"),
+                new menuEntry('@Resource.PROJECT_Admin_Artwork', "glyphicon glyphicon-picture", '@Url.Action("AdminArtwork", "Project", new { id = Model.Project.Id })', "btn btn-primary btn-lg"),
+                new menuEntry('@Resource.PROJECT_Admin_Invits', "glyphicon glyphicon-tag", '@Url.Action("AdminInvits", "Project", new { id = Model.Project.Id })', "btn btn-primary btn-lg")
 
                 ]);
 
 
-
-                //self.GoTo = function (id) {
-                //    console.log("id = " + id);
-                //    $.get(self.ProjectAdministration[id], function (data) {
-                //        $('#dynamicContent').replaceWith(data);
-                //    });
-
-                //};
 
                 self.btnAdminClicked = function (menuEntry) {
 
                     $.get(menuEntry.url, function (data) {
                         var $partialContent = $("#PartialContent");
 
-                        //if ($partialContent && $partialContent.get(0)) {
-                        //    ko.cleanNode($partialContent.get(0));
-                        //}
+                     
                         $('#dynamicContent').html(data);
                         ko.applyBindings(self, $("#PartialContent").get(0));
                     });
@@ -95,19 +109,39 @@
 
                 self.btnSaveClicked = function (data) {
                     $.post('@Url.Action("SaveProjectSettings")', data.Project(), function (result) {
-                        console.dir(result);
+                        if (result == true) {
+                            self.message("Project saved!");
+                            self.isMessageVisible(true);
+                            setInterval(self.hideMessage, 3000);
+
+                        }
                     });
                 }
 
+                self.hideMessage = function () {
+                    self.isMessageVisible(false);
+                }
 
-                $.get(self.menuEntries()[0].url, function (data) {
-                    $('#dynamicContent').html(data);
-                });
+                //$.get(self.menuEntries()[0].url, function (data) {
+                //    $('#dynamicContent').html(data);
+                //});
 
 
             }
 
-            ko.applyBindings(new ProjectAdministrationVM());
+            var projectAdministrationBindingRoot = new ProjectAdministrationVM();
+
+
+            var object = $.extend(projectAdministrationBindingRoot, new BtnFollowVM({
+                id: '@Model.Project.Id',
+                urlLike: '@Url.Action("ILike", "Like")',
+                urlFollow: '@Url.Action("Follow", "Follow")',
+                urlUnFollow: '@Url.Action("UnFollow", "Follow")',
+                isFollowed: '@Model.IsFollowed'
+            }));
+
+
+            ko.applyBindings(projectAdministrationBindingRoot);
 
 
         </script>

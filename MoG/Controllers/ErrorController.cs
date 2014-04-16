@@ -10,8 +10,10 @@ namespace MoG.Controllers
    
     public class ErrorController : MogController
     {
-        public ErrorController (IUserService userService)
-            : base(userService)
+        public ErrorController (IUserService userService
+             , ILogService logService
+            )
+            : base(userService, logService)
         { }
 
         public ViewResult Index()
@@ -23,6 +25,11 @@ namespace MoG.Controllers
         {
             Response.StatusCode = 404;  //you may want to set this to 200
             return View("NotFound");
+        }
+
+        public ViewResult ComingSoon()
+        {
+            return View();
         }
     }
 }

@@ -1,32 +1,49 @@
-﻿@model MoG.Domain.Models.VMCollabs
+﻿@model int
 
 <div class="row" id="PartialContent">
     <div class="col-md-12">
-        <div class="row">
-            <div class="col-md-12">
-                <table class="table  table-striped">
-                    <thead>
-                        <tr>
-                            <th class="myspan">DisplayName</th>
-                            <th>Id</th>
-                            <th>Login</th>
-                            <th>Lien</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var collab in @Model.Collabs)
-                        {
-                            <tr>
-                                <td>@collab.DisplayName</td>
-                                <td>@collab.Id</td>
-                                <td>@collab.Login</td>
-                                <td>TODO</td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
+        @{
+            ViewBag.Title = Resource.PROJECT_Admin_Collabs;
+        }
+
+        <h2>@Resource.PROJECT_Admin_Collabs</h2>
+
+
+        <div class="row" data-bind="foreach: collabs">
+            <div class="col-lg-2">
+                @Html.Partial("../Account/_profilSmall")
             </div>
         </div>
     </div>
 </div>
+
+@Scripts.Render("~/bundles/knockout")
+
+
+<script>
+    function CollabsVM() {
+        var self = this;
+
+        self.collabs = new ko.observableArray();
+        self.projectId = '@Model';
+        self.getData = function () {
+            $.post("/Project/GetCollabs", { id: self.projectId }, function (data) {
+                self.collabs(data.Collabs);
+                console.dir(data);
+            });
+        };
+
+        self.getFriendUrl = function (data) {
+            var url = '@Url.Action("Profile","Social")';
+            return url + '/' + data.Login;
+        }
+
+        self.getData();
+    }
+    var object = $.extend(projectAdministrationBindingRoot, new CollabsVM());
+
+
+
+</script>
+
 

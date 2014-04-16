@@ -38,8 +38,18 @@ namespace MoG.Domain.Models
          [DisplayName("Licence")]
         public Licence LicenceType { get; set; }
 
-        public virtual UserProfile Creator { get; set; }
+        public virtual UserProfileInfo Creator { get; set; }
 
-        public virtual ICollection<MoGFile> Files { get; set; }
+        public virtual ICollection<ProjectFile> Files { get; set; }
+
+        public DateTime? DeletedOn { get; set; }
+
+        public UserProfileInfo DeletedBy { get; set; }
+
+        public bool Deleted { get; set; }
+
+    
+        public int? PromotedId { get; set; }
+
     }
 }

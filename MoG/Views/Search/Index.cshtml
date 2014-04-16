@@ -1,0 +1,91 @@
+﻿@{
+    ViewBag.Title = "Search";
+}
+
+
+<div class="container">
+    <div class="row">
+        <div class="col-lg-8">
+            <h1 class="page-header">@ViewBag.Title</h1>
+        </div>
+    </div>
+    <div class="row">
+
+        <form class="form-inline MOG_Spacer" role="form">
+            <div class="col-lg-6">
+                <div class="form-group">
+                    <label class="sr-only" for="people">People</label>
+                    <input type="text" class="form-control" id="people" data-bind="value:qPeople ,valueUpdate: 'input'" placeholder="people">
+                </div>
+                <button class="btn btn-default" data-bind="click : btnSearchPeopleClicked" id="btnpeople">Search people</button>
+            </div>
+            <div class="col-lg-6">
+                <div class="form-group">
+                    <label class="sr-only" for="project">Project</label>
+                    <input type="text" class="form-control" id="project" data-bind="value:qProject,valueUpdate: 'input'" placeholder="project">
+                </div>
+                <button class="btn btn-default" data-bind="click : btnSearchProjectClicked" id="btnproject">Search project</button>
+            </div>
+
+
+        </form>
+
+    </div>
+    <section data-bind="visible: resultCount() > 0">
+        <div class="row">
+            <div class="col-lg-8">
+                <h2>Results</h2>
+            </div>
+        </div>
+        <div class="row">
+            <div class="row" data-bind="foreach : results">
+
+                <div class="col-lg-2 MOG_Spacer">
+                    <div class="thumbnail ">
+                        <a data-bind="attr : {href: url}">
+                            <img class="img-responsive" data-bind="attr : {src : pictureUrl}" />
+                        </a>
+                        <div class="caption text-center">
+
+                            <div class="content-heading">
+                                <a data-bind="attr : {href: url}"><h4 data-bind="text: name"></h4></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+
+    </section>
+    <div id="loader" class="center-block" style="display:none" data-bind="visible: isLoading">
+        <img class="center-block" src="@Url.Content("~/Content/Images/loading_.gif")" alt="loading..." />
+    </div>
+    
+</div>
+@section scripts
+    {
+
+
+    @Scripts.Render("~/bundles/knockout")
+    <script src="~/Scripts/Views/Search/Index.js"></script>
+    <script>
+
+        var searchVM = new SearchVM({
+            urlSearchPeople: '@Url.Action("SearchPeople")',
+            urlSearchProject: '@Url.Action("SearchProject")'
+        });
+        ko.applyBindings(searchVM);
+
+
+        $(document).ready(function () {
+            bindKeyPressEnter(searchVM);
+
+        })
+
+
+     
+
+    </script>
+}

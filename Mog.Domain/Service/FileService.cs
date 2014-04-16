@@ -12,35 +12,78 @@ namespace MoG.Domain.Service
     {
         public IFileRepository repoFile = null;
         public ICommentRepository repoComment = null;
-        public IActivityService servActivity = null;
+        public IActivityService serviceActivity = null;
+        public ISkydriveService serviceSkydrive = null;
+        public IDropBoxService serviceDropBox = null;
 
         public FileService(IFileRepository _fileRepo
             , ICommentRepository _commentRepo
-            , IActivityService _activityServ)
+            , IActivityService _activityServ
+            , ISkydriveService _skydriveService
+            , IDropBoxService _dropboxService)
         {
             this.repoFile = _fileRepo;
             this.repoComment = _commentRepo;
-            this.servActivity = _activityServ;
+            this.serviceActivity = _activityServ;
+            this.serviceSkydrive = _skydriveService;
+            this.serviceDropBox = _dropboxService;
         }
-        public List<MoGFile> GetProjectFile(int projectId)
+        public List<ProjectFile> GetProjectFile(int projectId)
         {
             return repoFile.GetByProjectId(projectId).ToList();
         }
 
-        public MoGFile GetById(int id)
+        public ProjectFile GetById(int id)
         {
-            return repoFile.GetById(id);
+            ProjectFile file = repoFile.GetById(id);
+
+            
+            if (file.StorageCredential != null )
+            {
+                string refreshedUrl = String.Empty;
+                if (!this.CheckIfFileExists(file.PublicUrl))
+                {
+                    switch (file.StorageCredential.CloudService)
+                    {
+                        case CloudStorageServices.Dropbox:
+
+                            refreshedUrl = serviceDropBox.RefreshFile(file);
+
+
+                            //todo : check later...
+                            break;
+                        case CloudStorageServices.GoogleDrive:
+                            //todo : check later...
+                            break;
+                        case CloudStorageServices.Skydrive:
+                            //file maybe deleted, or public link has expired
+                            file.PublicUrl = serviceSkydrive.RefreshFile(file);
+                            //TODO : save the file.
+
+                            break;
+
+                    }
+                    if (!String.IsNullOrEmpty(refreshedUrl))
+                    {// we need to update the record in the DB
+                        file.PublicUrl = refreshedUrl;
+                        this.repoFile.Save(file);
+                    }
+                }
+
+            }
+
+            return file;
         }
 
 
 
-        public IQueryable<Comment> GetFileComments(int fileId)
+        public List<Comment> GetFileComments(int fileId)
         {
-            return repoComment.GetByFileId(fileId);
+            return repoComment.GetByFileId(fileId).ToList();
         }
 
 
-        public int  Create(MoGFile file, UserProfile userProfile)
+        public int Create(ProjectFile file, UserProfileInfo userProfile)
         {
             file.CreatedOn = DateTime.Now;
             file.ModifiedOn = DateTime.Now;
@@ -50,16 +93,30 @@ namespace MoG.Domain.Service
             file.DownloadCount = 0;
             file.FileStatus = FileStatus.Draft;
             //file.FileType = FileType.Unknown;
-           
+
             if (this.repoFile.Create(file))
             {
-                servActivity.LogFileCreation(file);
+                serviceActivity.LogFileCreation(file);
 
                 return file.Id;
             }
             return -1;
         }
 
+        public int Create(TempUploadedFile modelFile, UserProfileInfo CurrentUser)
+        {
+            ProjectFile f = new ProjectFile();
+            f.AuthCredentialId = modelFile.AuthCredentialId;
+            f.Description = modelFile.Description;
+            f.DisplayName = modelFile.Name;
+            f.InternalName = modelFile.Name;
+            f.ProjectId = modelFile.ProjectId;
+            f.Tags = modelFile.Tags;
+            f.ThumbnailId = null;
+            f.TempFileId = modelFile.Id;
+            f.PublicUrl = "~/Content/Data/tempfile_sound.mp3";
+            return Create(f, CurrentUser);
+        }
 
 
 
@@ -67,27 +124,27 @@ namespace MoG.Domain.Service
 
         public bool Accept(int fileId)
         {
-            return this.repoFile.SetStatus(fileId,FileStatus.Accepted);
-          
+            return this.repoFile.SetStatus(fileId, FileStatus.Accepted);
+
         }
 
 
         public bool Reject(int fileId)
         {
-            return this.repoFile.SetStatus(fileId,FileStatus.Rejected);
+            return this.repoFile.SetStatus(fileId, FileStatus.Rejected);
         }
 
 
-        public bool Delete(int fileId, UserProfile userProfile)
+        public bool Delete(int fileId, UserProfileInfo userProfile)
         {
             bool result = true;
             var file = this.repoFile.GetById(fileId);
-            if (file!=null)
+            if (file != null)
             {
                 file.Deleted = true;
                 file.DeletedOn = DateTime.Now;
                 file.DeletedBy = userProfile;
-                result = (this.repoFile.Save(file) >0);
+                result = (this.repoFile.Save(file) > 0);
             }
             else
             {
@@ -97,31 +154,130 @@ namespace MoG.Domain.Service
         }
 
 
-        public int SaveChanges(MoGFile file)
+        public int SaveChanges(ProjectFile file)
         {
             return this.repoFile.Save(file);
+        }
+
+
+
+        public IQueryable<ProjectFile> GetAll(bool bExcludeDeleted, bool bExcludePrivate)
+        {
+            return this.repoFile.GetAll(bExcludeDeleted, bExcludePrivate);
+        }
+
+
+
+
+
+        public ProjectFile GetByTempFileId(int tempFileId)
+        {
+            return this.repoFile.GetByTempFileId(tempFileId);
+        }
+
+        public bool CheckIfFileExists(string  url)
+        {
+            // using MyClient from linked post
+            using (var client = new MoG.Domain.Common.SimpleWebClient())
+            {
+                client.HeadOnly = true;
+                // fine, no content downloaded
+                try
+                {
+                    string s1 = client.DownloadString(url);
+                }
+                catch (Exception)
+                { // throws 404
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        public bool CheckIfFileExists(int fileId)
+        {
+
+            if (fileId <= 0)
+            {
+                return false;
+            }
+            var file = this.repoFile.GetById(fileId);
+            if (file == null)
+            {
+                return false;
+            }
+
+
+            return CheckIfFileExists(file.PublicUrl);
+        }
+
+        private bool incrementPlayCount(ProjectFile file)
+        {
+            file.PlayCount++;
+            this.repoFile.Save(file);
+            return true;
+        }
+
+        public bool IncrementPlayCount(int fileId)
+        {
+            ProjectFile file = this.repoFile.GetById(fileId);
+            return this.incrementPlayCount(file);
+        }
+
+        public bool IncrementPlayCount(string url)
+        {
+            ProjectFile file = this.repoFile.GetByUrl(url);
+            return this.incrementPlayCount(file);
+        }
+
+
+        public bool IncrementDownloadCount(int fileId)
+        {
+            ProjectFile file = this.repoFile.GetById(fileId);
+            file.DownloadCount++;
+            this.repoFile.Save(file);
+            return true;
         }
     }
 
     public interface IFileService
     {
-        List<MoGFile> GetProjectFile(int projectId);
+        List<ProjectFile> GetProjectFile(int projectId);
 
 
-        MoGFile GetById(int id);
+        ProjectFile GetById(int id);
 
-        IQueryable<Comment> GetFileComments(int fileId);
+        List<Comment> GetFileComments(int fileId);
 
-        int Create(MoGFile file, UserProfile userProfile);
+        int Create(ProjectFile file, UserProfileInfo userProfile);
 
+        int Create(TempUploadedFile modelFile, UserProfileInfo CurrentUser);
 
 
         bool Accept(int fileId);
 
         bool Reject(int fileId);
 
-        bool Delete(int fileId, UserProfile userProfile);
+        bool Delete(int fileId, UserProfileInfo userProfile);
 
-        int SaveChanges(MoGFile file);
+        int SaveChanges(ProjectFile file);
+
+
+        IQueryable<ProjectFile> GetAll(bool bExcludeDeleted, bool bExcludePrivate);
+
+
+
+        ProjectFile GetByTempFileId(int p);
+
+
+        Boolean CheckIfFileExists(int fileId);
+
+        Boolean CheckIfFileExists(string fileUrl);
+
+        bool IncrementPlayCount(string url);
+
+        bool IncrementPlayCount(int fileId);
+
+        bool IncrementDownloadCount(int fileId);
     }
 }

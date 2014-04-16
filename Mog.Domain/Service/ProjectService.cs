@@ -29,39 +29,39 @@ namespace MoG.Domain.Service
 
 
 
-        public IQueryable<Project> GetByUserLogin(string login)
+        public IQueryable<Project> GetByUserLogin(int pageNumber, int pageSize, string login, bool bExcludePrivate, bool bExcludeDelete = true)
         {
-            return projectRepo.GetByUserLogin(login);
+            return projectRepo.GetByUserLogin(pageNumber,pageSize,login,bExcludePrivate,bExcludeDelete);
         }
 
 
-        public IQueryable<Project> GetNew(int limit)
+        public IQueryable<Project> GetNew(int page, int pagesize, bool bExcludePrivate, bool bExcludeDelete = true)
         {
-            return projectRepo.GetNew(limit);
+            return projectRepo.GetNew( page,  pagesize,bExcludePrivate,bExcludeDelete);
         }
 
 
-        public IQueryable<Project> GetPopular(int limit)
+        public IQueryable<Project> GetPopular(int page, int pagesize, bool bExcludePrivate, bool bExcludeDelete = true)
         {
-            return projectRepo.GetPopular(limit);
+            return projectRepo.GetPopular(page, pagesize,bExcludePrivate,bExcludeDelete);
         }
 
 
-        public ICollection<Project> GetRandom(int limit)
+        public ICollection<Project> GetRandom(int limit, bool bExcludePrivate, bool bExcludeDelete = true)
         {
-            return projectRepo.GetRandom(limit);
+            return projectRepo.GetRandom(limit,bExcludePrivate,bExcludeDelete);
         }
 
 
-        public int Create(Project project, UserProfile userProfile)
+        public int Create(Project project, UserProfileInfo userProfile)
         {
             project.CreatedOn = DateTime.Now;
             project.ModifiedOn = DateTime.Now;
             project.Creator = userProfile;
             project.Likes = 0;
 
-            project.ImageUrl = "http://placehold.it/700x400";
-            project.ImageUrlThumb1 = "http://placehold.it/350x200";
+            project.ImageUrl = "~/Content/Images/nothingyetbw.png";//http://placehold.it/700*400
+            project.ImageUrlThumb1 = "~/Content/Images/nothingyetbw.png";// "http://placehold.it/350x200";
 
             if (projectRepo.Create(project))
             {
@@ -107,7 +107,9 @@ namespace MoG.Domain.Service
             if (project != null && project.Files != null && project.Files.Count > 0)
             {
 
-                var filetags = project.Files.Select(file => (file.Tags != null ? file.Tags.Split(',') : null));
+                var filetags = project.Files
+                    .Where(f => f.Deleted == false)
+                    .Select(file => (file.Tags != null ? file.Tags.Split(',') : null));
                 if (filetags != null)
                 {
                     foreach (var filetag in filetags)
@@ -129,10 +131,10 @@ namespace MoG.Domain.Service
         }
 
 
-        public IList<MoGFile> GetFilteredFiles(Project project, string filterByAuthor, string filterByStatus, string filterByTag)
+        public IList<ProjectFile> GetFilteredFiles(Project project, string filterByAuthor, string filterByStatus, string filterByTag)
         {
             var files = project.Files;
-            IEnumerable<MoGFile> result = files.Where(f => f.Deleted == false);
+            IEnumerable<ProjectFile> result = files.Where(f => f.Deleted == false);
             if (!String.IsNullOrEmpty(filterByAuthor))
             {
                 result = result.Where(f => f.Creator.DisplayName == filterByAuthor);
@@ -154,7 +156,7 @@ namespace MoG.Domain.Service
 
         public VMCollabs GetCollabs(int projectId)
         {
-            List<UserProfile> users = userRepo.GetCollabs(projectId);
+            List<UserProfileInfo> users = userRepo.GetCollabs(projectId);
             VMCollabs result = new VMCollabs();
             result.Collabs = users;
             return result;
@@ -172,20 +174,80 @@ namespace MoG.Domain.Service
             project.ModifiedOn = DateTime.Now;
             return projectRepo.SaveChanges(project);
         }
+
+
+        public bool Delete(int id, UserProfileInfo deletor)
+        {
+            bool result = false;
+            Project p = GetById(id);
+            if (p != null)
+            {
+                p.DeletedOn = DateTime.Now;
+                p.DeletedBy = deletor;
+                p.Deleted = true;
+                this.projectRepo.SaveChanges(p);
+                result = true;
+            }
+            return result;
+        }
+
+
+
+        void IProjectService.IncreaseLike(int projectId)
+        {
+            Project p = GetById(projectId);
+            p.Likes++;
+            this.projectRepo.SaveChanges(p);
+        }
+
+        public bool ResetLikeCount(int projectId)
+        {
+            Project p = GetById(projectId);
+            p.Likes = 0;
+            this.projectRepo.SaveChanges(p);
+            return true;
+        }
+
+
+        public bool IsOwner(Project project, UserProfileInfo user)
+        {
+            return project.Creator.Login == user.Login;
+        }
+
+
+        public bool Promote(int fileId)
+        {
+            var file = this.fileRepo.GetById(fileId);
+            var project = file.Project;
+            project.PromotedId = fileId;
+            this.SaveChanges(project);
+            return true;
+        }
+
+
+        public List<Project> Search(string searchQuery, int page, int pageSize)
+        {
+            IQueryable<Project> result = this.projectRepo.Search(searchQuery, false,false);
+               int skip = (page - 1) * pageSize;
+               return result
+                   .Skip(skip)
+                   .Take(pageSize)
+                   .ToList();
+        }
     }
 
     public interface IProjectService
     {
-        IQueryable<Project> GetByUserLogin(string login);
+        IQueryable<Project> GetByUserLogin(int PageNumber, int pageSize, string login, bool bExcludePrivate, bool bExcludeDelete = true);
 
-        IQueryable<Project> GetNew(int limit);
+        IQueryable<Project> GetNew(int page, int pagesize, bool bExcludePrivate, bool bExcludeDelete = true);
 
-        IQueryable<Project> GetPopular(int limit);
+        IQueryable<Project> GetPopular(int page, int pagesize, bool bExcludePrivate, bool bExcludeDelete = true);
 
-        ICollection<Project> GetRandom(int limit);
+        ICollection<Project> GetRandom(int limit, bool bExcludePrivate, bool bExcludeDelete = true);
 
 
-        int Create(Project project, UserProfile userProfile);
+        int Create(Project project, UserProfileInfo userProfile);
 
         Project GetById(int id);
 
@@ -198,10 +260,23 @@ namespace MoG.Domain.Service
 
         ICollection<string> GetFileTags(Project project);
 
-        IList<MoGFile> GetFilteredFiles(Project projet, string filterByAuthor, string filterByStatus, string filterByTag);
+        IList<ProjectFile> GetFilteredFiles(Project projet, string filterByAuthor, string filterByStatus, string filterByTag);
 
         VMCollabs GetCollabs(int projectId);
 
         Project SaveChanges(Project project);
+
+        bool Delete(int id, UserProfileInfo deletor);
+
+        void IncreaseLike(int projectId);
+
+        bool ResetLikeCount(int projectId);
+
+        bool IsOwner(Project project, UserProfileInfo user);
+
+
+        bool Promote(int fileId);
+
+        List<Project> Search(string searchQuery, int page, int pageSize);
     }
 }

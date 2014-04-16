@@ -21,7 +21,7 @@
                &nbsp;
             </div>
             <div class="col-md-12">
-                <button type="button" class="btn btn-default  btn-block" onclick="showMsgForm()" id="btnNewMessage">Nouveau message</button>
+                <button type="button" class="btn btn-default  btn-block" onclick="showMsgForm()" id="btnNewMessage">@Resource.MAIL_NewMessage</button>
             </div>
         </div>
         <div class="row">
@@ -41,27 +41,27 @@
                 <div class="row">
                     <form role="form" class="form-horizontal" data-bind="submit: sendMail">
                         <div class="form-group">
-                            <label for="to" class="col-sm-2 control-label">Pour</label>
+                            <label for="to" class="col-sm-2 control-label">@Resource.MAIL_For</label>
                             <div class="col-sm-9">
                                 <input type="text" class="form-control TypeaheadInput" data-bind="value: to" />
                                 <input type="hidden" data-bind="value: replyTo" />
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="to" class="col-sm-2 control-label">TItre</label>
+                            <label for="to" class="col-sm-2 control-label">@Resource.MAIL_Subject</label>
                             <div class="col-sm-9">
                                 <input type="text" class="form-control" data-bind="value: title" />
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="message" class="col-sm-2 control-label">Message</label>
+                            <label for="message" class="col-sm-2 control-label">@Resource.MAIL_Message</label>
                             <div class="col-sm-9">
                                 <textarea class="form-control" rows="3" data-bind="value: body"></textarea>
                             </div>
                         </div>
                         <div class="form-group">
                             <div class="col-sm-offset-2 col-sm-10">
-                                <button class="btn btn-default" type="submit">Envoyer</button>
+                                <button class="btn btn-default" type="submit">@Resource.MAIL_BtnSend</button>
                             </div>
                         </div>
                     </form>
@@ -120,8 +120,22 @@
 @section scripts
 {
     @Scripts.Render("~/bundles/knockout")
-    <script type="text/javascript" src="@Url.Content("/Scripts/Views/Message/Index.js")"></script>
-    <script type="text/javascript">
+<script type="text/javascript">
 
-    </script>
+    var i8n = {
+        MAIL_Archive : '@Resource.MAIL_Archive',
+        MAIL_BtnSend: '@Resource.MAIL_BtnSend',
+        MAIL_For: '@Resource.MAIL_For',
+        MAIL_Inbox: '@Resource.MAIL_Inbox',
+        MAIL_Message: '@Resource.MAIL_Message',
+        MAIL_NewMessage: '@Resource.MAIL_NewMessage',
+        MAIL_Sent: '@Resource.MAIL_Sent',
+        MAIL_Subject: '@Resource.MAIL_Subject',
+        MAIL_SendError: '@Resource.MAIL_SendError'
+
+    }
+</script>
+
+
+    <script type="text/javascript" src="@Url.Content("/Scripts/Views/Message/Index.js")"></script>
 }

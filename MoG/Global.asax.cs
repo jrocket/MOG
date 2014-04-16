@@ -1,10 +1,13 @@
-﻿using System;
+﻿
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
+using Ninject;
+using MoG.Domain.Service;
 
 namespace MoG
 {
@@ -18,8 +21,9 @@ namespace MoG
             BundleConfig.RegisterBundles(BundleTable.Bundles);
             System.Data.Entity.Database.SetInitializer(new MyDataContextDbInitializer());
             MogAutomapper.RegisterAutomapper();
-         
-         
+            IScheduledTaskService scheduledtasks = DependencyResolver.Current.GetService<IScheduledTaskService>();
+            //var scheduledtasks = new Service.ScheduledTaskService(HttpRuntime.Cache);
+            scheduledtasks.StartService();
         }
     }
 }

@@ -11,7 +11,7 @@ namespace MoG.Domain.Models
     public class Message
     {
         public int Id { get; set; }
-        public virtual UserProfile CreatedBy { get; set; }
+        public virtual UserProfileInfo CreatedBy { get; set; }
 
      
 
@@ -37,7 +37,7 @@ namespace MoG.Domain.Models
         public int UserId { get; set; }
 
         [ForeignKey("UserId")]
-        public virtual UserProfile User { get; set; }
+        public virtual UserProfileInfo User { get; set; }
 
         public DateTime? ReplyedOn { get; set; }
 

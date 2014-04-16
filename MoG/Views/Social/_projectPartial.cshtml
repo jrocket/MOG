@@ -1,0 +1,39 @@
+﻿@model List<MoG.Domain.Models.Project>
+<h2 class="page-header">
+    Projects
+</h2>
+
+<div class="row">
+    @foreach (var project in Model)
+    {
+
+        <div class="col-sm-6 col-md-4" style="padding-top:14px">
+            <div class="thumbnail">
+                <a href="@Url.Action("Detail","Project",new {id = project.Id})">
+                    <img class="img-responsive" src="@Url.Content(project.ImageUrl)">
+                </a>
+                <div class="caption text-center">
+
+                    <div class="content-heading">
+                        <h4 />
+                        <a href="@Url.Action("Detail","Project",new {id = project.Id})">
+                            @project.Name
+                        </a>
+
+
+                    </div>
+
+                    <span class="badge  color_good  pull-right">
+
+                        <span class="glyphicon glyphicon-heart">@project.Likes</span>
+
+                    </span>
+
+                    <p data-bind="text:$data.Description"></p>
+
+                </div>
+
+            </div>
+        </div>
+    }
+</div>
