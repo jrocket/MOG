@@ -1,0 +1,16 @@
+﻿@model List<MoG.Domain.Models.VMActivity>
+@{
+    Layout = null;
+}
+
+
+
+@foreach (var activity in Model)
+{
+    <li>
+        <a href="@activity.Url">
+                @activity.When.ToShortDateString() -  @Html.Raw(activity.Description)
+        </a>
+    </li>
+
+}

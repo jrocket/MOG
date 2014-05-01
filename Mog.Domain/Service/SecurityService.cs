@@ -38,8 +38,34 @@ namespace MoG.Domain.Service
             hasRightMethods.Add(SecureActivity.ProjectEdit, CanEditProject);
             hasRightMethods.Add(SecureActivity.ProjectView, CanViewProject);
             hasRightMethods.Add(SecureActivity.ProjectDelete, CanDeleteProject);
+            hasRightMethods.Add(SecureActivity.TrackEdit, CanEditTrack);
+            hasRightMethods.Add(SecureActivity.TrackDelete, CanDeleteTrack);
+
             this.serviceProject = projectService;
             this.serviceInvit = invitService;
+        }
+
+        private bool CanDeleteTrack(UserProfileInfo user, object context)
+        {
+            bool result = false;
+            ProjectFile file = context as ProjectFile;
+            if (file != null)
+            {
+                result = file.Creator.Id == user.Id;
+                result |= serviceProject.IsOwner(file.Project, user);
+            }
+            return result;
+        }
+
+        private bool CanEditTrack(UserProfileInfo user, object context)
+        {
+            bool result = false;
+            ProjectFile file = context as ProjectFile;
+            if (file != null)
+            {
+                result = file.Creator.Id == user.Id;
+            }
+            return result;
         }
 
         private bool CanDeleteProject(UserProfileInfo user, object context)

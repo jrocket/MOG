@@ -100,6 +100,7 @@ namespace MoG.App_Start
             kernel.Bind<IParameterService>().To<ParameterService>();
             kernel.Bind<IMailService>().To<MailService>();
             kernel.Bind<IUserStatisticsService>().To<UserStatisticsService>();
+            kernel.Bind<ICacheService>().To<InMemoryCache>();
             
 
             kernel.Bind<IProjectRepository>().To<ProjectRepository>();

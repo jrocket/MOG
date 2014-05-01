@@ -40,7 +40,19 @@ namespace MoG.Controllers
             newComment.FileId = fileId;
             newComment = serviceComment.Create(newComment);
 
-            var result = new JsonResult() { Data = newComment, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
+            var model = new VMComment()
+            {
+                Body = newComment.Body,
+                CreatedOn = newComment.CreatedOn,
+                Creator = newComment.Creator,
+                CreatorName = newComment.CreatorName,
+                DeleteUrl = Url.Action("Delete",new {id = newComment.Id}),
+                Id = newComment.Id
+            };
+
+
+
+            var result = new JsonResult() { Data = model, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
             return result;
 
         }
@@ -50,7 +62,7 @@ namespace MoG.Controllers
             //TODO : use automapper
             var data = comments.Select(x => new VMAdminComment()
             {
-                Comment = x.Body,
+                Comment = x.Body.Replace("\n","<br />"),
                 CreatedBy = x.Creator.DisplayName,
                 CreatedOn = x.CreatedOn.ToString(),
                 TargetName = x.File.DisplayName,
@@ -66,8 +78,8 @@ namespace MoG.Controllers
          [HttpPost]
         public JsonResult Delete(int id)
         {
-            //TODO : implement security
-            bool bflag = this.serviceComment.Delete(id);
+           
+            bool bflag = this.serviceComment.Delete(id,CurrentUser);
             JsonResult result = new JsonResult() { Data = bflag };
             return result;
         }

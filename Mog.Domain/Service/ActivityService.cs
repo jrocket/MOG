@@ -12,10 +12,17 @@ namespace MoG.Domain.Service
     {
 
         private IActivityRepository repoActivity;
+      
+        private IFollowService serviceFollow;
 
-        public ActivityService(IActivityRepository _repo)
+        private IInvitService serviceInvit;
+        public IProjectService ServiceProject {get;set;}
+      
+        public ActivityService(IActivityRepository _repo,IFollowService _followService, IInvitService _invitService)
         {
             this.repoActivity = _repo;
+            this.serviceFollow = _followService;
+            this.serviceInvit = _invitService;
         }
 
         public void LogProjectCreation(Project project)
@@ -65,6 +72,8 @@ namespace MoG.Domain.Service
         public List<Activity> GetByUserId(int id, int count = -1)
         {
             var result = this.repoActivity.GetByUserId(id);
+
+            result = result.Where(a => (a.ProjectId != null ? a.Project.VisibilityType == Visibility.Public : true));
             if (count > 0)
             {
                 result = result.Take(count);
@@ -78,9 +87,54 @@ namespace MoG.Domain.Service
             var activity = this.repoActivity.GetByCommentId(id);
             return this.repoActivity.Delete(activity);
         }
+
+
+        /// <summary>
+        /// Notifications for activities
+        ///  - on project I created
+        ///  - on projects I follow (except if the project is private)
+        ///  - on my friends (except on private projects)
+        ///  - on projects i'm invited to
+        ///  
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="count"></param>
+        /// <returns></returns>
+        public List<Activity> GetNotificationForUserId(int userId, int count = -1)
+        {
+            if (ServiceProject == null)
+            {
+                throw new Exception("you must inject manually the serviceproject when you instanciate the ActivityService. Do something like activityServiceObject.serviceProject = ... ");
+
+            }
+            //find my projects
+            List<int> projectIds = ServiceProject.GetProjectIds(userId);
+
+            //find the projects I follow which are not private
+            projectIds.AddRange(serviceFollow.GetFollowedPublicProjectIds(userId));
+
+            //find the project I got invited (and I accepted)
+            projectIds.AddRange(serviceInvit.GetAcceptedInvitsProjectIds(userId));
+
+
+            //find the people I follow
+            //Todo : find the people a user follows
+
+            var result = this.repoActivity.GetNotificationsByProjectIds( projectIds, userId);
+
+            if (count > 0)
+            {
+                result = result.Take(count);
+            }
+            return result.ToList();
+        }
+
+
     }
     public interface IActivityService
     {
+        IProjectService ServiceProject { get; set; }
+
         void LogProjectCreation(Project project);
         void LogFileCreation(ProjectFile file);
 
@@ -92,5 +146,7 @@ namespace MoG.Domain.Service
         List<Activity> GetByUserId(int id, int count = -1);
 
         bool DeleteByCommentId(int id);
+
+        List<Activity> GetNotificationForUserId(int userId, int count = -1);
     }
 }

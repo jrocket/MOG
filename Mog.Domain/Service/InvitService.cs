@@ -92,6 +92,27 @@ namespace MoG.Domain.Service
         {
             return this.repoInvit.IsInvited(project.Id, user.Id);
         }
+
+
+        public IEnumerable<int> GetAcceptedInvitsProjectIds(int userId)
+        {
+            return this.repoInvit
+                .Get(userId, InvitStatus.Accepted)
+                .Select(i => i.ProjectId)
+                .ToList();
+        }
+
+
+        public IList<Invit> GetInvitsByProjectId(int projectId, int userId)
+        {
+            IList<Invit> result = this.repoInvit.GetByProjectId(projectId).ToList();
+            if (result.Count>0)
+            {
+                if (result[0].Project.Creator.Id != userId)
+                    return null;
+            }
+            return result;
+        }
     }
 
     public interface IInvitService
@@ -107,5 +128,9 @@ namespace MoG.Domain.Service
         bool Delete(int id);
 
         bool IsInvited(Project project, UserProfileInfo user);
+
+        IEnumerable<int> GetAcceptedInvitsProjectIds(int userId);
+
+        IList<Invit> GetInvitsByProjectId(int projectId, int userId);
     }
 }

@@ -19,17 +19,29 @@
             @if (!Model.isPendingProcessing)
             {
 
-                <button type="button" class="btn btn-primary" data-bind="visible : isAddToCartVisible, click:btnAddToCart">@Resource.FILE_AddToDownloadCart</button>
-                <button type="button" class="btn btn-primary" data-bind="visible : isBtnAcceptVisible, click:btnAcceptClicked">@Resource.FILE_Accept</button>
-                <button type="button" class="btn btn-primary" data-bind="visible : isBtnRejectVisible, click:btnRejectClicked">@Resource.FILE_Reject</button>
-    <button type="button" class="btn btn-success" data-bind="visible : isPromoteVisible, click : btnPromoteClicked">@Resource.FILE_Promote</button>
+                <button type="button" class="btn btn-default" data-bind="visible : isAddToCartVisible, click:btnAddToCart">@Resource.FILE_AddToDownloadCart</button>
+                if (Model.Permissions[MoG.Domain.Service.SecureActivity.ProjectEdit])
+                {
+                    <button type="button" class="btn btn-success btn-sucess2"  data-bind="visible : isBtnAcceptVisible, click:btnAcceptClicked">@Resource.FILE_Accept</button>
+    <button type="button" class="btn btn-warning" data-bind="visible : isBtnRejectVisible, click:btnRejectClicked">@Resource.FILE_Reject</button>
+
+                    <button type="button" class="btn btn-success" data-bind="visible : isPromoteVisible, click : btnPromoteClicked">@Resource.FILE_Promote</button>
+                }
+
             }
-            <button type="button" class="btn btn-danger" data-bind="click:btnDeleteClicked">@Resource.FILE_Delete</button>
-            <button type="button" class="btn btn-warning" data-bind="click:btnEditClicked ">@Resource.FILE_Edit</button>
+
+            @if (Model.Permissions[MoG.Domain.Service.SecureActivity.TrackDelete])
+            {
+                <button type="button" class="btn btn-danger" data-bind="click:btnDeleteClicked">@Resource.FILE_Delete</button>
+            }
+            @if (Model.Permissions[MoG.Domain.Service.SecureActivity.TrackEdit])
+            {
+                <button type="button" class="btn btn-warning" data-bind="click:btnEditClicked ">@Resource.FILE_Edit</button>
+            }
 
         </div>
         <div class="col-md-8" data-bind="visible : isEditMode">
-            <button type="button" class="btn btn-primary" data-bind="click:btnSaveClicked">@Resource.COMMON_Save</button>
+            <button type="button" class="btn btn-default" data-bind="click:btnSaveClicked">@Resource.COMMON_Save</button>
             <button type="button" class="btn btn-danger" data-bind="click:btnCancelClicked">@Resource.COMMON_Cancel</button>
         </div>
         <div class="col-md-4">
@@ -54,10 +66,10 @@
                     <div class="panel-body">
                         <p>
                             <h4 data-bind="text: CreatorName"></h4>
-                            <span data-bind="text: Body"></span>
-                            <br /><small data-bind="text: CreatedOnAsString"></small>
-                            <div class="pull-right"><a href="javascript:void(0)" data-bind="click: $root.btnDeleteComment"><span class="glyphicon glyphicon-trash"></span></a></div>
-                        </p>                       
+                            <span style="white-space: pre-wrap" data-bind="text: Body"></span>
+                            <br /><small data-bind="text: CreatedOnAsString" class="js_date"></small>
+                            <div class="pull-right"><a href="javascript:void(0)" data-bind="click: $root.btnDeleteComment, visible : DeleteUrl"><span class="glyphicon glyphicon-trash"></span></a></div>
+                        </p>
                     </div>
                 </div>
             </div>
@@ -73,7 +85,7 @@
             </div>
             <div class="form-group col-lg-8">
                 <input type="hidden" name="save" value="contact">
-                <button class="btn btn-primary" data-bind="click: btnCreateComment">Submit</button>
+                <button class="btn btn-default" data-bind="click: btnCreateComment">Submit</button>
             </div>
         </form>
     </div>
@@ -88,6 +100,13 @@
     <script>
 
         ko.applyBindings(new FileVM('@Model.Id', '@Model.FileStatusAsInt', '@Model.Promoted'));
+
+
+        $(".js_date").each(function () {
+            var date = $(this).html();
+            var timespan = moment(date, "YYYYMMDD").fromNow();
+            $(this).html(timespan);
+        });
 
     </script>
 }

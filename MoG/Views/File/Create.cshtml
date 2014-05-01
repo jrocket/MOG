@@ -123,7 +123,7 @@
                     </td>
                     <td>
                         {% if (!i && !o.options.autoUpload) { %}
-                        <button class="btn btn-primary start hidden" disabled>
+                        <button class="btn btn-default start hidden" disabled>
                             <span class="glyphicon glyphicon-upload"></span>
                             <span>@Resource.FILE_Start</span>
                         </button>
@@ -192,7 +192,7 @@
                         var $CloudStorage = $("#CloudStorage");
                         // Initialize the jQuery File Upload widget:
                         $('#fileupload').fileupload({
-                            acceptFileTypes: /^audio\/(wav|mp3)$/i,
+                            acceptFileTypes: /\.(mp3|wav)$/i,// /^audio\/(wav|mp3)$/i,
                             disableImageResize: false,
                             // Uncomment the following to send cross-domain cookies:
                             //xhrFields: {withCredentials: true},

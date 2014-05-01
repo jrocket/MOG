@@ -42,10 +42,11 @@
               
                 self.invits = new ko.observableArray();
                 self.deleteUrl = "/Social/InvitDelete";
+                self.projectId = '@Model';
 
                 self.getData = function () {
-                    $.post("/social/GetMyInvits", null, function (data) {
-                        console.log(data);
+                    $.post("/social/GetInvitsByProjectId", { id: self.projectId }, function (data) {
+                       
                         self.invits(data);
                     });
                 };

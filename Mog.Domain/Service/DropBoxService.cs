@@ -134,6 +134,10 @@ namespace MoG.Domain.Service
 
         public String GetMedialUrl(string path, AuthCredential credential)
         {
+            if (String.IsNullOrEmpty(path))
+            {
+                return null;
+            }
             var _client = new DropNetClient(MogConstants.DROPBOX_KEY, MogConstants.DROPBOX_SECRET);
             UserLogin User = new UserLogin() { Token = credential.Token, Secret = credential.Secret };
             _client.UserLogin = User;
@@ -164,6 +168,10 @@ namespace MoG.Domain.Service
 
         public String RefreshFile(ProjectFile file)
         {
+            if (file==null)
+            {
+                return null;
+            }
             string refreshedUrl = GetMedialUrl(file.Path,file.StorageCredential);
             return refreshedUrl;
             

@@ -61,6 +61,33 @@ namespace MoG.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to commented file.
+        /// </summary>
+        public static string ACTIVITY_CommentedFile {
+            get {
+                return ResourceManager.GetString("ACTIVITY_CommentedFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to created a new file.
+        /// </summary>
+        public static string ACTIVITY_CreatedFile {
+            get {
+                return ResourceManager.GetString("ACTIVITY_CreatedFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to created a new project.
+        /// </summary>
+        public static string ACTIVITY_CreatedProject {
+            get {
+                return ResourceManager.GetString("ACTIVITY_CreatedProject", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Are you sure?.
         /// </summary>
         public static string COMMON_AreYouSure {
@@ -183,6 +210,15 @@ namespace MoG.Resources {
         public static string COMMON_NewProjects {
             get {
                 return ResourceManager.GetString("COMMON_NewProjects", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to I guess you don&apos;t have the right to do so.....
+        /// </summary>
+        public static string COMMON_PermissionDenied {
+            get {
+                return ResourceManager.GetString("COMMON_PermissionDenied", resourceCulture);
             }
         }
         
@@ -655,6 +691,15 @@ namespace MoG.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Activity feed.
+        /// </summary>
+        public static string PROFILE_ActivityFeed {
+            get {
+                return ResourceManager.GetString("PROFILE_ActivityFeed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Alerts.
         /// </summary>
         public static string PROFILE_Alerts {
@@ -691,7 +736,7 @@ namespace MoG.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Followed.
+        ///   Looks up a localized string similar to Projects I follow.
         /// </summary>
         public static string PROFILE_FOLLOWED {
             get {
@@ -741,6 +786,15 @@ namespace MoG.Resources {
         public static string PROFILE_PageTitle {
             get {
                 return ResourceManager.GetString("PROFILE_PageTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to See detail....
+        /// </summary>
+        public static string PROFILE_SeeDetail {
+            get {
+                return ResourceManager.GetString("PROFILE_SeeDetail", resourceCulture);
             }
         }
         

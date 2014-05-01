@@ -1,21 +1,25 @@
-﻿@model List<MoG.Domain.Models.Activity>
+﻿@model List<MoG.Domain.Models.VMActivity>
 <h2 class="page-header">
-    Activity feed
+    @Resource.PROFILE_ActivityFeed
 </h2>
 
 @foreach (var activity in Model)
 {
     <div class="row">
         <div class="col-lg-12">
-            <h4><span class="js_date">@activity.When.ToString("yyyyMMdd")</span></h4>
             <div class="row">
                 <div class="col-lg-2">
                     <img class="img-thumbnail" src="@activity.Who.PictureUrl" />
                 </div>
                 <div class="col-lg-10">
                     <p>
-                        I did something
+                        @Html.Raw(activity.Description)
                     </p>
+                    <small>
+                        <span class="js_date">@activity.When.ToString("yyyyMMdd")</span> -
+                        <a href="@activity.Url">@Resource.PROFILE_SeeDetail</a>
+                    </small>
+                  
                 </div>
             </div>
 

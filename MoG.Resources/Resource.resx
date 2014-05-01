@@ -286,7 +286,7 @@
     <value>Dashboard</value>
   </data>
   <data name="PROFILE_FOLLOWED" xml:space="preserve">
-    <value>Followed</value>
+    <value>Projects I follow</value>
   </data>
   <data name="PROFILE_JoinedOn" xml:space="preserve">
     <value>Joined on</value>
@@ -430,5 +430,23 @@
   </data>
   <data name="MAIL_SendError" xml:space="preserve">
     <value>Argh! you broke it.</value>
+  </data>
+  <data name="PROFILE_ActivityFeed" xml:space="preserve">
+    <value>Activity feed</value>
+  </data>
+  <data name="PROFILE_SeeDetail" xml:space="preserve">
+    <value>See detail...</value>
+  </data>
+  <data name="ACTIVITY_CommentedFile" xml:space="preserve">
+    <value>commented file</value>
+  </data>
+  <data name="ACTIVITY_CreatedFile" xml:space="preserve">
+    <value>created a new file</value>
+  </data>
+  <data name="ACTIVITY_CreatedProject" xml:space="preserve">
+    <value>created a new project</value>
+  </data>
+  <data name="COMMON_PermissionDenied" xml:space="preserve">
+    <value>I guess you don't have the right to do so....</value>
   </data>
 </root>

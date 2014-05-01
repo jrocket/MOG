@@ -8,12 +8,12 @@
             {
                 <li>
                     @{ string cssClass = "";
-                     if (status == Model.filterByStatus)
-                     {
-                         cssClass = "color_selected";
-                     }
-                    <a href="@Url.Action("Files", new { filterByStatus = status, filterByAuthor = Model.filterByAuthor, filterByType = Model.filterByType })" class="@cssClass">@status</a>
-                    }
+ if (status == Model.filterByStatus)
+ {
+     cssClass = "color_selected";
+ }
+<a href="@Url.Action("Files", new { filterByStatus = status, filterByAuthor = Model.filterByAuthor, filterByType = Model.filterByType })" class="refinement_facet @cssClass">@status</a>
+}
                 </li>
             }
 
@@ -26,12 +26,12 @@
             {
                 <li>
                     @{ string cssClass = "";
-                     if (type == Model.filterByType)
-                     {
-                         cssClass = "color_selected";
-                     }
-                    <a href="@Url.Action("Files", new { filterByType = type, filterByStatus = Model.filterByStatus, c = Model.filterByAuthor })" class="@cssClass">@type</a>
-                    }
+ if (type == Model.filterByType)
+ {
+     cssClass = "color_selected";
+ }
+<a href="@Url.Action("Files", new { filterByType = type, filterByStatus = Model.filterByStatus, c = Model.filterByAuthor })" class="refinement_facet @cssClass">@type</a>
+}
                 </li>
             }
 
@@ -47,12 +47,12 @@
             {
                 <li>
                     @{ string cssClass = "";
-                     if (author == Model.filterByAuthor)
-                     {
-                         cssClass = "color_selected";
-                     }
-                    <a href="@Url.Action("Files", new { filterByAuthor = author, filterByStatus = Model.filterByStatus, filterByType = Model.filterByType})" class="@cssClass">@author</a>
-                    }
+ if (author == Model.filterByAuthor)
+ {
+     cssClass = "color_selected";
+ }
+<a href="@Url.Action("Files", new { filterByAuthor = author, filterByStatus = Model.filterByStatus, filterByType = Model.filterByType})" class="refinement_facet @cssClass">@author</a>
+}
                 </li>
             }
 

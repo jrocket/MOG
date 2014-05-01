@@ -152,6 +152,8 @@
     <Compile Include="Models\Thumbnail.cs" />
     <Compile Include="Models\UserProfileInfo.cs" />
     <Compile Include="Models\UserStatistics.cs" />
+    <Compile Include="Models\ViewModel\VMComment.cs" />
+    <Compile Include="Models\ViewModel\VMActivity.cs" />
     <Compile Include="Models\ViewModel\TimeLine.cs" />
     <Compile Include="Models\ViewModel\UserStorageVM.cs" />
     <Compile Include="Models\ViewModel\VMAddInvit.cs" />
@@ -195,6 +197,7 @@
     <Compile Include="Repository\UserRepository.cs" />
     <Compile Include="Service\ActivityService.cs" />
     <Compile Include="Service\AzureStorageService.cs" />
+    <Compile Include="Service\CacheService.cs" />
     <Compile Include="Service\CommentService.cs" />
     <Compile Include="Service\DownloadCartService.cs" />
     <Compile Include="Service\DropBoxService.cs" />

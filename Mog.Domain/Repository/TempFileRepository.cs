@@ -56,7 +56,7 @@ namespace MoG.Domain.Repository
         public TempUploadedFile GetNextInQueue()
         {
             return dbContext.TempUploadedFiles
-                .Where(t => t.Status == Models.ProcessStatus.NotStarted)
+                .Where(t => t.Status == Models.ProcessStatus.ProcessingNotStarted)
                 .OrderBy(t => t.Id)
                 .Take(1)
                 .FirstOrDefault();
@@ -66,7 +66,7 @@ namespace MoG.Domain.Repository
         public int GetQueueLength()
         {
             return dbContext.TempUploadedFiles
-                .Where(t => t.Status == Models.ProcessStatus.NotStarted)
+                .Where(t => t.Status == Models.ProcessStatus.ProcessingNotStarted)
                 .Count();
         }
     }

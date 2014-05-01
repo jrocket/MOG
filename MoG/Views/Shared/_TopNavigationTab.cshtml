@@ -3,9 +3,14 @@
 <div class="row">
     <div class="col-lg-8">
         <h1 class="page-header">
+
             @Html.DisplayFor(model => model.Project.Name) <small>
                 @Resource.PROJECT_By
-                @Html.DisplayFor(model => model.Project.Creator.DisplayName)
+                <a href="@Url.Action("Profile", "Social", new { id = Model.Project.Creator.Id})"> @Html.DisplayFor(model => model.Project.Creator.DisplayName)</a>
+                @if (Model.Project.VisibilityType == Visibility.Private)
+                {
+                    <span class="glyphicon glyphicon-lock"></span>
+                }
             </small>
             <a class="btn btn-default" href="#" data-bind="click:btnUnFollowClicked, visible: isFollowed" style="display:none">
                 <span class="glyphicon glyphicon-eye-close"></span>&nbsp;Unfollow
@@ -16,17 +21,17 @@
         </h1>
 
     </div>
-    <div class="col-lg-4  hidden-xs MOG_UpperRightButton" >
+    <div class="col-lg-4  hidden-xs MOG_UpperRightButton">
 
-        <a href="@Url.Action("Create","File",new {id = Model.Project.Id} )" class="btn btn-primary btn-lg btn-block btn-success">@Resource.PROJECT_UploadFile</a>
+        <a href="@Url.Action("Create","File",new {id = Model.Project.Id} )" class="btn  btn-lg btn-block btn-success">@Resource.PROJECT_UploadFile</a>
 
     </div>
 </div>
 <div class="row">
     <div class="col-lg-12">
         <ul class="nav nav-tabs">
-            @Html.MenuItem(Resource.PROJECT_General, "Detail", "Project", null, new { id=Model.Project.Id})
-            @*@Html.MenuItem(Resource.PROJECT_Activity, "Activity", "Project", null, new { id = Model.Project.Id })*@
+            @Html.MenuItem(Resource.PROJECT_General, "Detail", "Project", null, new { id = Model.Project.Id })
+            @Html.MenuItem(Resource.PROJECT_Activity, "Activity", "Project", null, new { id = Model.Project.Id })
             @Html.MenuItem(Resource.PROJECT_Files, "Files", "Project", null, new { id = Model.Project.Id })
             @if (Model.HasEdit)
             {
@@ -35,5 +40,4 @@
         </ul>
     </div>
 </div>
-
 

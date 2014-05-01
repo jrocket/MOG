@@ -67,6 +67,12 @@ namespace MoG.Domain.Repository
             int result = dbContext.SaveChanges();
             return (result > 0);
         }
+
+
+        public Models.Comment GetById(int id)
+        {
+            return this.dbContext.Comments.Find(id);
+        }
     }
 
     public interface ICommentRepository
@@ -81,5 +87,7 @@ namespace MoG.Domain.Repository
         IQueryable<Models.Comment> GetByUserId(int userID);
 
         bool DeleteById(int id);
+
+        Models.Comment GetById(int id);
     }
 }

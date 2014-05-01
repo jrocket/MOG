@@ -49,7 +49,25 @@
     <Reference Include="AutoMapper.Net4">
       <HintPath>..\packages\AutoMapper.3.1.1\lib\net40\AutoMapper.Net4.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.AspNet.SignalR.Core">
+      <HintPath>..\packages\Microsoft.AspNet.SignalR.Core.2.0.3\lib\net45\Microsoft.AspNet.SignalR.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.SignalR.SystemWeb">
+      <HintPath>..\packages\Microsoft.AspNet.SignalR.SystemWeb.2.0.3\lib\net45\Microsoft.AspNet.SignalR.SystemWeb.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.Owin, Version=2.0.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.Owin.2.0.2\lib\net45\Microsoft.Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Host.SystemWeb, Version=2.0.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.Owin.Host.SystemWeb.2.0.2\lib\net45\Microsoft.Owin.Host.SystemWeb.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security, Version=2.0.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.Owin.Security.2.0.2\lib\net45\Microsoft.Owin.Security.dll</HintPath>
+    </Reference>
     <Reference Include="Ninject">
       <HintPath>..\packages\Ninject.3.0.1.10\lib\net45-full\Ninject.dll</HintPath>
     </Reference>
@@ -150,15 +168,6 @@
     <Reference Include="Owin">
       <HintPath>..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Owin">
-      <HintPath>..\packages\Microsoft.Owin.2.0.0\lib\net45\Microsoft.Owin.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Owin.Host.SystemWeb">
-      <HintPath>..\packages\Microsoft.Owin.Host.SystemWeb.2.0.0\lib\net45\Microsoft.Owin.Host.SystemWeb.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Owin.Security">
-      <HintPath>..\packages\Microsoft.Owin.Security.2.0.0\lib\net45\Microsoft.Owin.Security.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.Owin.Security.Facebook">
       <HintPath>..\packages\Microsoft.Owin.Security.Facebook.2.0.0\lib\net45\Microsoft.Owin.Security.Facebook.dll</HintPath>
     </Reference>
@@ -186,8 +195,13 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Code\automapperSettings.cs" />
     <Compile Include="Code\JsonHelper.cs" />
+    <Compile Include="Code\Mapper.cs" />
     <Compile Include="Code\MogAuthAttribut.cs" />
+    <Compile Include="Code\SignalR\ConnectionMapping.cs" />
+    <Compile Include="Code\SignalR\notificationHub.cs" />
     <Compile Include="Code\ScheduledTaskService.cs" />
+    <Compile Include="Code\SignalR\NotificationSignal.cs" />
+    <Compile Include="Code\SignalR\SignalRConnection.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\CommentController.cs" />
     <Compile Include="Controllers\DEBUGController.cs" />
@@ -221,8 +235,10 @@
       <Link>AutoMapper.Net4.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\bootstrap.css" />
-    <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\css\custom-styles.css" />
+    <Content Include="Content\css\flexslider.css" />
+    <Content Include="Content\css\prettyPhoto.css" />
+    <Content Include="Content\css\style-ie.css" />
     <Content Include="Content\Data\tempfile_sound.mp3" />
     <Content Include="Content\EasyPieChart\easypiechart.js" />
     <Content Include="Content\EasyPieChart\easypiechart.min.js" />
@@ -247,6 +263,55 @@
     <Content Include="Content\Images\SkyDriveLogo.png" />
     <Content Include="Content\Images\thumbnail_error.png" />
     <Content Include="Content\Images\thumbnail_temp.png" />
+    <Content Include="Content\img\apple-touch-icon-114x114.png" />
+    <Content Include="Content\img\apple-touch-icon-72x72.png" />
+    <Content Include="Content\img\apple-touch-icon.png" />
+    <Content Include="Content\img\author-avatar.jpg" />
+    <Content Include="Content\img\back-top-btn.png" />
+    <Content Include="Content\img\bg_direction_nav.png" />
+    <Content Include="Content\img\container-bg.png" />
+    <Content Include="Content\img\favicon.ico" />
+    <Content Include="Content\img\flabbit-logo.png" />
+    <Content Include="Content\img\gallery-item-hover.png" />
+    <Content Include="Content\img\gallery-item-icons.png" />
+    <Content Include="Content\img\gallery\blog-med-img-1.jpg" />
+    <Content Include="Content\img\gallery\client-img-1.png" />
+    <Content Include="Content\img\gallery\client-img-2.png" />
+    <Content Include="Content\img\gallery\client-img-3.png" />
+    <Content Include="Content\img\gallery\client-img-4.png" />
+    <Content Include="Content\img\gallery\client-img-5.png" />
+    <Content Include="Content\img\gallery\flickr-img-1.jpg" />
+    <Content Include="Content\img\gallery\gallery-img-1-3col.jpg" />
+    <Content Include="Content\img\gallery\gallery-img-1-4col-cir.jpg" />
+    <Content Include="Content\img\gallery\gallery-img-1-4col.jpg" />
+    <Content Include="Content\img\gallery\gallery-img-1-6col.jpg" />
+    <Content Include="Content\img\gallery\gallery-img-1-full.jpg" />
+    <Content Include="Content\img\gallery\gallery-img-13-6col.jpg" />
+    <Content Include="Content\img\gallery\gallery-img-14-6col.jpg" />
+    <Content Include="Content\img\gallery\gallery-img-2-thumb.jpg" />
+    <Content Include="Content\img\gallery\post-img-1.jpg" />
+    <Content Include="Content\img\gallery\slider-img-1.jpg" />
+    <Content Include="Content\img\gallery\slider-img-2.jpg" />
+    <Content Include="Content\img\gallery\thumbnail-270x130.jpg" />
+    <Content Include="Content\img\gallery\thumbnail-270x300.jpg" />
+    <Content Include="Content\img\glyphicons-halflings-white.png" />
+    <Content Include="Content\img\glyphicons-halflings.png" />
+    <Content Include="Content\img\location-map.jpg" />
+    <Content Include="Content\img\page-bg-1.jpg" />
+    <Content Include="Content\img\piccolo-footer-logo.png" />
+    <Content Include="Content\img\piccolo-logo.png" />
+    <Content Include="Content\img\post-item-hover.png" />
+    <Content Include="Content\img\prettyPhoto\default\default_thumb.png" />
+    <Content Include="Content\img\prettyPhoto\default\loader.gif" />
+    <Content Include="Content\img\prettyPhoto\default\sprite.png" />
+    <Content Include="Content\img\prettyPhoto\default\sprite_next.png" />
+    <Content Include="Content\img\prettyPhoto\default\sprite_prev.png" />
+    <Content Include="Content\img\prettyPhoto\default\sprite_x.png" />
+    <Content Include="Content\img\prettyPhoto\default\sprite_y.png" />
+    <Content Include="Content\img\rnd-client-mask.png" />
+    <Content Include="Content\img\slider-caption-bg.png" />
+    <Content Include="Content\img\social-icons.png" />
+    <Content Include="Content\img\user-avatar.jpg" />
     <Content Include="Content\jQuery.FileUpload\jquery.fileupload-ui.css" />
     <Content Include="Content\jQuery.FileUpload\jquery.fileupload.css" />
     <Content Include="Content\jQuery.FileUpload\loading.gif" />
@@ -286,7 +351,6 @@
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
-    <Content Include="Content\Site.css" />
     <Content Include="Scripts\bootstrap-tagsinput.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
@@ -313,6 +377,7 @@
     <Content Include="Content\font-awesome\scss\_path.scss" />
     <Content Include="Content\font-awesome\scss\_variables.scss" />
     <Content Include="Content\SoundManager\swf\soundmanager2_flash_xdomain.zip" />
+    <Content Include="Content\img\prettyPhoto\.DS_Store" />
     <None Include="Properties\PublishProfiles\mogstaging - FTP.pubxml" />
     <None Include="Properties\PublishProfiles\mogstaging - Web Deploy.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
@@ -332,6 +397,8 @@
     <Content Include="Scripts\jQuery.Fileupload\jquery.ui.widget.js" />
     <Content Include="Scripts\jQuery.Fileupload\load-image.min.js" />
     <Content Include="Scripts\jQuery.Fileupload\tmpl.min.js" />
+    <Content Include="Scripts\jquery.signalR-2.0.3.js" />
+    <Content Include="Scripts\jquery.signalR-2.0.3.min.js" />
     <Content Include="Scripts\jquery.validate.js" />
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
@@ -392,13 +459,20 @@
     <Content Include="Scripts\Timeline\storyjs-embed.js" />
     <Content Include="Scripts\Timeline\timeline-min.js" />
     <Content Include="Scripts\Timeline\timeline.js" />
+    <Content Include="Scripts\Views\Account\Followed.js" />
     <Content Include="Scripts\Views\File\Create.js" />
     <Content Include="Scripts\Views\File\Display.js" />
+    <Content Include="Scripts\Views\Layout\jquery.custom.js" />
+    <Content Include="Scripts\Views\Layout\jquery.easing.1.3.js" />
+    <Content Include="Scripts\Views\Layout\jquery.flexslider.js" />
+    <Content Include="Scripts\Views\Layout\jquery.prettyPhoto.js" />
+    <Content Include="Scripts\Views\Layout\jquery.quicksand.js" />
     <Content Include="Scripts\Views\Message\index.js" />
     <Content Include="Scripts\Views\Project\BtnFollow.js" />
     <Content Include="Scripts\Views\Project\Detail.js" />
     <Content Include="Scripts\Views\Project\ProjectList.js" />
     <Content Include="Scripts\Views\Search\Index.js" />
+    <Content Include="Scripts\Views\Shared\_Layout.js" />
     <Content Include="Scripts\_references.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
@@ -487,6 +561,7 @@
     <Content Include="Views\Social\_projectPartial.cshtml" />
     <Content Include="Views\Social\_activityPartial.cshtml" />
     <Content Include="Views\Search\Index.cshtml" />
+    <Content Include="Views\Social\_GetNotificationsPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

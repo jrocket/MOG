@@ -18,7 +18,8 @@ namespace MoG.Controllers
         private ITempFileService serviceTempFile = null;
         private IDropBoxService serviceDropBox = null;
         private IThumbnailService serviceThumbnail = null;
-       
+        private ISecurityService serviceSecurity = null;
+
 
 
         public FileController(IFileService _fileService
@@ -28,6 +29,7 @@ namespace MoG.Controllers
             , IDropBoxService dropboxService
             , IThumbnailService thumbnailService
             , ILogService logService
+            ,ISecurityService securityService
             )
             : base(userService, logService)
         {
@@ -36,6 +38,7 @@ namespace MoG.Controllers
             serviceTempFile = tempFileService;
             serviceDropBox = dropboxService;
             serviceThumbnail = thumbnailService;
+            serviceSecurity = securityService;
         }
         public ActionResult Display(int id = -1)
         {
@@ -79,7 +82,9 @@ namespace MoG.Controllers
             model.Tags = file.Tags;
             model.Metadata = file.Metadata;
             model.MetadataType = file.MetadataType;
-
+            model.Permissions.Add(SecureActivity.TrackEdit,serviceSecurity.HasRight(SecureActivity.TrackEdit, CurrentUser, file));
+            model.Permissions.Add(SecureActivity.ProjectEdit, serviceSecurity.HasRight(SecureActivity.ProjectEdit, CurrentUser, file.Project));
+            model.Permissions.Add(SecureActivity.TrackDelete, serviceSecurity.HasRight(SecureActivity.TrackDelete, CurrentUser, file));
             if (file.ThumbnailId != null)
             {
                 model.ThumbnailUrl = file.Thumbnail.PublicUrl;//this.serviceDropBox.GetMedialUrl(file.Thumbnail.Path, file.StorageCredential);
@@ -100,6 +105,11 @@ namespace MoG.Controllers
         public ActionResult Edit(int id, string tags, string description, string name)
         {
             var file = serviceFile.GetById(id);
+         if (!serviceSecurity.HasRight(SecureActivity.TrackEdit,CurrentUser,file))
+         {
+             return this.RedirectToErrorPage(Resources.Resource.COMMON_PermissionDenied);
+         }
+            
             file.Tags = tags;
             file.Description = description;
             file.InternalName = name;
@@ -118,7 +128,23 @@ namespace MoG.Controllers
         public JsonResult GetComments(int id = 1)
         {
             var comments = serviceFile.GetFileComments(id);
-            var result = new JsonResult() { Data = comments, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
+
+            List<VMComment> model = new List<VMComment>();
+            foreach (var comment in comments)
+            {//todo : use automapper
+                VMComment vm = new VMComment()
+                {
+                    Body = comment.Body,
+                    CreatedOn = comment.CreatedOn,
+                    CreatorName = comment.CreatorName,
+                    Creator = comment.Creator,
+                    Id = comment.Id,
+                    DeleteUrl = (comment.Creator.Id == CurrentUser.Id ? Url.Action("Delete", "Comment", new { id = comment.Id }) : null)
+
+                };
+                model.Add(vm);
+            }
+            var result = new JsonResult() { Data = model, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
             return result;
         }
 
@@ -128,12 +154,12 @@ namespace MoG.Controllers
             var project = serviceProject.GetById(id);
             VMFileCreate model = new VMFileCreate() { Project = project };
             var userStorages = this.serviceUser.GetUserStorages(CurrentUser);
-           
+
             var items = userStorages.CloudStorages
                 .Where(c => c.Status == CredentialStatus.Approved)
                 .Select(c => new { id = c.Id, value = c.CloudService + "-" + c.Login });
 
-            if (items.Count()>0)
+            if (items.Count() > 0)
             {
                 SelectList CloudStorages = new SelectList(items, "id", "value");
                 ViewBag.CloudStorages = CloudStorages;
@@ -142,7 +168,7 @@ namespace MoG.Controllers
             {
                 ViewBag.CloudStorages = null;
             }
-            
+
             return View(model);
         }
 
@@ -176,9 +202,9 @@ namespace MoG.Controllers
         public ActionResult Create3(List<VMFileCreate> files)
         {
             string log = "Create3 ";
-            log += files!=null ? "fileCount = "+ files.Count : String.Empty;
+            log += files != null ? "fileCount = " + files.Count : String.Empty;
             this.serviceLog.LogMessage("FileController", log);
-          
+
             if (files == null)
             {
                 return this.RedirectToErrorPage("Il faudrait peut etre ajouter de fichiers!");
@@ -194,7 +220,7 @@ namespace MoG.Controllers
                     Name = file.File.DisplayName,
                     Id = file.File.Id,
                     ProjectId = file.File.ProjectId,
-
+                    Status = Domain.Models.ProcessStatus.ProcessingNotStarted
 
                 };
                 modelFile = this.serviceTempFile.Update(modelFile);
@@ -380,10 +406,10 @@ namespace MoG.Controllers
 
         public JsonResult Upload(IEnumerable<HttpPostedFileBase> files, int id, int cloudStorage)
         {
-            string log = "Upload file to "+id + " into " + cloudStorage;
-            log += files != null ? "count = " + files.Count(): string.Empty;
+            string log = "Upload file to " + id + " into " + cloudStorage;
+            log += files != null ? "count = " + files.Count() : string.Empty;
             this.serviceLog.LogMessage("FileController", log);
-        
+
             VMFileUpload result = new VMFileUpload();
             result.files = new List<UploadedFile>();
             foreach (var baseFile in files)
@@ -463,7 +489,7 @@ namespace MoG.Controllers
         public JsonResult Played(string url)
         {
             this.serviceFile.IncrementPlayCount(url);
-            return new JsonResult(){Data = url};
+            return new JsonResult() { Data = url };
         }
     }
 }

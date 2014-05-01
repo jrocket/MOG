@@ -60,6 +60,7 @@
                         </div>
                         <div class="col-md-4">
                             <h3><a href="@Url.Action("Display","File",new { id=file.Id})">@file.DisplayName</a></h3>
+                            <small>@Resource.PROJECT_By <a href="@Url.Action("Profile", "Social", new { id = file.Creator.Id})">@file.Creator.DisplayName</a></small>
                             <p>@file.Tags</p>
 
 

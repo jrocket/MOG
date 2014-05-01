@@ -25,7 +25,9 @@ namespace MoG.Domain.Repository
         {
             return this.dbContext.Invits
                 .Where( i => !i.Deleted)
-               .Where(i => i.UserId == userId);
+               .Where(i => i.UserId == userId)
+               .Where(i => (i.Status & filterBy) != 0)
+               ;
               
         }
 
@@ -65,6 +67,14 @@ namespace MoG.Domain.Repository
                 Where(i => i.ProjectId == projectId && i.UserId == userId && i.Deleted == false)
                 .Count()>0;
         }
+
+
+        public IQueryable<Invit> GetByProjectId(int projectId)
+        {
+            return this.dbContext.Invits.
+                Where(i => i.ProjectId == projectId && i.Deleted == false);
+               
+        }
     }
 
     public interface IInvitRepository
@@ -85,5 +95,7 @@ namespace MoG.Domain.Repository
         Invit GetById(int id);
 
         bool IsInvited(int projectId, int userId);
+
+        IQueryable<Invit> GetByProjectId(int projectId);
     }
 }

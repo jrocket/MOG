@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Data.Entity;
 
 namespace MoG.Domain.Repository
 {
@@ -28,7 +29,9 @@ namespace MoG.Domain.Repository
 
         public IQueryable<Activity> GetByProjectId(int projectId)
         {
-            return dbContext.Activities.Where(p => p.ProjectId == projectId);
+            List<int> ids = new List<int>();
+            ids.Add(projectId);
+            return this.GetNotificationsByProjectIds(ids,null);
         }
 
 
@@ -55,6 +58,29 @@ namespace MoG.Domain.Repository
             int result = dbContext.SaveChanges();
             return result > 0;
         }
+
+
+
+
+
+        public IQueryable<Activity> GetNotificationsByProjectIds(List<int> projectIds, int? excludedUserId)
+        {
+            var query =  this.dbContext.Activities
+                 .Include(c => c.Project)
+                 .Include(a => a.File)
+                 .Include(a => a.Who)
+                .Where(a => (a.ProjectId.HasValue ? projectIds.Contains(a.ProjectId.Value) : false) 
+                || (a.File !=null ? projectIds.Contains( a.File.ProjectId) : false)
+                );
+            if (excludedUserId != null)
+            {
+                query = query.Where(a => a.Who.Id != excludedUserId.Value);
+            }
+
+            query = query.OrderByDescending(a => a.When);
+
+            return query;
+        }
     }
 
     public interface IActivityRepository
@@ -69,5 +95,8 @@ namespace MoG.Domain.Repository
         Activity GetByCommentId(int id);
 
         bool Delete(Activity activity);
+
+
+        IQueryable<Activity> GetNotificationsByProjectIds(List<int> projectIds, int? excludedUserId);
     }
 }

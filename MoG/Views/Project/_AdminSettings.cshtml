@@ -26,8 +26,30 @@
             <a href="@Url.Action("delete", new { id = Model.Id})" class="btn btn-danger pull-right">Supprimer</a>
 
             <input type="hidden" data-bind="value:Project().Id">
-            <button type="button" class="btn btn-primary" data-bind="click: btnSaveClicked">Save</button>
+            <button type="button" class="btn btn-default" data-bind="click: btnSaveClicked">Save</button>
             <span data-bind="text : message(), visible : isMessageVisible"></span>
         </div>
     </form>
 </div>
+<script>
+    function SettingsVM() {
+
+        var self = this;
+
+        this.availablePublicity = ko.observableArray([
+   new SelectItem("Public", 1),
+   new SelectItem("Private", 2)
+        ]);
+
+        this.availableLicence = ko.observableArray([
+   new SelectItem("CC BY", 1),
+   new SelectItem("CC BY-ND", 2),
+   new SelectItem("CC BY-ND-NC", 3)
+        ]);
+
+
+
+    }
+    var object = $.extend(projectAdministrationBindingRoot, new SettingsVM());
+</script>
+         

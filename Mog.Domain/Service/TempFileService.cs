@@ -65,7 +65,7 @@ namespace MoG.Domain.Service
         public int Create(TempUploadedFile file, UserProfileInfo userProfile)
         {
             file.Creator = userProfile;
-            file.Status = Models.ProcessStatus.NotStarted;
+            file.Status = Models.ProcessStatus.UploadInProgress;
             file.FailedCount = 0;
             try
             {
@@ -292,7 +292,7 @@ namespace MoG.Domain.Service
                 data.Description = modelFile.Description;
                 data.Name = modelFile.Name;
                 data.Tags = modelFile.Tags;
-
+                data.Status = modelFile.Status;
                 this.fileRepo.SaveChanges(data);
             }
             return data;
@@ -307,7 +307,7 @@ namespace MoG.Domain.Service
             var result = this.fileRepo.GetNextInQueue();
             if (result != null)
             {
-                result.Status = Models.ProcessStatus.InProgress;
+                result.Status = Models.ProcessStatus.ProcessInProgress;
                 this.fileRepo.SaveChanges(result);
             }
             return result;

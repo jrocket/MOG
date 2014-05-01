@@ -17,17 +17,17 @@ namespace MoG
                         "~/Scripts/modernizr-*"));
 
             bundles.Add(new ScriptBundle("~/bundles/bootstrap").Include(
-                      "~/Scripts/bootstrap.js",
+                      //"~/Scripts/bootstrap.js",
                       "~/Scripts/respond.js"
-                      , "~/Scripts/modern-business.js"
+                      //, "~/Scripts/modern-business.js"
                       , "~/Scripts/TagInput/bootstrap-tagsinput.js"
                       , "~/Scripts/TagInput/typeahead.min.js"));
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
-                      "~/Content/bootstrap.css",
-                      "~/Content/Site.css"
-                      , "~/content/modern-business.css"
-                      , "~/Content/font-awesome/font-awesome.css"
+                      //"~/Content/bootstrap.css",
+                      //"~/Content/Site.css"
+                      //, "~/content/modern-business.css"
+                       "~/Content/font-awesome/font-awesome.css"
                       , "~/Content/TagInput/bootstrap-tagsinput.css"
                        , "~/Content/TagInput/bootstrap-tagsinput-custom.css"));
             bundles.Add(new ScriptBundle("~/bundles/knockout").Include(

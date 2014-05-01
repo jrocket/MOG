@@ -36,38 +36,49 @@ namespace MoG.Domain.Service
         public ProjectFile GetById(int id)
         {
             ProjectFile file = repoFile.GetById(id);
-
+            if (file == null)
+                return null;
             
             if (file.StorageCredential != null )
             {
                 string refreshedUrl = String.Empty;
                 if (!this.CheckIfFileExists(file.PublicUrl))
                 {
-                    switch (file.StorageCredential.CloudService)
+                    try
                     {
-                        case CloudStorageServices.Dropbox:
+                        switch (file.StorageCredential.CloudService)
+                        {
+                            case CloudStorageServices.Dropbox:
 
-                            refreshedUrl = serviceDropBox.RefreshFile(file);
+                                refreshedUrl = serviceDropBox.RefreshFile(file);
 
 
-                            //todo : check later...
-                            break;
-                        case CloudStorageServices.GoogleDrive:
-                            //todo : check later...
-                            break;
-                        case CloudStorageServices.Skydrive:
-                            //file maybe deleted, or public link has expired
-                            file.PublicUrl = serviceSkydrive.RefreshFile(file);
-                            //TODO : save the file.
+                                //todo : check later...
+                                break;
+                            case CloudStorageServices.GoogleDrive:
+                                //todo : check later...
+                                break;
+                            case CloudStorageServices.Skydrive:
+                                //file maybe deleted, or public link has expired
+                                file.PublicUrl = serviceSkydrive.RefreshFile(file);
+                                //TODO : save the file.
 
-                            break;
+                                break;
 
+                        }
+                        if (!String.IsNullOrEmpty(refreshedUrl))
+                        {// we need to update the record in the DB
+                            file.PublicUrl = refreshedUrl;
+                            this.repoFile.Save(file);
+                        }
                     }
-                    if (!String.IsNullOrEmpty(refreshedUrl))
-                    {// we need to update the record in the DB
-                        file.PublicUrl = refreshedUrl;
-                        this.repoFile.Save(file);
+                    catch (Exception exc)
+                    {//toDO : file does not exists anymore
+                       // mark it for deletion
+                        
                     }
+                   
+                   
                 }
 
             }
@@ -79,7 +90,13 @@ namespace MoG.Domain.Service
 
         public List<Comment> GetFileComments(int fileId)
         {
-            return repoComment.GetByFileId(fileId).ToList();
+            var result =  repoComment.GetByFileId(fileId).ToList();
+            //foreach (var comment in result)
+            //{
+            //    comment.Body = comment.Body.Replace("\n", "<br>");
+
+            //}
+            return result;
         }
 
 

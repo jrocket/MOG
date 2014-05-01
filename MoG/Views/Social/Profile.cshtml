@@ -34,7 +34,7 @@
 
             <div class="col-lg-8" id="rightbar">
 
-                @Html.Partial("_vcardPartial",  Model);
+                @Html.Partial("_vcardPartial",  Model)
             </div>
         }
     </div>
@@ -73,7 +73,7 @@
             }
 
             self.getPartialContent = function (url, callback) {
-                $.get(url, null, function (data) {
+                $.post(url, null, function (data) {
                     $("#rightbar").html(data);
                     if (callback !== undefined) {
                         callback();

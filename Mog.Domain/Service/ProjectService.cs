@@ -22,6 +22,7 @@ namespace MoG.Domain.Service
             )
         {
             serviceActivity = _activityService;
+            serviceActivity.ServiceProject = this;
             projectRepo = _repo;
             fileRepo = _fileRepo;
             userRepo = _userRepo;
@@ -234,6 +235,13 @@ namespace MoG.Domain.Service
                    .Take(pageSize)
                    .ToList();
         }
+
+
+        public List<int> GetProjectIds(int userId)
+        {
+            var projectedIds = this.projectRepo.GetByUserId(userId).Select(p => p.Id).ToList();
+            return projectedIds;
+        }
     }
 
     public interface IProjectService
@@ -278,5 +286,7 @@ namespace MoG.Domain.Service
         bool Promote(int fileId);
 
         List<Project> Search(string searchQuery, int page, int pageSize);
+
+        List<int> GetProjectIds(int userId);
     }
 }

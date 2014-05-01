@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MoG.Domain.Service;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -10,6 +11,10 @@ namespace MoG.Domain.Models
 {
     public class VMFile
     {
+        public VMFile()
+        {
+            Permissions = new Dictionary<SecureActivity, bool>();
+        }
         public int Id { get; set; }
 
         public string DisplayName { get; set; }
@@ -67,6 +72,9 @@ namespace MoG.Domain.Models
                 return this.Project != null && this.Project.PromotedId != null && this.Project.PromotedId.Value == this.Id;
             }
         }
+
+        public Dictionary<SecureActivity,bool> Permissions { get; set; }
+      
         public Metadata GetMetadata()
         {
             if (String.IsNullOrEmpty(this.Metadata))

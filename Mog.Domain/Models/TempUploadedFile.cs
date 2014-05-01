@@ -10,10 +10,11 @@ namespace MoG.Domain.Models
 {
     public enum ProcessStatus
     {
-        NotStarted,
-        InProgress,
+        ProcessingNotStarted,
+        ProcessInProgress,
         Failed,
-        Completed
+        Completed,
+        UploadInProgress
     }
     public class TempUploadedFile
     {

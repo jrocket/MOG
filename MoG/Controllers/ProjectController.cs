@@ -1,4 +1,5 @@
-﻿using MoG.Domain.Models;
+﻿using MoG.Code;
+using MoG.Domain.Models;
 using MoG.Domain.Models.TimeLine;
 using MoG.Domain.Models.ViewModel;
 using MoG.Domain.Service;
@@ -134,6 +135,7 @@ namespace MoG.Controllers
             var projects = serviceProject.GetRandom(10, true, true);
             return new JsonResult() { Data = TodoUseAutomapper(projects.ToList()) };
         }
+
         public ActionResult Random()
         {
             ViewBag.Title = Resources.Resource.PROJECT_Random;
@@ -152,7 +154,7 @@ namespace MoG.Controllers
             VMProject model = this.getById(id);
             if (!this.serviceSecurity.HasRight(SecureActivity.ProjectView, CurrentUser, model.Project))
             {
-                return this.RedirectToErrorPage("I guess you don't have the right to do so...");
+                return this.RedirectToErrorPage(Resources.Resource.COMMON_PermissionDenied);
             }
             return View(model);
         }
@@ -166,7 +168,7 @@ namespace MoG.Controllers
             Project model = this.serviceProject.GetById(id);
             if (!this.serviceSecurity.HasRight(SecureActivity.ProjectEdit, CurrentUser, model))
             {
-                return this.RedirectToErrorPage("I guess you don't have the right to do so...");
+                return this.RedirectToErrorPage(Resources.Resource.COMMON_PermissionDenied);
             }
 
 
@@ -206,7 +208,7 @@ namespace MoG.Controllers
             var model = this.getById(id);
             if (!this.serviceSecurity.HasRight(SecureActivity.ProjectDelete, CurrentUser, model.Project))
             {
-                return this.RedirectToErrorPage("I guess you don't have the right to do so...");
+                return this.RedirectToErrorPage(Resources.Resource.COMMON_PermissionDenied);
             }
 
             return View(model);
@@ -229,7 +231,7 @@ namespace MoG.Controllers
             var project = this.serviceProject.GetById(id);
             if (!this.serviceSecurity.HasRight(SecureActivity.ProjectDelete, CurrentUser, project))
             {
-                return JsonHelper.ResultError(null, null, "I guess you don't have the right to do so...");
+                return JsonHelper.ResultError(null, null, Resources.Resource.COMMON_PermissionDenied);
             }
 
             bool result = this.serviceProject.Delete(id, CurrentUser);
@@ -247,7 +249,7 @@ namespace MoG.Controllers
             VMProject model = this.getById(id);
             if (!this.serviceSecurity.HasRight(SecureActivity.ProjectView, CurrentUser, model.Project))
             {
-                return this.RedirectToErrorPage("I guess you don't have the right to do so...");
+                return this.RedirectToErrorPage(Resources.Resource.COMMON_PermissionDenied);
             }
             return View(model);
         }
@@ -267,7 +269,7 @@ namespace MoG.Controllers
             Project project = serviceProject.GetById(id);
             if (!this.serviceSecurity.HasRight(SecureActivity.ProjectView, CurrentUser, project))
             {
-                return JsonHelper.ResultError(null, null, "I guess you don't have the right to do so...", JsonRequestBehavior.AllowGet);
+                return JsonHelper.ResultError(null, null, Resources.Resource.COMMON_PermissionDenied, JsonRequestBehavior.AllowGet);
             }
 
 
@@ -277,33 +279,29 @@ namespace MoG.Controllers
             data.timeline = new Timeline();
             data.timeline.headline = String.Format("Here is what happened in {0}", project.Name);
             data.timeline.type = "default";
-            data.timeline.text = "<p>Intro body text goes here, some HTML is ok</p>";
+            data.timeline.text = "<p>Click on the left or right arrow to see the next event</p>";
             data.timeline.asset = new Asset()
             {
                 credit = "Credit Name Goes Here",
                 caption = "Caption text goes here"
             };
             data.timeline.date = new List<Date>();
-            foreach (var activity in activities)
+
+            List<VMActivity> model = new Mapper().MapActivities(activities);
+
+            foreach (var activity in model)
             {
                 Date theEvent = new Date()
                {
                    StartDate = activity.When,
                    EndDate = activity.When,
-                   headline = activity.Who.DisplayName
-
+                   headline = activity.Who.DisplayName,
+                   tag = activity.Type.ToString(),
+                   text = String.Format("<a href='{0}'>{1}</a>",
+                   activity.Url,
+                   activity.Description)
                };
 
-                if ((activity.Type & ActivityType.Project) == ActivityType.Project)
-                {
-                    theEvent.tag = "Project";
-                    theEvent.text = "Something happened on the project <br> this is cool!";
-                }
-                else if ((activity.Type & ActivityType.File) == ActivityType.File)
-                {
-                    theEvent.tag = "File";
-                    theEvent.text = "Someone did something on a file";
-                }
 
 
                 data.timeline.date.Add(theEvent);
@@ -331,7 +329,7 @@ namespace MoG.Controllers
             var project = model.Project.Project;
             if (!this.serviceSecurity.HasRight(SecureActivity.ProjectView, CurrentUser, project))
             {
-                return this.RedirectToErrorPage("I guess you don't have the right to do so...");
+                return this.RedirectToErrorPage(Resources.Resource.COMMON_PermissionDenied);
             }
 
             model.FilteredFiles = serviceProject.GetFilteredFiles(project, filterByAuthor, filterByStatus, filterByType);
@@ -367,7 +365,7 @@ namespace MoG.Controllers
 
             if (!this.serviceSecurity.HasRight(SecureActivity.ProjectView, CurrentUser, project))
             {
-                return JsonHelper.ResultError(null, null, "I guess you don't have the right to do so...", JsonRequestBehavior.AllowGet);
+                return JsonHelper.ResultError(null, null, Resources.Resource.COMMON_PermissionDenied, JsonRequestBehavior.AllowGet);
             }
 
 
@@ -392,7 +390,7 @@ namespace MoG.Controllers
             var model = this.getById(id);
             if (!this.serviceSecurity.HasRight(SecureActivity.ProjectEdit, CurrentUser, model.Project))
             {
-                return this.RedirectToErrorPage("I guess you don't have the right to do so...");
+                return this.RedirectToErrorPage(Resources.Resource.COMMON_PermissionDenied);
             }
 
             return View(model);
@@ -404,7 +402,7 @@ namespace MoG.Controllers
             var project = this.serviceProject.GetById(id);
             if (!this.serviceSecurity.HasRight(SecureActivity.ProjectEdit, CurrentUser, project))
             {
-                return this.RedirectToErrorPage("I guess you don't have the right to do so...");
+                return this.RedirectToErrorPage(Resources.Resource.COMMON_PermissionDenied);
             }
             return PartialView("_AdminSettings", project);
         }
@@ -413,7 +411,7 @@ namespace MoG.Controllers
             Project p = this.serviceProject.GetById(id);
             if (!this.serviceSecurity.HasRight(SecureActivity.ProjectEdit, CurrentUser, p))
             {
-                return this.RedirectToErrorPage("I guess you don't have the right to do so...");
+                return this.RedirectToErrorPage(Resources.Resource.COMMON_PermissionDenied);
             }
             return PartialView("_AdminCollabs", id);
         }
@@ -432,7 +430,7 @@ namespace MoG.Controllers
 
             if (!this.serviceSecurity.HasRight(SecureActivity.ProjectEdit, CurrentUser, p))
             {
-                return this.RedirectToErrorPage("I guess you don't have the right to do so...");
+                return this.RedirectToErrorPage(Resources.Resource.COMMON_PermissionDenied);
             }
 
             return PartialView("_AdminFollow", id);
@@ -444,7 +442,7 @@ namespace MoG.Controllers
 
             if (!this.serviceSecurity.HasRight(SecureActivity.ProjectEdit, CurrentUser, p))
             {
-                return this.RedirectToErrorPage("I guess you don't have the right to do so...");
+                return this.RedirectToErrorPage(Resources.Resource.COMMON_PermissionDenied);
             }
 
             return PartialView("_AdminReports");
@@ -456,7 +454,7 @@ namespace MoG.Controllers
 
             if (!this.serviceSecurity.HasRight(SecureActivity.ProjectEdit, CurrentUser, p))
             {
-                return this.RedirectToErrorPage("I guess you don't have the right to do so...");
+                return this.RedirectToErrorPage(Resources.Resource.COMMON_PermissionDenied);
             }
 
             return PartialView("_AdminComments",id);
@@ -470,7 +468,7 @@ namespace MoG.Controllers
 
             if (!this.serviceSecurity.HasRight(SecureActivity.ProjectEdit, CurrentUser, p))
             {
-                return this.RedirectToErrorPage("I guess you don't have the right to do so...");
+                return this.RedirectToErrorPage(Resources.Resource.COMMON_PermissionDenied);
             }
 
             return PartialView("_AdminNotes",id);
@@ -483,7 +481,7 @@ namespace MoG.Controllers
 
             if (!this.serviceSecurity.HasRight(SecureActivity.ProjectEdit, CurrentUser, project))
             {
-                return this.RedirectToErrorPage("I guess you don't have the right to do so...");
+                return this.RedirectToErrorPage(Resources.Resource.COMMON_PermissionDenied);
             }
             return PartialView("_AdminArtwork", project);
         }
@@ -494,10 +492,10 @@ namespace MoG.Controllers
 
             if (!this.serviceSecurity.HasRight(SecureActivity.ProjectEdit, CurrentUser, p))
             {
-                return this.RedirectToErrorPage("I guess you don't have the right to do so...");
+                return this.RedirectToErrorPage(Resources.Resource.COMMON_PermissionDenied);
             }
 
-            return PartialView("_AdminInvits");
+            return PartialView("_AdminInvits", id);
         }
 
         [HttpPost]

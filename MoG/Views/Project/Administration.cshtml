@@ -67,30 +67,19 @@
                 });
 
 
-                this.availablePublicity  =  ko.observableArray([
-           new SelectItem("Public", 1),
-           new SelectItem("Private", 2)
-                ]);
-
-                this.availableLicence =  ko.observableArray([
-           new SelectItem("CC BY", 1),
-           new SelectItem("CC BY-ND", 2),
-           new SelectItem("CC BY-ND-NC",3)
-                ]);
-           
                 this.message = ko.observable();
                 this.isMessageVisible = ko.observable(false);
 
 
                 self.menuEntries = ko.observableArray([
-                @*new menuEntry('@Resource.PROJECT_Admin_Reports', "glyphicon glyphicon-signal", '@Url.Action("AdminReports", "Project", new { id = Model.Project.Id })', "btn btn-primary btn-lg"),*@
+                @*new menuEntry('@Resource.PROJECT_Admin_Reports', "glyphicon glyphicon-signal", '@Url.Action("AdminReports", "Project", new { id = Model.Project.Id })', "btn btn-default btn-lg"),*@
                 new menuEntry('@Resource.PROJECT_Admin_Parameters', "glyphicon glyphicon-list-alt", '@Url.Action("AdminSettings","Project", new { id = Model.Project.Id } )', "btn btn-danger btn-lg"),
                 new menuEntry('@Resource.PROJECT_Admin_Follow', "glyphicon glyphicon-eye-open", '@Url.Action("AdminFollow", "Project", new { id = Model.Project.Id })', "btn btn-warning btn-lg"),
                 new menuEntry('@Resource.PROJECT_Admin_Comments', "glyphicon glyphicon-comment", '@Url.Action("AdminComments", "Project", new { id = Model.Project.Id })', "btn btn-primary btn-lg"),
                 new menuEntry('@Resource.PROJECT_Admin_Collabs', "glyphicon glyphicon-user", '@Url.Action("AdminCollabs", "Project", new { id = Model.Project.Id })', "btn btn-success btn-lg"),
                 new menuEntry('@Resource.PROJECT_Admin_Notes', "glyphicon glyphicon-file", '@Url.Action("AdminNotes", "Project", new { id = Model.Project.Id })', "btn btn-info btn-lg"),
-                new menuEntry('@Resource.PROJECT_Admin_Artwork', "glyphicon glyphicon-picture", '@Url.Action("AdminArtwork", "Project", new { id = Model.Project.Id })', "btn btn-primary btn-lg"),
-                new menuEntry('@Resource.PROJECT_Admin_Invits', "glyphicon glyphicon-tag", '@Url.Action("AdminInvits", "Project", new { id = Model.Project.Id })', "btn btn-primary btn-lg")
+                new menuEntry('@Resource.PROJECT_Admin_Artwork', "glyphicon glyphicon-picture", '@Url.Action("AdminArtwork", "Project", new { id = Model.Project.Id })', "btn btn-success btn-sucess2 btn-lg"),
+                new menuEntry('@Resource.PROJECT_Admin_Invits', "glyphicon glyphicon-tag", '@Url.Action("AdminInvits", "Project", new { id = Model.Project.Id })', "btn btn-danger btn-danger2 btn-lg")
 
                 ]);
 

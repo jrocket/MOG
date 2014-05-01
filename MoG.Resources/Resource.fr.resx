@@ -286,7 +286,7 @@
     <value>Tableau de bord</value>
   </data>
   <data name="PROFILE_FOLLOWED" xml:space="preserve">
-    <value>Suivis</value>
+    <value>Projets suivis</value>
   </data>
   <data name="PROFILE_JoinedOn" xml:space="preserve">
     <value>Inscrit le </value>
@@ -430,5 +430,23 @@
   </data>
   <data name="MAIL_SendError" xml:space="preserve">
     <value>Oups, y'a eu une erreur</value>
+  </data>
+  <data name="PROFILE_ActivityFeed" xml:space="preserve">
+    <value>Activités</value>
+  </data>
+  <data name="PROFILE_SeeDetail" xml:space="preserve">
+    <value>Afficher le détail ...</value>
+  </data>
+  <data name="ACTIVITY_CommentedFile" xml:space="preserve">
+    <value>a commenté le fichier</value>
+  </data>
+  <data name="ACTIVITY_CreatedFile" xml:space="preserve">
+    <value>a créé un nouveau fichier</value>
+  </data>
+  <data name="ACTIVITY_CreatedProject" xml:space="preserve">
+    <value>a créé un nouveau projet</value>
+  </data>
+  <data name="COMMON_PermissionDenied" xml:space="preserve">
+    <value>Mmm.... je pense que vous n'avez pas le droit de faire ca.</value>
   </data>
 </root>

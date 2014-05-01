@@ -7,6 +7,8 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Script.Serialization;
+using System.Web.Caching;
+using MoG.Code;
 
 namespace MoG.Controllers
 {
@@ -18,6 +20,9 @@ namespace MoG.Controllers
         private IProjectService serviceProject = null;
         private IActivityService serviceActivity = null;
         private IUserStatisticsService serviceStatistics = null;
+
+        private ICacheService serviceCache = null;
+
         public SocialController(ISocialService socialService
             , IInvitService invitService
             , IProjectService projectService
@@ -25,6 +30,7 @@ namespace MoG.Controllers
             , IUserStatisticsService statService
             , IUserService userService
              , ILogService logService
+            ,ICacheService cacheService
             )
             : base(userService, logService)
         {
@@ -32,9 +38,12 @@ namespace MoG.Controllers
             this.serviceInvit = invitService;
             this.serviceProject = projectService;
             this.serviceActivity = activityService;
+            this.serviceActivity.ServiceProject = projectService;
             this.serviceStatistics = statService;
+            this.serviceCache = cacheService;
+            
         }
-       
+
         // GET: /Social/
         public ActionResult Friends()
         {
@@ -65,7 +74,7 @@ namespace MoG.Controllers
             {
                 var stats = serviceStatistics.GetStatByUserId(user.Id);
                 model = new VMProfile();
-                
+
                 model.Id = user.Id;
                 model.Stats = stats;
                 model.DisplayName = user.DisplayName;
@@ -73,7 +82,7 @@ namespace MoG.Controllers
                 model.Login = user.Login;
                 model.PictureUrl = user.PictureUrl;
                 model.CreatedOn = user.CreatedOn;
-             
+
             }
 
 
@@ -82,10 +91,10 @@ namespace MoG.Controllers
 
         public ActionResult GetProjects(string id = "")
         {
-           List<Project> model = null;
+            List<Project> model = null;
             if (!String.IsNullOrEmpty(id))
             {
-                model = this.serviceProject.GetByUserLogin(-1,-1,id,true).ToList();
+                model = this.serviceProject.GetByUserLogin(-1, -1, id, true).ToList();
             }
 
             return PartialView("_projectPartial", model);
@@ -102,14 +111,42 @@ namespace MoG.Controllers
         }
         public ActionResult GetActivity(int id = -1)
         {
-            List<Activity> model = null;
+            List<Activity> data = null;
             if (id > 0)
             {
-                model = this.serviceActivity.GetByUserId(id,20);
+                data = this.serviceActivity.GetByUserId(id, 20);
             }
+            //Todo : use automapper
+            List<VMActivity> model = new Mapper().MapActivities(data);
 
             return PartialView("_activityPartial", model);
         }
+
+
+        public ActionResult GetNotificationsPartial()
+        {
+
+            var model = serviceCache.Get("catalog.products", () => getNoticiationsFromCache());
+            
+            //return new JsonResult() { Data = model, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
+
+            return View("_GetNotificationsPartial",model);
+        }
+
+        private List<VMActivity> getNoticiationsFromCache()
+        {
+            List<Activity> data = null;
+
+            if (CurrentUser != null)
+            {
+                data = this.serviceActivity.GetNotificationForUserId(CurrentUser.Id, 20);
+            }
+            //Todo : use automapper
+            List<VMActivity> model = new Mapper().MapActivities(data);
+            return model;
+        }
+
+      
 
         public JsonResult GetMyInvits()
         {
@@ -129,7 +166,30 @@ namespace MoG.Controllers
                 model.InvitStatus = invit.Status;
                 model.InviteeName = invit.User.DisplayName;
                 model.InviteeUrl = Url.Action("Detail", "Profil", new { id = invit.UserId });
-                model.Message = (invit.Message != null ? invit.Message.Replace("\\n", "<br/>") : null);
+                model.Message = (invit.Message != null ? invit.Message.Replace("\n", "<br/>") : null);
+                data.Add(model);
+            }
+            return new JsonResult() { Data = data, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
+        }
+
+        public JsonResult GetInvitsByProjectId(int id)
+        {
+            var invits = this.serviceInvit.GetInvitsByProjectId(id,CurrentUser.Id);
+            List<VMInvit> data = new List<VMInvit>();
+            foreach (var invit in invits)
+            {
+                VMInvit model = new VMInvit();
+                model.Id = invit.Id;
+                model.InviterName = invit.CreatedBy.DisplayName;
+                model.ProjectName = invit.Project.Name;
+                model.Date = invit.CreatedOn.ToString("dd-MMM-yyyy");
+                model.Status = invit.Status.ToString();
+                model.ProjectUrl = Url.Action("Detail", "Project", new { id = invit.ProjectId });
+                model.InviterUrl = Url.Action("Detail", "Profil", new { id = invit.CreatedById });
+                model.InvitStatus = invit.Status;
+                model.InviteeName = invit.User.DisplayName;
+                model.InviteeUrl = Url.Action("Detail", "Profil", new { id = invit.UserId });
+                model.Message = (invit.Message != null ? invit.Message.Replace("\n", "<br/>") : null);
                 data.Add(model);
             }
             return new JsonResult() { Data = data, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
@@ -214,6 +274,6 @@ Thanks,
             return new JsonResult() { Data = result > 0 };
         }
 
-      
+
     }
 }

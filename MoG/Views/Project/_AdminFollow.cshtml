@@ -11,13 +11,13 @@
         <div class="row" data-bind="foreach: followers">
             <div class="col-lg-2">
                 <div class="thumbnail">
-                    <a data-bind="attr : {href: '/Account/Profile/'+ $data.Follower.Id}">
+                    <a data-bind="attr : {href: '/Social/Profile/'+ $data.Follower.Id}">
                         <img class="img-responsive" data-bind="attr : {src : $data.Follower.PictureUrl}" />
                     </a>
                     <div class="caption text-center">
 
                         <div class="content-heading">
-                            <a data-bind="attr : {href: '/Account/Profile/'+ $data.Follower.Id}"><h4 data-bind="text:$data.Follower.DisplayName"></h4></a>
+                            <a data-bind="attr : {href: '/Social/Profile/'+ $data.Follower.Id}"><h4 data-bind="text:$data.Follower.DisplayName"></h4></a>
 
                             <p>
                                 <small>(<span data-bind="text:$data.Follower.Login"></span>)</small>
@@ -33,7 +33,7 @@
         </div>
 
 
-        @Scripts.Render("~/bundles/knockout")
+        @*@Scripts.Render("~/bundles/knockout")*@
 
 
         <script>

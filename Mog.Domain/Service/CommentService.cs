@@ -1,4 +1,5 @@
-﻿using MoG.Domain.Repository;
+﻿using MoG.Domain.Models;
+using MoG.Domain.Repository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -37,12 +38,23 @@ namespace MoG.Domain.Service
         }
 
 
-        public bool Delete(int id)
+        public bool Delete(int id,UserProfileInfo userProfile)
         {
+            Comment commentToDelete = GetById(id);
+            if (commentToDelete.Creator.Id != userProfile.Id)
+            {
+                return false;
+            }
             var flag = this.servActivity.DeleteByCommentId(id);
             if (!flag)
                 return false;
+            this.servActivity.DeleteByCommentId(id);
             return this.repoComment.DeleteById(id);
+        }
+
+        private Comment GetById(int id)
+        {
+            return this.repoComment.GetById(id);
         }
     }
 
@@ -53,6 +65,6 @@ namespace MoG.Domain.Service
 
         List<Models.Comment> GetByProjectId(int id);
 
-        bool Delete(int id);
+        bool Delete(int id, UserProfileInfo userProfile);
     }
 }

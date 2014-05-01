@@ -63,7 +63,9 @@ namespace MoG.Domain.Service
 
         public IList<Follow> GetFollowsByUser(int userId)
         {
-            return this.repo.GetByUser(userId).ToList();
+            return this.repo.GetByUser(userId)
+                .Where(f => f.Project.VisibilityType == Visibility.Public)
+                .ToList();
         }
 
         public IList<Follow> GetFollowsByProject(int projectId)
@@ -83,6 +85,21 @@ namespace MoG.Domain.Service
         {
             return this.repo.Get(projectId, userId);
         }
+
+
+        public IEnumerable<int> GetFollowedProjectIds(int userId)
+        {
+            return this.repo.GetByUser(userId).Select(f => f.ProjectId).ToList();
+        }
+
+
+        public IEnumerable<int> GetFollowedPublicProjectIds(int userId)
+        {
+            return this.repo.GetByUser(userId)
+                .Where(p => p.Project.VisibilityType != Visibility.Private)
+                .Select(p => p.ProjectId)
+                .ToList();
+        }
     }
 
     public interface IFollowService
@@ -99,5 +116,9 @@ namespace MoG.Domain.Service
         bool Delete(int id);
 
         bool IsFollowed(Project project, UserProfileInfo user);
+
+        IEnumerable<int> GetFollowedProjectIds(int userId);
+
+        IEnumerable<int> GetFollowedPublicProjectIds(int userId);
     }
 }
