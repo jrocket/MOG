@@ -11,8 +11,9 @@ using System.Web.Mvc;
 
 namespace MoG.Controllers
 {
-    public class MogController : Controller
+    public class FlabbitController : Controller
     {
+        //private List<String> errorMessage;
         protected IUserService serviceUser;
         private UserProfileInfo _currentUser;
         protected ILogService serviceLog; 
@@ -31,11 +32,11 @@ namespace MoG.Controllers
         }
 
 
-        public MogController(IUserService _userService, ILogService _logService)
+        public FlabbitController(IUserService _userService, ILogService _logService)
         {
             serviceUser = _userService;
             this.serviceLog = _logService;
-            
+            //this.errorMessage = new List<string>();
         }
 
 
@@ -47,7 +48,7 @@ namespace MoG.Controllers
         protected ActionResult RedirectToErrorPage(string message)
         {
             TempData[MogConstants.TEMPDATA_ERRORMESSAGE] = message;
-            return RedirectToAction("index", "error");
+            return RedirectToAction("error", "error");
 
         }
 
@@ -90,6 +91,12 @@ namespace MoG.Controllers
             return base.BeginExecuteCore(callback, state);
         }
 
+        //protected override void EndExecuteCore(IAsyncResult asyncResult)
+        //{
+        //    ViewBag.ErrorMessages= errorMessage;
+        //    ViewBag.ErrorMessages = "toto mange des pommes";
+        //    base.EndExecuteCore(asyncResult);
+        //}
         //private void DEBUGREDIRECT()
         //{
         //    if (!User.Identity.IsAuthenticated && !this.Request.Url.AbsolutePath.Contains("/account"))
@@ -100,6 +107,9 @@ namespace MoG.Controllers
             
         //}
 
-
+        //public void AddErrorMessage(string message)
+        //{
+        //    errorMessage.Add(message);
+        //}
     }
 }

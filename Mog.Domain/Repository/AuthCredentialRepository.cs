@@ -57,6 +57,14 @@ namespace MoG.Domain.Repository
            this.SaveChanges(credentialToUpdate);
            return true;
         }
+
+
+        public bool Delete(AuthCredential credential)
+        {
+            this.dbContext.AuthCredentials.Remove(credential);
+            this.dbContext.SaveChanges();
+            return true;
+        }
     }
 
     public interface IAuthCredentialRepository
@@ -71,5 +79,7 @@ namespace MoG.Domain.Repository
         void SaveChanges(AuthCredential partialCredential);
 
         bool CancelCredential(int id);
+
+        bool Delete(AuthCredential credential);
     }
 }

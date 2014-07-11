@@ -57,7 +57,7 @@ namespace MoG.Domain.Service
         public void StartService()
         {
             StartService(30);//86400 seconds = 24 hours
-            cache[CRON_BROADCAST_NOTIFICATIONS_LRT] = DateTime.Now;
+           
         }
 
         public void StartService(int seconds)
@@ -68,10 +68,11 @@ namespace MoG.Domain.Service
 
             }
 
-            if (cache[CRON_BROADCAST_NOTIFICATIONS] == null)
-            {
-                AddTask(CRON_BROADCAST_NOTIFICATIONS, seconds);
-            }
+            //if (cache[CRON_BROADCAST_NOTIFICATIONS] == null)
+            //{
+            //    AddTask(CRON_BROADCAST_NOTIFICATIONS, seconds);
+            //    cache[CRON_BROADCAST_NOTIFICATIONS_LRT] = DateTime.Now;
+            //}
 
 
         }
@@ -198,7 +199,7 @@ namespace MoG.Domain.Service
                 var userProfile = this.serviceUser.GetByLogin(user);
                 if (userProfile != null)
                 {
-                    var rawData = this.serviceActivity.GetNotificationForUserId(userProfile.Id, 5);
+                    var rawData = this.serviceActivity.GetActivitiesByUserId(userProfile.Id, 5);
                     var notifications = new Mapper().MapActivities(rawData);
                     foreach (var notification in notifications)
                     {

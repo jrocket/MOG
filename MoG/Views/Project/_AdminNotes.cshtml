@@ -83,7 +83,8 @@
                                     }
                                 },
                                 error: function (err) {
-                                    alert(err.responseText);
+                                    ns_MOG.displayModal("error", err.responseText);
+                                    
                                 }
                             });
                         }

@@ -37,13 +37,13 @@
                 </div>
                 <div class="form-group col-lg-4">
                     @Html.LabelFor(model => model.VisibilityType, new { @class = "control-label" })
-                    @Html.EnumDropDownListFor(model => model.VisibilityType, new { @Class = "form-control" })
-
+                    @Html.EnumDropDownListFor(model => model.VisibilityType, "Select visibility",new { @Class = "form-control" })
+                    @Html.ValidationMessageFor(m => m.VisibilityType)
                 </div>
                 <div class="form-group col-lg-4">
                     @Html.LabelFor(model => model.LicenceType, new { @class = "control-label" })
-                    @Html.EnumDropDownListFor(model => model.LicenceType, new { @Class = "form-control" })
-
+                    @Html.EnumDropDownListFor(model => model.LicenceType, "Select a license", new { @Class = "form-control" })
+                    @Html.ValidationMessageFor(m => m.LicenceType)
                 </div>
                 <div class="clearfix"></div>
                 <div class="form-group col-lg-12">
@@ -52,7 +52,10 @@
                 </div>
                 <div class="form-group col-lg-12">
                     @Html.LabelFor(model => model.Tags, new { @class = "control-label" })
-                    @Html.TextBoxFor(model => model.Tags, new { @class = "form-control", @data_role = "tagsinput" })
+                    <input type="text" class="tm-input" /><br/>
+                    <small>Type some tags in the input field, and separate them with enter, comma, or tab</small>
+                    @Html.HiddenFor(model => model.Tags)
+                    @*@Html.TextBoxFor(model => model.Tags, new { @class = "form-control", @data_role = "tagsinput" })*@
                     @*<input type="text" value="Rock,Punk,Detroit,Sydney#,Oslo" data-role="tagsinput" class="form-control" />*@
                 </div>
                 <div class="form-group col-lg-12">
@@ -70,14 +73,22 @@
 
             </p>
             @Html.Raw(Resource.PROJECT_Create_LicenceDescription)
-            <!--  <ul class="list-unstyled list-inline list-social-icons">
-                <li class="tooltip-social facebook-link"><a href="#facebook-page" data-toggle="tooltip" data-placement="top" title="Facebook"><i class="icon-facebook-sign icon-2x"></i></a></li>
-                <li class="tooltip-social linkedin-link"><a href="#linkedin-company-page" data-toggle="tooltip" data-placement="top" title="LinkedIn"><i class="icon-linkedin-sign icon-2x"></i></a></li>
-                <li class="tooltip-social twitter-link"><a href="#twitter-profile" data-toggle="tooltip" data-placement="top" title="Twitter"><i class="icon-twitter-sign icon-2x"></i></a></li>
-                <li class="tooltip-social google-plus-link"><a href="#google-plus-page" data-toggle="tooltip" data-placement="top" title="Google+"><i class="icon-google-plus-sign icon-2x"></i></a></li>
-              </ul>-->
+          
         </div>
 
     </div><!-- /.row -->
 
 </div><!-- /.container -->
+
+@section Scripts
+    {
+    <script type="text/javascript" language="javascript">
+        $(document).ready(function () {
+            $(".tm-input").tagsManager({ output: '#Tags' });
+        });
+
+    </script>
+    
+
+
+}

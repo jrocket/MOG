@@ -139,7 +139,8 @@ function ProjectListVM(options) {
 
             }
             else {
-                alert("you already liked it");
+                ns_MOG.displayModal("Hey", 'you already liked it');
+               
             }
         });
     }

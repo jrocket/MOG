@@ -1,4 +1,5 @@
-﻿using MoG.Domain.Models;
+﻿using MoG.Domain;
+using MoG.Domain.Models;
 using MoG.Domain.Service;
 using MoG.Helpers;
 using System;
@@ -10,16 +11,18 @@ using System.Web.Mvc;
 
 namespace MoG.Controllers
 {
-    public class ProfileController : MogController
+    public class ProfileController : FlabbitController
     {
         IDropBoxService serviceDropbox = null;
+        ILocalStorageService serviceLocalStorage = null;
         public ProfileController(IUserService userService, IDropBoxService dropboxService
              , ILogService logService
+            , ILocalStorageService localStorageService
             )
             : base(userService, logService)
         {
             this.serviceDropbox = dropboxService;
-        
+            this.serviceLocalStorage = localStorageService;
         }
         //
         // GET: /Profile/
@@ -57,15 +60,15 @@ namespace MoG.Controllers
             string redirectUrl = "";
             switch (service)
             {
-                case CloudStorageServices.Dropbox :
+                case CloudStorageServices.Dropbox:
                     int credentialId = -1;
                     string targetUrl = this.Url.Action("RegisterDropboxStorage", "Profile", null, this.Request.Url.Scheme);
                     redirectUrl = this.serviceDropbox.AskForRegistrationUrl(this.CurrentUser, targetUrl, out credentialId);
                     TempData["tempCredentialId"] = credentialId;
                     break;
-                case CloudStorageServices.GoogleDrive :
-                    return  this.RedirectToComingSoon();
-                    
+                case CloudStorageServices.GoogleDrive:
+                    return this.RedirectToComingSoon();
+
             }
             return Redirect(redirectUrl);
         }
@@ -87,19 +90,20 @@ namespace MoG.Controllers
         public JsonResult CancelRegistration(int id)
         {
             this.serviceUser.CancelRegistration(id);
-            var result = new {
+            var result = new
+            {
                 result = true,
-                redirectUrl  =  Url.Action("Storage")
+                redirectUrl = Url.Action("Storage")
             };
 
             JsonResult json = new JsonResult() { Data = result };
             return json;
         }
 
-        public ActionResult Avatar(int id=-1)
+        public ActionResult Avatar(int id = -1)
         {
             UserProfileInfo model = null;
-            if (id>0)
+            if (id > 0)
             {
                 model = this.serviceUser.GetById(id);
             }
@@ -108,6 +112,66 @@ namespace MoG.Controllers
                 model = CurrentUser;
             }
             return View(model);
+        }
+
+
+        public ActionResult GetPicture(int id = -1)
+        {
+
+            if (id < 0)
+                return HttpNotFound();
+            var user = this.serviceUser.GetById(id);
+            if (user != null)
+            {//TODO : move this into the service layer
+                System.IO.Stream stream = new System.IO.MemoryStream();
+                if (user.PictureUrl.Contains("/Content/"))
+                {
+                    // Construct absolute image path
+
+                    var imagePath = Server.MapPath("~/Content/Images/NoAvatar.png");
+                    var image = System.Drawing.Image.FromFile(imagePath);
+                    var resized = BitmapHelper.ResizeImage(image, 370, 211);
+
+                    stream = new System.IO.MemoryStream();
+                    resized.Save(stream, System.Drawing.Imaging.ImageFormat.Png);
+                    stream.Position = 0;
+
+
+                }
+                else
+                {
+                    //TODO : arggghghh this is ugly!
+                    try
+                    {
+                        string path = String.Format("{0}/avatars/thumbnail_200x200.png", user.Id);
+                        if (this.serviceLocalStorage.DownloadFile(ref stream, path, "users"))
+                        {
+
+                            stream = BitmapHelper.ResizeImage(stream, 370, 211);
+                            stream.Position = 0;
+
+                        }
+                    }
+                    catch (Exception exc)
+                    {
+                        this.serviceLog.LogError("ProfileController::GetPicture", exc);
+                        return HttpNotFound();
+                    }
+                   
+                }
+
+
+                return base.File(stream, "image/png");
+
+
+
+
+            }
+            return HttpNotFound();
+
+
+
+
         }
 
         public ActionResult Alert()

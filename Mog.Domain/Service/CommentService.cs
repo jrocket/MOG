@@ -12,6 +12,7 @@ namespace MoG.Domain.Service
     {
         private ICommentRepository repoComment = null;
         private IActivityService servActivity = null;
+
         public CommentService(ICommentRepository repo, IActivityService activityService)
         {
             repoComment = repo;
@@ -25,7 +26,9 @@ namespace MoG.Domain.Service
             newComment.ModifiedOn = DateTime.Now;
             if (repoComment.Create(newComment))
             {
-                this.servActivity.LogCommentCreation(newComment);
+                //to be sure to get the complete object from DB
+                Comment c = this.repoComment.GetById(newComment.Id);
+                this.servActivity.LogCommentCreation(c);
             }
 
             return newComment;
@@ -52,9 +55,19 @@ namespace MoG.Domain.Service
             return this.repoComment.DeleteById(id);
         }
 
-        private Comment GetById(int id)
+        public Comment GetById(int id)
         {
             return this.repoComment.GetById(id);
+        }
+
+
+
+
+        public bool Edit(Comment comment)
+        {
+            comment.ModifiedOn = DateTime.Now;
+           var result =  this.repoComment.SaveChanges(comment);
+            return result.Id>0;
         }
     }
 
@@ -66,5 +79,9 @@ namespace MoG.Domain.Service
         List<Models.Comment> GetByProjectId(int id);
 
         bool Delete(int id, UserProfileInfo userProfile);
+
+        Comment GetById(int id);
+
+        bool Edit(Comment comment);
     }
 }

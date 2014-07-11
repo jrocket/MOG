@@ -21,15 +21,17 @@ namespace MoG
                       "~/Scripts/respond.js"
                       //, "~/Scripts/modern-business.js"
                       , "~/Scripts/TagInput/bootstrap-tagsinput.js"
-                      , "~/Scripts/TagInput/typeahead.min.js"));
+                      , "~/Scripts/TagInput/typeahead.min.js"
+                      , "~/Scripts/TagManager/tagmanager.js"));
 
-            bundles.Add(new StyleBundle("~/Content/css").Include(
+            bundles.Add(new StyleBundle("~/Style/css").Include(
                       //"~/Content/bootstrap.css",
                       //"~/Content/Site.css"
                       //, "~/content/modern-business.css"
                        "~/Content/font-awesome/font-awesome.css"
                       , "~/Content/TagInput/bootstrap-tagsinput.css"
-                       , "~/Content/TagInput/bootstrap-tagsinput-custom.css"));
+                       , "~/Content/TagInput/bootstrap-tagsinput-custom.css"
+                       , "~/Content/css/TagManager/tagmanager.css"));
             bundles.Add(new ScriptBundle("~/bundles/knockout").Include(
     "~/Scripts/knockout-3.0.0.js"
     ));

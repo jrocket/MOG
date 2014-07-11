@@ -56,8 +56,9 @@ namespace MoG.Domain.Repository
                 foreach (DownloadCartItem item in result)
                 {
                     this.dbContext.DownloadCarts.Remove(item);
-                    this.dbContext.SaveChanges();
-                } 
+                  
+                }
+                this.dbContext.SaveChanges();
                 return true;
             }
             return false;

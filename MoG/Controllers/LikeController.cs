@@ -8,7 +8,7 @@ using System.Web.Mvc;
 namespace MoG.Controllers
 {
     [MogAuthAttribut]
-    public class LikeController : MogController
+    public class LikeController : FlabbitController
     {
         public ILikeService serviceLike { get; set; }
 

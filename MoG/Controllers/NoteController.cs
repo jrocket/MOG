@@ -8,7 +8,7 @@ using System.Web.Mvc;
 namespace MoG.Controllers
 {
     [MogAuthAttribut]
-    public class NoteController : MogController
+    public class NoteController : FlabbitController
     {
         private INoteService serviceNote = null;
 

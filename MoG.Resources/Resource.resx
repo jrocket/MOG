@@ -268,7 +268,7 @@
     <value>Project</value>
   </data>
   <data name="MAINMENU_Projects" xml:space="preserve">
-    <value>Projects</value>
+    <value>My projects</value>
   </data>
   <data name="MAINMENU_Random" xml:space="preserve">
     <value>Random</value>
@@ -348,10 +348,10 @@
             &lt;p&gt;&lt;i class="icon-time"&gt;&lt;/i&gt; &lt;abbr title="BY-ND"&gt;ND&lt;/abbr&gt; NoDerivs - This license allows for redistribution, commercial and non-commercial, as long as it is passed along unchanged and in whole, with credit to you&lt;/p&gt;</value>
   </data>
   <data name="PROJECT_Create_LicenceExplain" xml:space="preserve">
-    <value>Below is an explaination of the licences....</value>
+    <value>Below is an explanation of the licences....</value>
   </data>
   <data name="PROJECT_Create_Title" xml:space="preserve">
-    <value>Explaination...</value>
+    <value>Explanation...</value>
   </data>
   <data name="PROJECT_Files" xml:space="preserve">
     <value>Files</value>
@@ -448,5 +448,107 @@
   </data>
   <data name="COMMON_PermissionDenied" xml:space="preserve">
     <value>I guess you don't have the right to do so....</value>
+  </data>
+  <data name="PROJECT_ClickToPlay" xml:space="preserve">
+    <value>Click to listen</value>
+  </data>
+  <data name="PROJECT_Detail" xml:space="preserve">
+    <value>Project Details</value>
+  </data>
+  <data name="PROJECT_Licence" xml:space="preserve">
+    <value>Licence</value>
+  </data>
+  <data name="PROJECT_LastModification" xml:space="preserve">
+    <value>Last Modification</value>
+  </data>
+  <data name="PROJECT_liked" xml:space="preserve">
+    <value>This project was liked</value>
+  </data>
+  <data name="PROJECT_Times" xml:space="preserve">
+    <value>time(s)</value>
+  </data>
+  <data name="PROJECT_Tags" xml:space="preserve">
+    <value>Tags</value>
+  </data>
+  <data name="FILE_ModifiedOn" xml:space="preserve">
+    <value>last update</value>
+  </data>
+  <data name="FILE_PostedOn" xml:space="preserve">
+    <value>posted on </value>
+  </data>
+  <data name="PROJECT_Description" xml:space="preserve">
+    <value>Project description</value>
+  </data>
+  <data name="ACTIViTY_HereIsWhatHappened" xml:space="preserve">
+    <value>Here is what happened in {0}</value>
+  </data>
+  <data name="ACTIVITY_ClickOnTheLeftOrRigthArrow" xml:space="preserve">
+    <value>Click on the left or right arrow to see the next event</value>
+  </data>
+  <data name="FILE_Reset" xml:space="preserve">
+    <value>Reset</value>
+  </data>
+  <data name="STORAGE_RegisterDropboxFailed" xml:space="preserve">
+    <value>Dropbox registration failed</value>
+  </data>
+  <data name="PROFILE_TheFridge" xml:space="preserve">
+    <value>The fridge</value>
+  </data>
+  <data name="DASHBOARD_PageTitle" xml:space="preserve">
+    <value>Dashboard</value>
+  </data>
+  <data name="DASHBOARD_LatestNotifications" xml:space="preserve">
+    <value>Latest notifications</value>
+  </data>
+  <data name="ACTIVITY_SeeAll" xml:space="preserve">
+    <value>See all</value>
+  </data>
+  <data name="PROFILE_Notifications" xml:space="preserve">
+    <value>Notifications</value>
+  </data>
+  <data name="NOTIFICATION_Never" xml:space="preserve">
+    <value>Never</value>
+  </data>
+  <data name="NOTIFICATION_OnceADay" xml:space="preserve">
+    <value>Once a day</value>
+  </data>
+  <data name="NOTIFICATION_OnceAnHour" xml:space="preserve">
+    <value>Once an hour</value>
+  </data>
+  <data name="HOME_WelcomeHeader" xml:space="preserve">
+    <value> Welcome to Flabbit. &lt;br /&gt; Yet another online music collaboration site.</value>
+  </data>
+  <data name="HOME_WelcomeLead" xml:space="preserve">
+    <value>We're in a private beta</value>
+  </data>
+  <data name="HOME_IfYouAreInterested" xml:space="preserve">
+    <value>If you are interested, drop us your email.</value>
+  </data>
+  <data name="HOME_FeedbackThx" xml:space="preserve">
+    <value> thanks :) &lt;br /&gt; we'll keep in touch soon.</value>
+  </data>
+  <data name="HOME_Email" xml:space="preserve">
+    <value>Enter your email address</value>
+  </data>
+  <data name="HOME_InvitMe" xml:space="preserve">
+    <value>Invite Me!</value>
+  </data>
+  <data name="HOME_RecentWork" xml:space="preserve">
+    <value>Recent Work</value>
+  </data>
+  <data name="HOME_ThisIsHappening" xml:space="preserve">
+    <value>... this is happening right now</value>
+  </data>
+  <data name="HOME_ViewAllRecent" xml:space="preserve">
+    <value>View all recents</value>
+  </data>
+  <data name="HOME_NewMembers" xml:space="preserve">
+    <value>New members</value>
+  </data>
+  <data name="HOME_ThanksJoining" xml:space="preserve">
+    <value>... thanks for joining in</value>
+  </data>
+  <data name="HOME_ViewAllMembers" xml:space="preserve">
+    <value>View all members</value>
   </data>
 </root>

@@ -27,7 +27,18 @@ namespace MoG.Domain.Models
 
         public string PictureUrl { get; set; }
 
+        public NotificationFrequency NotificationFrequency { get; set; }
+
+        public DateTime LastNotificationDate { get; set; }
+
 
         public DateTime CreatedOn { get; set; }
+    }
+
+    public enum NotificationFrequency
+    {
+        Never = 0,
+        OnceADay = 1,
+        OnceAnHour = 2
     }
 }

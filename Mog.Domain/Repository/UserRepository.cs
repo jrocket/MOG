@@ -18,8 +18,8 @@ namespace MoG.Domain.Repository
 
         public bool Create(UserProfileInfo usr)
         {
-
-
+            if (usr.LastNotificationDate == DateTime.MinValue)
+                usr.LastNotificationDate = DateTime.Now;
             dbContext.Users.Add(usr);
             int result = dbContext.SaveChanges();
             return (result > 0);
@@ -44,13 +44,17 @@ namespace MoG.Domain.Repository
         public List<UserProfileInfo> GetCollabs(int projectId)
         {
             return dbContext.Database.SqlQuery<UserProfileInfo>(
-                       @"SELECT DISTINCT UserProfileInfoes.DisplayName,
-UserProfileInfoes.Id,
-UserProfileInfoes.[Login], 
-UserProfileInfoes.PictureUrl,
-UserProfileInfoes.Email,
+                       @"SELECT DISTINCT 
+UserProfileInfoes.ID,
 UserProfileInfoes.AppUserId,
-UserProfileInfoes.CreatedOn
+UserProfileInfoes.CreatedOn,
+UserProfileInfoes.DisplayName,
+UserProfileInfoes.Email,
+UserProfileInfoes.[Login],
+UserProfileInfoes.PictureUrl,
+UserProfileInfoes.NotificationFrequency,
+USerProfileInfoes.LastNotificationDate
+
   FROM [Projects]
   JOIN ProjectFiles on ProjectFiles.ProjectId = Projects.Id
   JOIN UserProfileInfoes on UserProfileInfoes.Id = ProjectFiles.Creator_Id
@@ -62,6 +66,8 @@ WHERE Projects.Id = @projectId
 
         public int SaveChanges(UserProfileInfo user)
         {
+            if (user.LastNotificationDate == DateTime.MinValue)
+                user.LastNotificationDate = DateTime.Now;
             this.dbContext.Entry(user).State = EntityState.Modified;
             this.dbContext.SaveChanges();
             return user.Id;
@@ -104,14 +110,16 @@ WHERE Projects.Id = @projectId
             return dbContext.Database.SqlQuery<UserProfileInfo>(
                @"
 SELECT 
-DISTINCT UserProfileInfoes.ID,
+DISTINCT 
+UserProfileInfoes.ID,
 UserProfileInfoes.AppUserId,
 UserProfileInfoes.CreatedOn,
 UserProfileInfoes.DisplayName,
 UserProfileInfoes.Email,
-UserProfileInfoes.Login,
-UserProfileInfoes.PictureUrl
-
+UserProfileInfoes.[Login],
+UserProfileInfoes.PictureUrl,
+UserProfileInfoes.NotificationFrequency,
+USerProfileInfoes.LastNotificationDate
   FROM [ProjectFiles] a
   JOIN [ProjectFiles] b on a.ProjectId = b.ProjectId
   join UserProfileInfoes on b.Creator_Id = UserProfileInfoes.Id
@@ -129,6 +137,16 @@ UserProfileInfoes.PictureUrl
                 .Where(u => u.DisplayName.ToLower().Contains(query) || u.Login.ToLower().Contains(query))
                 .OrderByDescending(u => u.DisplayName);
            
+        }
+
+
+        public IQueryable<UserProfileInfo> GetNew(int page, int pageSize, bool bExcludePrivate, bool bExcludeDeleted)
+        {
+            IQueryable<UserProfileInfo> allUsers = GetAll();
+            return allUsers
+                .OrderByDescending(p => p.CreatedOn)
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize);
         }
     }
 
@@ -154,5 +172,7 @@ UserProfileInfoes.PictureUrl
         IList<UserProfileInfo> GetFriends(int p);
 
         IQueryable<UserProfileInfo> Search(string query);
+
+        IQueryable<UserProfileInfo> GetNew(int page, int pageSize, bool bExcludePrivate, bool bExcludeDeleted);
     }
 }

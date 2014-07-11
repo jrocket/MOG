@@ -7,7 +7,7 @@ using System.Web.Mvc;
 
 namespace MoG.Controllers
 {
-    public class DEBUGController : MogController
+    public class DEBUGController : FlabbitController
     {
         public DEBUGController(IUserService userService
            , ILogService logService

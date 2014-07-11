@@ -1,4 +1,5 @@
-﻿using MoG.Domain.Service;
+﻿using MoG.Domain.Models;
+using MoG.Domain.Service;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,32 +8,48 @@ using System.Web.Mvc;
 
 namespace MoG.Controllers
 {
-   
-    public class HomeController : MogController
+
+    public class HomeController : FlabbitController
     {
+        private IProjectService serviceProject = null;
         private IInviteMeService serviceInvit = null;
-       public HomeController(IInviteMeService invitService, IUserService userService
-            , ILogService logService
-            )
+        private IFileService serviceFile = null;
+        public HomeController(IInviteMeService invitService, IProjectService projectService
+            ,IUserService userService
+            ,IFileService fileService
+             , ILogService logService
+             )
             : base(userService, logService)
         {
             this.serviceInvit = invitService;
-       }
+            this.serviceFile = fileService;
+            this.serviceProject = projectService;
+        }
         public ActionResult Index()
         {
-            if (User.Identity.IsAuthenticated)
-                return RedirectToAction("New", "Project");
-            return View();
+            //if (User.Identity.IsAuthenticated)
+            //    return RedirectToAction("New", "Project");
+            var recentProject = this.serviceProject.GetNew(1, 12, true)
+                .ToList();
+            var fileIds = recentProject.Select(p => p.PromotedId);
+            List<ProjectFile> files = this.serviceFile.GetByIds(fileIds);
+            List<UserProfileInfo> recentMembers = this.serviceUser.GetNew(1, 4, true).ToList();
+            HomeVM model = new HomeVM();
+            model.Projects = recentProject;
+            model.Users = recentMembers;
+            model.Files = files;
+            
+            return View(model);
         }
 
         [HttpPost]
         public JsonResult InviteMe(string email)
         {
             int result = this.serviceInvit.InviteMe(email, getIPAddress(Request));
-            return new JsonResult() { Data = result!=-1 };
+            return new JsonResult() { Data = result != -1 };
         }
 
-        private   string getIPAddress(HttpRequestBase request)
+        private string getIPAddress(HttpRequestBase request)
         {
             try
             {
@@ -60,7 +77,7 @@ namespace MoG.Controllers
             }
         }
 
-        private  bool IsPrivateIpAddress(string ipAddress)
+        private bool IsPrivateIpAddress(string ipAddress)
         {
             // http://en.wikipedia.org/wiki/Private_network
             // Private IP Addresses are: 
@@ -98,6 +115,9 @@ namespace MoG.Controllers
 
         //    return View();
         //}
-                
+        public ActionResult Offline()
+        {
+            return View();
+        }
     }
 }

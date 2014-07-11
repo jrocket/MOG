@@ -21,7 +21,7 @@
                 </div>
 
                 <ul class="flat">
-                    <li><a href="@Url.Content(@Model.PromotedUrl)">Click to play</a></li>
+                    <li><a href="@Url.Content(@Model.PromotedUrl)">@Resource.PROJECT_ClickToPlay</a></li>
                 </ul>
 
             }
@@ -32,38 +32,38 @@
         </div>
 
         <div class="col-md-4">
-            <h3>Project Description</h3>
+            <h3>@Resource.PROJECT_Description</h3>
             <p><span style="white-space: pre-line">@Model.Project.Description</span></p>
             <p><i class="icon-time"></i> Posted on @Html.DisplayFor(m => m.Project.CreatedOn, "LongDateString")</p>
         </div>
 
         <div class="col-md-4">
-            <h3>Project Details</h3>
+            <h3>@Resource.PROJECT_Detail</h3>
 
             <dl>
-                <dt>Licence</dt>
+                <dt>@Resource.PROJECT_Licence</dt>
                 <dd>@Model.Project.LicenceType</dd>
             </dl>
 
             <dl>
-                <dt>Last Modification</dt>
+                <dt>@Resource.PROJECT_LastModification</dt>
                 <dd>@Html.DisplayFor(m => m.Project.ModifiedOn, "ShortDateString") </dd>
             </dl>
 
 
             <dl>
                 <dt>
-                    This project was liked
+                    @Resource.PROJECT_liked
                     <a href="#" data-bind="click:btnLikeClicked" style="color:white">
                         <span class="badge  color_good "><span class="glyphicon glyphicon-heart" data-bind="text : likeCount"></span></span>
                     </a>
-                    times
+                    @Resource.PROJECT_Times
                 </dt>
                 <dd> </dd>
             </dl>
 
             <dl>
-                <dt>Tags</dt>
+                <dt>@Resource.PROJECT_Tags</dt>
                 <dd>@Html.TagsLabelFor(@Model.Project.Tags, "form-control")</dd>
             </dl>
         </div>

@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<parameters>
+  <parameter name="AuthentConnection-Web.config Connection String" description="AuthentConnection Connection String used in web.config by the application to access the database." defaultValue="Server=tcp:ob4fnzew0a.database.windows.net,1433;Database=PRD_Flabbit_Authent;User ID=tberst@ob4fnzew0a;Password=#Bayard01;Trusted_Connection=False;Encrypt=True;Connection Timeout=30;" tags="SqlConnectionString">
+    <parameterEntry kind="XmlFile" scope="C:\\Data\\Project\ MOG\\Solution\\PRD_Flabbit\\Mog\\obj\\PRD\\Package\\PackageTmp\\Web\.config$" match="/configuration/connectionStrings/add[@name='AuthentConnection']/@connectionString" />
+  </parameter>
+  <parameter name="DefaultConnection-Web.config Connection String" description="DefaultConnection Connection String used in web.config by the application to access the database." defaultValue="Server=tcp:ob4fnzew0a.database.windows.net,1433;Database=PRD_Flabbit;User ID=tberst@ob4fnzew0a;Password=#Bayard01;Trusted_Connection=False;Encrypt=True;Connection Timeout=30;" tags="SqlConnectionString">
+    <parameterEntry kind="XmlFile" scope="C:\\Data\\Project\ MOG\\Solution\\PRD_Flabbit\\Mog\\obj\\PRD\\Package\\PackageTmp\\Web\.config$" match="/configuration/connectionStrings/add[@name='DefaultConnection']/@connectionString" />
+  </parameter>
+  <parameter name="StorageConnectionString-Web.config Connection String" description="StorageConnectionString Connection String used in web.config by the application to access the database." defaultValue="DefaultEndpointsProtocol=https;AccountName=flabbit;AccountKey=WfrO980z0or1cK6a7mRIT8xb89si/FBAoYkKWjJiHRPH7u3f1PbXJzOSJ7Gw9caDDpJjZYhbEIP7XgF2QpunWg==;" tags="SqlConnectionString">
+    <parameterEntry kind="XmlFile" scope="C:\\Data\\Project\ MOG\\Solution\\PRD_Flabbit\\Mog\\obj\\PRD\\Package\\PackageTmp\\Web\.config$" match="/configuration/connectionStrings/add[@name='StorageConnectionString']/@connectionString" />
+  </parameter>
+  <parameter name="MoG.Domain.Models.ApplicationDbContext-Web.config Connection String" description="MoG.Domain.Models.ApplicationDbContext Connection String used in web.config by the application to access the database." defaultValue="MoG.Domain.Models.ApplicationDbContext_ConnectionString" tags="SqlConnectionString">
+    <parameterEntry kind="XmlFile" scope="C:\\Data\\Project\ MOG\\Solution\\PRD_Flabbit\\Mog\\obj\\PRD\\Package\\PackageTmp\\Web\.config$" match="/configuration/connectionStrings/add[@name='MoG.Domain.Models.ApplicationDbContext']/@connectionString" />
+  </parameter>
+</parameters>

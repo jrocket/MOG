@@ -164,6 +164,16 @@ namespace MoG.Domain.Service
                 .Take(pageSize)
                 .ToList();
         }
+
+
+
+
+        public IQueryable<UserProfileInfo> GetNew(int page, int pageSize, bool bExcludePrivate, bool bExcludeDeleted = true)
+        {
+            return this.repoUser.GetNew(page, pageSize, bExcludePrivate, bExcludeDeleted);
+        }
+
+
     }
 
 
@@ -197,5 +207,8 @@ namespace MoG.Domain.Service
         UserManager<ApplicationUser> UserManager { get; set; }
 
         List<UserProfileInfo> Search(string query, int page, int pageSize);
+
+
+        IQueryable<UserProfileInfo> GetNew(int page, int pageSize, bool excludePrivate, bool bExcludeDeleted = true);
     }
 }

@@ -9,12 +9,13 @@ using System.Data.Entity;
 
 namespace MoG.Domain.Repository
 {
-    public class ActivityRepository : BaseRepository , IActivityRepository
+    public class ActivityRepository : BaseRepository, IActivityRepository
     {
-      
-        public ActivityRepository(IdbContextProvider provider) : base(provider)
+
+        public ActivityRepository(IdbContextProvider provider)
+            : base(provider)
         {
-          
+
         }
 
 
@@ -31,7 +32,7 @@ namespace MoG.Domain.Repository
         {
             List<int> ids = new List<int>();
             ids.Add(projectId);
-            return this.GetNotificationsByProjectIds(ids,null);
+            return this.GetNotificationsByProjectIds(ids, null);
         }
 
 
@@ -52,7 +53,7 @@ namespace MoG.Domain.Repository
 
         public bool Delete(Activity activity)
         {
-            if (activity== null)
+            if (activity == null)
                 return false;
             this.dbContext.Activities.Remove(activity);
             int result = dbContext.SaveChanges();
@@ -65,12 +66,12 @@ namespace MoG.Domain.Repository
 
         public IQueryable<Activity> GetNotificationsByProjectIds(List<int> projectIds, int? excludedUserId)
         {
-            var query =  this.dbContext.Activities
+            var query = this.dbContext.Activities
                  .Include(c => c.Project)
                  .Include(a => a.File)
                  .Include(a => a.Who)
-                .Where(a => (a.ProjectId.HasValue ? projectIds.Contains(a.ProjectId.Value) : false) 
-                || (a.File !=null ? projectIds.Contains( a.File.ProjectId) : false)
+                .Where(a => (a.ProjectId.HasValue ? projectIds.Contains(a.ProjectId.Value) : false)
+                || (a.File != null ? projectIds.Contains(a.File.ProjectId) : false)
                 );
             if (excludedUserId != null)
             {
@@ -80,6 +81,20 @@ namespace MoG.Domain.Repository
             query = query.OrderByDescending(a => a.When);
 
             return query;
+        }
+
+
+        public IQueryable<Activity> GetLatest(Visibility visibility)
+        {
+            var query = this.dbContext.Activities
+                    .Where(a => 
+                        (a.Project !=null && a.Project.VisibilityType == visibility) 
+                        ||
+                        (a.File != null && a.File.Project.VisibilityType == visibility)
+                        )
+                .OrderByDescending(a => a.When);
+            return query;
+
         }
     }
 
@@ -98,5 +113,7 @@ namespace MoG.Domain.Repository
 
 
         IQueryable<Activity> GetNotificationsByProjectIds(List<int> projectIds, int? excludedUserId);
+
+        IQueryable<Activity> GetLatest(Visibility visibility);
     }
 }

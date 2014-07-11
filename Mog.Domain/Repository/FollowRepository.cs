@@ -37,10 +37,24 @@ namespace MoG.Domain.Repository
             return follow.Id;
         }
 
+        public int Create(FollowUser follow)
+        {
+            follow.CreatedOn = DateTime.Now;
+            this.dbContext.FollowUsers.Add(follow);
+            this.dbContext.SaveChanges();
+            return follow.Id;
+        }
 
 
 
         public bool SaveChanges(Follow follow)
+        {
+            this.dbContext.Entry(follow).State = System.Data.Entity.EntityState.Modified;
+            int result = this.dbContext.SaveChanges();
+            return result > 0;
+        }
+
+        public bool SaveChanges(FollowUser follow)
         {
             this.dbContext.Entry(follow).State = System.Data.Entity.EntityState.Modified;
             int result = this.dbContext.SaveChanges();
@@ -56,7 +70,7 @@ namespace MoG.Domain.Repository
                 .Count() > 0;
         }
 
-        public IQueryable<Follow> GetByUser(int userId)
+        public IQueryable<Follow> GetFollowedProjectByUser(int userId)
         {
             this.dbContext.Configuration.ProxyCreationEnabled = false;
 
@@ -66,7 +80,7 @@ namespace MoG.Domain.Repository
              .Where(i => i.FollowerId == userId);
         }
 
-        public IQueryable<Follow> GetByProject(int ProjectId)
+        public IQueryable<Follow> GetFollowerByProject(int ProjectId)
         {
             this.dbContext.Configuration.ProxyCreationEnabled = false;
             return this.dbContext.Follows
@@ -74,21 +88,26 @@ namespace MoG.Domain.Repository
               .Where(i => i.ProjectId == ProjectId);
         }
 
-        public Follow GetById(int id)
+        public Follow GetFollowProjectById(int id)
         {
             return this.dbContext.Follows.Find(id);
         }
 
-        public Follow Get(int projectId, int userId)
+        public Follow GetFollowProject(int projectId, int userId)
         {
             return this.dbContext.Follows
                 .Where(i => i.FollowerId == userId && i.ProjectId == projectId).FirstOrDefault();
         }
 
+        public FollowUser GetFollowedUser(int followedId, int followerId)
+        {
+            return this.dbContext.FollowUsers
+               .Where(i => i.FollowerId == followerId && i.FollowedId == followedId).FirstOrDefault();
+        }
 
 
 
-        public bool Delete(Follow follow)
+        public bool DeleteFollowProject(Follow follow)
         {
 
             if (follow != null)
@@ -99,30 +118,61 @@ namespace MoG.Domain.Repository
             }
             return false;
         }
+
+
+        public IQueryable<FollowUser> GetFollowedUsers(int userId)
+        {
+            return this.dbContext.FollowUsers.Where(f => f.FollowerId == userId);
+        }
+        public IQueryable<FollowUser> GetFollowerUsers(int followedId)
+        {
+            return this.dbContext.FollowUsers.Where(f => f.FollowedId == followedId);
+        }
+       
+
+        
+
+
+
+
+
+
+
     }
 
     public interface IFollowRepository
     {
 
-        IQueryable<Follow> GetByUser(int userId);
+        IQueryable<Follow> GetFollowedProjectByUser(int userId);
 
 
-        IQueryable<Follow> GetByProject(int ProjectId);
+        IQueryable<Follow> GetFollowerByProject(int ProjectId);
 
+        IQueryable<FollowUser> GetFollowedUsers(int userId);
 
-        Follow GetById(int id);
+        Follow GetFollowProjectById(int id);
 
-        Follow Get(int projectId, int userId);
+        Follow GetFollowProject(int projectId, int userId);
 
+        FollowUser GetFollowedUser(int followedId, int followerId);
 
         int Create(Follow follow);
 
+        int Create(FollowUser follow);
 
         bool SaveChanges(Follow follow);
+
+        bool SaveChanges(FollowUser follow);
 
 
         bool IsFollowed(int projectId, int userId);
 
-        bool Delete(Follow follow);
+   
+        bool DeleteFollowProject(Follow follow);
+
+        IQueryable<FollowUser> GetFollowerUsers(int followedId);
+
+
+
     }
 }

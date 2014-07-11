@@ -44,7 +44,7 @@ namespace MoG.Code
                          activity.File.DisplayName,
                          Resources.Resource.ACTIVITY_CreatedFile);
 
-                    oneActivity.Url = "File/Display/"+activity.FileId.Value;//controler.Url.Action("Display", "File", new { id = activity.FileId.Value });
+                    oneActivity.Url = "File/Display/" + activity.FileId.Value;//controler.Url.Action("Display", "File", new { id = activity.FileId.Value });
                 }
 
                 if ((activity.Type & ActivityType.Project) == ActivityType.Project
@@ -55,11 +55,29 @@ namespace MoG.Code
                         activity.Project.Name,
                         Resources.Resource.ACTIVITY_CreatedProject);
 
-                    oneActivity.Url = "Project/Detail/"+ activity.ProjectId.Value;//controler.Url.Action("Detail", "Project", new { id = activity.ProjectId.Value });
+                    oneActivity.Url = "Project/Detail/" + activity.ProjectId.Value;//controler.Url.Action("Detail", "Project", new { id = activity.ProjectId.Value });
                 }
 
 
                 result.Add(oneActivity);
+            }
+            return result;
+        }
+
+        internal List<VMNotification> MapActivities(List<Notification> data)
+        {
+            List<VMNotification> result = new List<VMNotification>();
+            foreach (var notif in data)
+            {
+                VMNotification model = new VMNotification()
+           {
+               isRead = notif.IsRead ? "true" : "false",
+               message = notif.Message,
+               pictureUrl = notif.PictureUrl,
+               url = notif.Url,
+               when =notif.CreatedOn
+           };
+                result.Add(model);
             }
             return result;
         }

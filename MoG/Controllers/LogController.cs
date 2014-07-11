@@ -13,7 +13,7 @@ using MoG.Domain.Service;
 namespace MoG.Controllers
 {
     [MogAuthAttribut]
-    public class LogController : MogController
+    public class LogController : FlabbitController
     {
        
         public LogController(IUserService userService

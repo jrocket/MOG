@@ -1,4 +1,57 @@
-﻿function FileVM(dbFileId, FileStatus, Promoted) {
+﻿function Comments(model)
+{
+    var self = this;
+    self.Body = ko.observable(model.Body);
+    self.Creator = model.Creator;
+    self.CreatorName = model.CreatorName;
+    self.Id = model.Id;
+    self.CreatedOnAsString = model.CreatedOnAsString;
+    self.DeleteUrl = model.DeleteUrl;
+    self.isEdit = ko.observable(false);
+    self.isLoading = ko.observable(false);
+    self.ModifiedOnAsString = model.ModifiedOnAsString;
+
+    self.btnEditClicked = function ()
+    {
+        self.isEdit(true);
+    }
+
+    self.btnSaveClicked = function (data)
+    {
+        self.isEdit(false);
+        self.isLoading(true);
+
+        $.ajax({
+            url: '/Comment/Edit',
+            type: 'post',
+            dataType: 'json',
+            data: ko.toJSON({ "id": self.Id, "body" : self.Body }),
+            contentType: 'application/json',
+            success: function (result) {
+                self.isLoading(false);
+                if (result.data == true) {//Set promoted 
+                    
+                }
+                else
+                {
+                    ns_MOG.displayModal("Error", result.message);
+                   
+                }
+            },
+            error: function (err) {
+                self.isLoading(false);
+                ns_MOG.displayModal("Error", err.responseText);
+               
+            }
+        });
+        //console.dir(data);
+       
+    }
+}
+
+
+
+function FileVM(dbFileId, FileStatus, Promoted) {
 
     var self = this;
 
@@ -41,7 +94,8 @@
                 }
             },
             error: function (err) {
-                alert(err.responseText);
+                ns_MOG.displayModal("Error", err.responseText);
+               
             }
         });
     }
@@ -60,7 +114,8 @@
                 }
             },
             error: function (err) {
-                alert(err.responseText);
+                ns_MOG.displayModal("Error", err.responseText);
+               
             }
         });
     };
@@ -79,7 +134,8 @@
                 }
             },
             error: function (err) {
-                alert(err.responseText);
+                ns_MOG.displayModal("Error", err.responseText);
+               
             }
         });
     };
@@ -101,7 +157,8 @@
                     }
                 },
                 error: function (err) {
-                    alert(err.responseText);
+                    ns_MOG.displayModal("Error", err.responseText);
+                  
                 }
             });
         }
@@ -119,17 +176,16 @@
 
     this.btnSaveClicked = function () {
 
-        var $taginputControl = $('[data-role=tagsinput]');
-        var $elt = $taginputControl.tagsinput('input');
-        if ($elt && $elt[0] && $elt[0].value != "") {
-            //we have a pending tag, let's add it to the list
-            if (/\S/.test($elt[0].value)) {
-                // string is not empty and not just whitespace
-                $taginputControl.tagsinput('add', $elt[0].value);
-            }
-        }
+        
+        //if ($elt && $elt[0] && $elt[0].value != "") {
+        //    //we have a pending tag, let's add it to the list
+        //    if (/\S/.test($elt[0].value)) {
+        //        // string is not empty and not just whitespace
+        //        $taginputControl.tagsinput('add', $elt[0].value);
+        //    }
+        //}
 
-        var tags = $taginputControl.val();
+        var tags = $('#Tags').val();
         var description = $('#Description').val();
         var name = $('#DisplayName').val();
         var url = "/File/Edit/" + self.fileId();
@@ -165,7 +221,8 @@
           },
           function (data) {
               self.isAddToCartVisible(false);
-              alert("result = " + data.result);
+              ns_MOG.displayModal("Success", "File has been added to your cart");
+             
           }
           );
 
@@ -178,7 +235,12 @@
             dataType: 'json',
             data: { "id": self.fileId(), "_nocache": new Date().getMilliseconds() },
             success: function (data) {
-                self.comments(data);
+                var viewmodel = [];
+                for (var i = 0; i < data.length; i++)
+                {
+                    viewmodel[i] = new Comments(data[i]);
+                }
+                self.comments(viewmodel);
 
             }
         });
@@ -204,7 +266,8 @@
                 if (err.responseText == "success")
                 { window.location.href = urlPath + '/'; }
                 else {
-                    alert(err.responseText);
+                    ns_MOG.displayModal("Error", err.responseText);
+                  
                 }
             },
             complete: function () {
@@ -221,7 +284,8 @@
             data: ko.toJSON({ "fileId": self.fileId(), "body": self.newBody() }),
             contentType: 'application/json',
             success: function (result) {
-                self.comments.push(result);
+                var newComment = new Comments(result);
+                self.comments.push(newComment);
                 self.newBody("");
 
             },
@@ -229,7 +293,8 @@
                 if (err.responseText == "success")
                 { window.location.href = urlPath + '/'; }
                 else {
-                    alert(err.responseText);
+                    ns_MOG.displayModal("Error", err.responseText);
+                   
                 }
             },
             complete: function () {

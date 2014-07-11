@@ -43,7 +43,8 @@
                         <div class="form-group">
                             <label for="to" class="col-sm-2 control-label">@Resource.MAIL_For</label>
                             <div class="col-sm-9">
-                                <input type="text" class="form-control TypeaheadInput" data-bind="value: to" />
+                                <input type="text" class="form-control tm-input"  />
+                                <input type="hidden" id="tagInputHidden" data-bind="value: to" />
                                 <input type="hidden" data-bind="value: replyTo" />
                             </div>
                         </div>
@@ -123,15 +124,15 @@
 <script type="text/javascript">
 
     var i8n = {
-        MAIL_Archive : '@Resource.MAIL_Archive',
-        MAIL_BtnSend: '@Resource.MAIL_BtnSend',
-        MAIL_For: '@Resource.MAIL_For',
-        MAIL_Inbox: '@Resource.MAIL_Inbox',
-        MAIL_Message: '@Resource.MAIL_Message',
-        MAIL_NewMessage: '@Resource.MAIL_NewMessage',
-        MAIL_Sent: '@Resource.MAIL_Sent',
-        MAIL_Subject: '@Resource.MAIL_Subject',
-        MAIL_SendError: '@Resource.MAIL_SendError'
+        MAIL_Archive : '@Html.Raw(Resource.MAIL_Archive)',
+        MAIL_BtnSend: '@Html.Raw(Resource.MAIL_BtnSend)',
+        MAIL_For: '@Html.Raw(Resource.MAIL_For)',
+        MAIL_Inbox: '@Html.Raw(Resource.MAIL_Inbox)',
+        MAIL_Message: '@Html.Raw(Resource.MAIL_Message)',
+        MAIL_NewMessage: '@Html.Raw(Resource.MAIL_NewMessage)',
+        MAIL_Sent: '@Html.Raw(Resource.MAIL_Sent)',
+        MAIL_Subject: '@Html.Raw(Resource.MAIL_Subject)',
+        MAIL_SendError: '@Html.Raw(Resource.MAIL_SendError)'
 
     }
 </script>

@@ -11,7 +11,7 @@ using System.Web.Mvc;
 namespace MoG.Controllers
 {
     [MogAuthAttribut]
-    public class FileController : MogController
+    public class FileController : FlabbitController
     {
         private IProjectService serviceProject = null;
         private IFileService serviceFile = null;
@@ -29,7 +29,7 @@ namespace MoG.Controllers
             , IDropBoxService dropboxService
             , IThumbnailService thumbnailService
             , ILogService logService
-            ,ISecurityService securityService
+            , ISecurityService securityService
             )
             : base(userService, logService)
         {
@@ -43,6 +43,10 @@ namespace MoG.Controllers
         public ActionResult Display(int id = -1)
         {
             var file = serviceFile.GetById(id);
+            if (file == null)
+            {
+                return HttpNotFound();
+            }
             VMFile model = getViewModel(file);
             //ViewBag.Comments = serviceFile.GetFileComments(id);
 
@@ -82,7 +86,7 @@ namespace MoG.Controllers
             model.Tags = file.Tags;
             model.Metadata = file.Metadata;
             model.MetadataType = file.MetadataType;
-            model.Permissions.Add(SecureActivity.TrackEdit,serviceSecurity.HasRight(SecureActivity.TrackEdit, CurrentUser, file));
+            model.Permissions.Add(SecureActivity.TrackEdit, serviceSecurity.HasRight(SecureActivity.TrackEdit, CurrentUser, file));
             model.Permissions.Add(SecureActivity.ProjectEdit, serviceSecurity.HasRight(SecureActivity.ProjectEdit, CurrentUser, file.Project));
             model.Permissions.Add(SecureActivity.TrackDelete, serviceSecurity.HasRight(SecureActivity.TrackDelete, CurrentUser, file));
             if (file.ThumbnailId != null)
@@ -105,11 +109,11 @@ namespace MoG.Controllers
         public ActionResult Edit(int id, string tags, string description, string name)
         {
             var file = serviceFile.GetById(id);
-         if (!serviceSecurity.HasRight(SecureActivity.TrackEdit,CurrentUser,file))
-         {
-             return this.RedirectToErrorPage(Resources.Resource.COMMON_PermissionDenied);
-         }
-            
+            if (!serviceSecurity.HasRight(SecureActivity.TrackEdit, CurrentUser, file))
+            {
+                return this.RedirectToErrorPage(Resources.Resource.COMMON_PermissionDenied);
+            }
+
             file.Tags = tags;
             file.Description = description;
             file.InternalName = name;
@@ -136,6 +140,7 @@ namespace MoG.Controllers
                 {
                     Body = comment.Body,
                     CreatedOn = comment.CreatedOn,
+                    ModifiedOn = comment.ModifiedOn,
                     CreatorName = comment.CreatorName,
                     Creator = comment.Creator,
                     Id = comment.Id,
@@ -152,6 +157,11 @@ namespace MoG.Controllers
         {
             this.serviceLog.LogMessage("FileController", "Create " + id);
             var project = serviceProject.GetById(id);
+            if (project == null)
+            {
+
+                return HttpNotFound();
+            }
             VMFileCreate model = new VMFileCreate() { Project = project };
             var userStorages = this.serviceUser.GetUserStorages(CurrentUser);
 
@@ -490,6 +500,28 @@ namespace MoG.Controllers
         {
             this.serviceFile.IncrementPlayCount(url);
             return new JsonResult() { Data = url };
+        }
+
+
+        [AllowAnonymous]
+        public JsonResult RefreshPromoted()
+        {
+            JsonResult result = new JsonResult() { Data = true, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
+
+            var recentProject = this.serviceProject.GetNew(1, 12, true)
+                 .ToList();
+            var fileIds = recentProject.Select(p => p.PromotedId);
+            foreach (var fileId in fileIds)
+            {
+                //let's assume that this is going to refresh the public url if the file is found in the cloudstorage
+                if (fileId.HasValue)
+                {
+                    this.serviceFile.GetById(fileId.Value);
+                }
+                
+            }
+
+            return result;
         }
     }
 }

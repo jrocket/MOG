@@ -16,38 +16,46 @@ using MoG.Domain.Skydrive;
 namespace MoG.Controllers
 {
     [Authorize]
-    public class AccountController : MogController
+    public class AccountController : FlabbitController
     {
         IDropBoxService serviceDropbox = null;
-             ISkydriveService serviceSkydrive = null;
+        ISkydriveService serviceSkydrive = null;
         IRegistrationCodeService serviceRegistrationCode = null;
+        ISecurityService serviceSecurity = null;
+        IActivityService serviceActivity = null;
         public UserManager<ApplicationUser> UserManager { get; private set; }
 
 
-        public AccountController(IUserService userService, 
-            IDropBoxService dropboxService, 
+        public AccountController(IUserService userService,
+            IDropBoxService dropboxService,
             ISkydriveService skydriveService,
             IRegistrationCodeService registrationService
-             , ILogService logService
-           
+            , ILogService logService
+            , ISecurityService securityService
+            , IActivityService activityService
+
             )
             : this(userService
-            ,dropboxService
+            , dropboxService
             , skydriveService
-            ,registrationService
+            , registrationService
             , new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(new ApplicationDbContext()))
             , logService
+            , securityService
+            , activityService
             )
         {
-           
+
         }
 
         public AccountController(IUserService userService
-            ,IDropBoxService dropboxService
-            ,ISkydriveService skydriveService
-            ,IRegistrationCodeService registrationService
-            ,  UserManager<ApplicationUser> userManager
-             , ILogService logService
+            , IDropBoxService dropboxService
+            , ISkydriveService skydriveService
+            , IRegistrationCodeService registrationService
+            , UserManager<ApplicationUser> userManager
+            , ILogService logService
+            , ISecurityService securityService
+            , IActivityService activityService
             )
             : base(userService, logService)
         {
@@ -56,6 +64,8 @@ namespace MoG.Controllers
             UserManager = userManager;
             userService.UserManager = userManager;
             this.serviceRegistrationCode = registrationService;
+            this.serviceSecurity = securityService;
+            this.serviceActivity = activityService;
         }
 
         #region Profile Management
@@ -91,6 +101,67 @@ namespace MoG.Controllers
             Response.Cookies.Add(cookie);
             return RedirectToAction("Manage");
         }
+
+        [HttpPost]
+        public JsonResult UpdateProfile(int id, string displayName, string email)
+        {
+            if (id != this.CurrentUser.Id)
+            {
+                return JsonHelper.ResultError("... no, ... no, ... no!", null);
+            }
+            this.CurrentUser.DisplayName = displayName;
+            this.CurrentUser.Email = email;
+            this.serviceUser.SaveChanges(this.CurrentUser);
+
+            return JsonHelper.ResultOk(true);
+        }
+
+        public ActionResult SetNofications(string frequency)
+        {
+            NotificationFrequency freq = NotificationFrequency.Never;
+            if (Enum.TryParse(frequency,out freq))
+            {
+                this.CurrentUser.NotificationFrequency = freq;
+                this.serviceUser.SaveChanges(this.CurrentUser);
+            
+            }
+            return RedirectToAction("Manage");
+        }
+
+        public ActionResult DashBoard(int id = -1)
+        {
+            if (id == -1)
+            {
+                id = CurrentUser.Id;
+            }
+            if (!this.serviceSecurity.HasRight(SecureActivity.ViewUserDashboard, CurrentUser, id))
+            {
+                return this.RedirectToErrorPage(Resources.Resource.COMMON_PermissionDenied);
+            }
+            return View();
+        }
+
+        public JsonResult GetNotifications()
+        {
+            int id = CurrentUser.Id;
+
+            JsonResult result = new JsonResult();
+            result.JsonRequestBehavior = JsonRequestBehavior.AllowGet;
+            var data = this.serviceActivity.GetNotificationByUserId(id);
+            //todo use automapper
+            result.Data = data.Select(n => new VMNotification()
+                { 
+                    url = n.Url,
+                    message = n.Message,
+                    pictureUrl = n.PictureUrl,
+                    isRead = (n.IsRead ? "true" : "false"),
+                    when = n.CreatedOn
+                }
+                );
+            this.serviceActivity.MarkNotificationsAsRead(id);
+            return result;
+        }
+
         public ActionResult Followed()
         {
             return View();
@@ -111,16 +182,16 @@ namespace MoG.Controllers
             {
                 case CloudStorageServices.Dropbox:
                     int credentialId = -1;
-                     targetUrl = this.Url.Action("RegisterDropboxStorage", "Account", null, this.Request.Url.Scheme);
+                    targetUrl = this.Url.Action("RegisterDropboxStorage", "Account", null, this.Request.Url.Scheme);
                     redirectUrl = this.serviceDropbox.AskForRegistrationUrl(this.CurrentUser, targetUrl, out credentialId);
                     TempData["tempCredentialId"] = credentialId;
                     break;
                 case CloudStorageServices.GoogleDrive:
                     return this.RedirectToComingSoon();
                     break;
-                case CloudStorageServices.Skydrive :
+                case CloudStorageServices.Skydrive:
                     return this.RedirectToComingSoon();
-                     targetUrl = this.Url.Action("RegisterSkydriveStorage", "Account", null, this.Request.Url.Scheme);
+                    targetUrl = this.Url.Action("RegisterSkydriveStorage", "Account", null, this.Request.Url.Scheme);
                     redirectUrl = this.serviceSkydrive.AskForRegistrationUrl(this.CurrentUser, targetUrl, out credentialId);
                     break;
 
@@ -134,15 +205,15 @@ namespace MoG.Controllers
             if (!string.IsNullOrEmpty(Request.QueryString[OAuthConstants.AccessToken]))
             {
                 // There is a token available already. It should be the token flow. Ignore it.
-                return  RedirectToAction("Storage");
+                return RedirectToAction("Storage");
             }
             string verifier = Request.QueryString[OAuthConstants.Code];
             OAuthToken token;
             OAuthError error;
             if (!string.IsNullOrEmpty(verifier))
             {
-                serviceSkydrive.RequestAccessTokenByVerifier(verifier, redirectUrl,out token, out error);
-                serviceSkydrive.RegisterAccount(token,CurrentUser);
+                serviceSkydrive.RequestAccessTokenByVerifier(verifier, redirectUrl, out token, out error);
+                serviceSkydrive.RegisterAccount(token, CurrentUser);
                 return RedirectToAction("Storage");
             }
 
@@ -153,7 +224,7 @@ namespace MoG.Controllers
 
             if (!string.IsNullOrEmpty(errorCode))
             {
-               //todo : do something
+                //todo : do something
             }
             return RedirectToAction("Storage");
         }
@@ -167,7 +238,16 @@ namespace MoG.Controllers
                 RedirectToErrorPage("Dropbox authorization failed... your local account is not linked to dropbox");
 
             }
-            this.serviceDropbox.RegisterAccount(tempCredentialId);
+            try
+            {
+                this.serviceDropbox.RegisterAccount(tempCredentialId);
+
+            }
+            catch (Exception)
+            {
+                RedirectToErrorPage(Resources.Resource.STORAGE_RegisterDropboxFailed);
+            }
+
             return RedirectToAction("Storage");
         }
 
@@ -204,13 +284,9 @@ namespace MoG.Controllers
             return View();
         }
 
-        public ActionResult Dashboard()
-        {
-            return View();
-        }
 
 
-        #endregion 
+        #endregion
 
         #region Login / register
         //
@@ -266,12 +342,12 @@ namespace MoG.Controllers
             {
                 var user = new ApplicationUser() { UserName = model.UserName };
                 var registrationCode = this.serviceRegistrationCode.GetByCode(model.RegistrationCode);
-                if (registrationCode ==null || registrationCode.UserId!=null)
+                if (registrationCode == null || registrationCode.UserId != null)
                 {
-                   return  this.RedirectToErrorPage("wrong registration code....");
+                    return this.RedirectToErrorPage("wrong registration code....");
                 }
                 //var result = await UserManager.CreateAsync(user, model.Password);
-                var result = await this.serviceUser.CreateAsync(user, 
+                var result = await this.serviceUser.CreateAsync(user,
                     model.Password,
                     model.RegistrationCode,
                     model.Email,
@@ -280,7 +356,7 @@ namespace MoG.Controllers
                 //var result = await  UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
-                    
+
                     await SignInAsync(user, isPersistent: false);
                     return RedirectToAction("Index", "Home");
                 }

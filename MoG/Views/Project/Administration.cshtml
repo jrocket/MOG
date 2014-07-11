@@ -67,13 +67,13 @@
                 });
 
 
-                this.message = ko.observable();
-                this.isMessageVisible = ko.observable(false);
+                //this.message = ko.observable();
+                //this.isMessageVisible = ko.observable(false);
 
 
                 self.menuEntries = ko.observableArray([
                 @*new menuEntry('@Resource.PROJECT_Admin_Reports', "glyphicon glyphicon-signal", '@Url.Action("AdminReports", "Project", new { id = Model.Project.Id })', "btn btn-default btn-lg"),*@
-                new menuEntry('@Resource.PROJECT_Admin_Parameters', "glyphicon glyphicon-list-alt", '@Url.Action("AdminSettings","Project", new { id = Model.Project.Id } )', "btn btn-danger btn-lg"),
+                new menuEntry('@Html.Raw(Resource.PROJECT_Admin_Parameters)', "glyphicon glyphicon-list-alt", '@Url.Action("AdminSettings","Project", new { id = Model.Project.Id } )', "btn btn-danger btn-lg"),
                 new menuEntry('@Resource.PROJECT_Admin_Follow', "glyphicon glyphicon-eye-open", '@Url.Action("AdminFollow", "Project", new { id = Model.Project.Id })', "btn btn-warning btn-lg"),
                 new menuEntry('@Resource.PROJECT_Admin_Comments', "glyphicon glyphicon-comment", '@Url.Action("AdminComments", "Project", new { id = Model.Project.Id })', "btn btn-primary btn-lg"),
                 new menuEntry('@Resource.PROJECT_Admin_Collabs', "glyphicon glyphicon-user", '@Url.Action("AdminCollabs", "Project", new { id = Model.Project.Id })', "btn btn-success btn-lg"),
@@ -99,17 +99,15 @@
                 self.btnSaveClicked = function (data) {
                     $.post('@Url.Action("SaveProjectSettings")', data.Project(), function (result) {
                         if (result == true) {
-                            self.message("Project saved!");
-                            self.isMessageVisible(true);
-                            setInterval(self.hideMessage, 3000);
-
+                            ns_MOG.displayModal('Success', 'Whoot, project saved without any error :)');
+                          
                         }
                     });
                 }
 
-                self.hideMessage = function () {
-                    self.isMessageVisible(false);
-                }
+                //self.hideMessage = function () {
+                //    self.isMessageVisible(false);
+                //}
 
                 //$.get(self.menuEntries()[0].url, function (data) {
                 //    $('#dynamicContent').html(data);

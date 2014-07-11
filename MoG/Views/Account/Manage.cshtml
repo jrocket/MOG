@@ -50,19 +50,40 @@
                             <div class="panel-heading">
                                 <h4 class="panel-title">
                                     <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
-                                        General
+                                        <i class="glyphicon glyphicon-user"></i> General
                                     </a>
                                 </h4>
                             </div>
                             <div id="collapseOne" class="panel-collapse collapse in">
                                 <div class="panel-body">
-                                    <div class="col-sm-6 col-md-4">
-                                        <img src="@Model.User.PictureUrl" alt="" class="img-rounded img-responsive" />
+                                    <div class="col-sm-6 col-md-4" style="text-align:center">
+                                        <img src="@Model.User.PictureUrl" alt="" class="img-rounded img-responsive" style="margin-left:auto;margin-right:auto" />
                                         <a href="@Url.Action("Avatar")">@Resource.PROFILE_ChangeAvatar</a>
                                     </div>
-                                    <div class="col-sm-6 col-md-8">
+                                    <div class="col-sm-6 col-md-8" data-bind="visible:!isEditMode()">
                                         <h4>
-                                            @Model.User.DisplayName
+                                            <span data-bind="text:displayName"></span>&nbsp;<a href="#" data-bind="click : btnEditClicked"><span class="glyphicon glyphicon-edit"></span></a>
+                                        </h4>
+                                      
+                                        <small>
+                                            <cite title="@Model.User.Login">
+                                                @Model.User.Login @*<i class="glyphicon glyphicon-map-marker"></i>*@
+                                            </cite>
+                                        </small>
+                                        <p>
+                                            <i class="glyphicon glyphicon-envelope"></i><span data-bind="text : email"></span>
+                                                                                              @*<br />
+                <i class="glyphicon glyphicon-globe"></i><a href="http://www.jquery2dotnet.com">www.jquery2dotnet.com</a>*@
+                                                <br />
+                                                <i class="glyphicon glyphicon-gift"></i> @Resource.PROFILE_JoinedOn : @Model.User.CreatedOn
+                                        </p>
+
+                                    </div>
+                                    <div class="col-sm-6 col-md-8" data-bind="visible:isEditMode">
+                                        <h4><a href="#" data-bind="click : btnSaveClicked"><span class="glyphicon glyphicon-floppy-disk"></span></a></h4>
+                                        <h4 data-bind="visible:isEditMode">
+                                            <input type="text" class="form-control" data-bind="value:displayName, visible:isEditMode" />
+                                         
                                         </h4>
                                         <small>
                                             <cite title="@Model.User.Login">
@@ -70,13 +91,14 @@
                                             </cite>
                                         </small>
                                         <p>
-                                            @*<i class="glyphicon glyphicon-envelope"></i>email@example.com
-                                                <br />
-                                                <i class="glyphicon glyphicon-globe"></i><a href="http://www.jquery2dotnet.com">www.jquery2dotnet.com</a>*@
-                                            <br />
-                                            <i class="glyphicon glyphicon-gift"></i> @Resource.PROFILE_JoinedOn : @Model.User.CreatedOn
-                                        </p>
 
+                                           
+                                            <input type="text" data-bind="value:email" class="form-control" />
+                                        
+                                            <i class="glyphicon glyphicon-gift"></i> @Resource.PROFILE_JoinedOn : @Model.User.CreatedOn
+                                            
+                                        </p>
+                                    
                                     </div>
                                 </div>
                             </div>
@@ -85,7 +107,7 @@
                             <div class="panel-heading">
                                 <h4 class="panel-title">
                                     <a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo">
-                                        Password
+                                        <i class="glyphicon glyphicon-lock"></i>Password
                                     </a>
                                 </h4>
                             </div>
@@ -108,7 +130,7 @@
                             <div class="panel-heading">
                                 <h4 class="panel-title">
                                     <a data-toggle="collapse" data-parent="#accordion" href="#collapseThree">
-                                        @Resource.PROFILE_Language
+                                        <i class="glyphicon glyphicon-globe"></i>@Resource.PROFILE_Language
                                     </a>
                                 </h4>
                             </div>
@@ -117,7 +139,7 @@
                                     @using (Html.BeginForm("SetLanguage", "Account"))
                                     {
                                         <p>
-                                            <i class="glyphicon glyphicon-globe"></i>@Resource.PROFILE_Language
+                                          
                                             <ul>
                                                 <li>
                                                     <label for="en-us">
@@ -137,37 +159,75 @@
                                 </div>
                             </div>
                         </div><!--end panel section-->
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h4 class="panel-title">
+                                    <a data-toggle="collapse" data-parent="#accordion" href="#collapseFour">
+                                        <i class="glyphicon glyphicon-bell"></i> @Resource.PROFILE_Notifications
+                                    </a>
+                                </h4>
+                            </div>
+                            <div id="collapseFour" class="panel-collapse collapse">
+                                <div class="panel-body">
+                                    @using (Html.BeginForm("SetNofications", "Account"))
+                                    {
+                                        <p>
+                                          
+                                            <ul>
+                                                <li>
+                                                    <label for="en-us">
+                                                        <input name="frequency" id="Never" value="Never" type="radio" @selected("Never", Model.User.NotificationFrequency.ToString()) /> @Resource.NOTIFICATION_Never
+                                                    </label>
+                                                </li>
+                                                <li>
+                                                    <label for="fr">
+                                                        <input name="frequency" id="OnceADay" value="OnceADay" type="radio" @selected("OnceADay", Model.User.NotificationFrequency.ToString()) /> @Resource.NOTIFICATION_OnceADay
+                                                    </label>
+                                                </li>
+                                                <li>
+                                                    <label for="fr">
+                                                        <input name="frequency" id="OnceADay" value="OnceAnHour" type="radio" @selected("OnceAnHour", Model.User.NotificationFrequency.ToString()) /> @Resource.NOTIFICATION_OnceAnHour
+                                                    </label>
+                                                </li>
+                                            </ul>
+
+
+                                        </p>
+                                    }
+                                </div>
+                            </div>
+                        </div><!--end panel section-->
                         @*<div class="row">*@
 
-                            <!-- Split button -->
-                            @*<div class="btn-group">
-                                    <button type="button" class="btn btn-default">
-                                        Social
-                                    </button>
-                                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                                        <span class="caret"></span><span class="sr-only">Social</span>
-                                    </button>
-                                    <ul class="dropdown-menu" role="menu">
-                                        <li><a href="#">Twitter</a></li>
-                                        <li><a href="https://plus.google.com/+Jquery2dotnet/posts">Google +</a></li>
-                                        <li><a href="https://www.facebook.com/jquery2dotnet">Facebook</a></li>
-                                        <li class="divider"></li>
-                                        <li><a href="#">Github</a></li>
-                                    </ul>
-                                </div>*@
+                        <!-- Split button -->
+                        @*<div class="btn-group">
+                                <button type="button" class="btn btn-default">
+                                    Social
+                                </button>
+                                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                                    <span class="caret"></span><span class="sr-only">Social</span>
+                                </button>
+                                <ul class="dropdown-menu" role="menu">
+                                    <li><a href="#">Twitter</a></li>
+                                    <li><a href="https://plus.google.com/+Jquery2dotnet/posts">Google +</a></li>
+                                    <li><a href="https://www.facebook.com/jquery2dotnet">Facebook</a></li>
+                                    <li class="divider"></li>
+                                    <li><a href="#">Github</a></li>
+                                </ul>
+                            </div>*@
                         @*</div>*@
                         @*<div class="row">
-                            <div class="col-sm-6 col-md-4"></div>
-                            <div class="col-sm-6 col-md-8">
+                                <div class="col-sm-6 col-md-4"></div>
+                                <div class="col-sm-6 col-md-8">
+                                </div>
                             </div>
-                        </div>
-                        <div class="row">
-                            @*<section id="externalLogins">
-                                    @Html.Action("RemoveAccountList")
-                                    @Html.Partial("_ExternalLoginsListPartial", new { Action = "LinkLogin", ReturnUrl = ViewBag.ReturnUrl })
-                                </section>
+                            <div class="row">
+                                @*<section id="externalLogins">
+                                        @Html.Action("RemoveAccountList")
+                                        @Html.Partial("_ExternalLoginsListPartial", new { Action = "LinkLogin", ReturnUrl = ViewBag.ReturnUrl })
+                                    </section>
 
-                        </div>*@
+                            </div>*@
                     </div>
                 </div>
             </div>
@@ -185,4 +245,23 @@
 
         })(jQuery);
     </script>
+
+    @Scripts.Render("~/bundles/knockout")
+
+    <script src="~/Scripts/Views/Account/Manage.js"></script>
+    <script>
+        ko.applyBindings(new ManageVM(
+            {
+                urlSaveProfile: '@Url.Action("UpdateProfile", "Account")',
+                displayName: '@Model.User.DisplayName',
+                email : '@Model.User.Email',
+                id : '@Model.User.Id'
+            }
+
+            ));
+    </script>
+
+
 }
+
+

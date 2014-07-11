@@ -10,8 +10,9 @@ namespace MoG.App_Start
 
     using Ninject;
     using Ninject.Web.Common;
-    using MoG.Domain.Service;
     using MoG.Domain.Repository;
+    using MoG.Domain.Service;
+    using System.Web.Mvc;
 
     public static class NinjectWebCommon 
     {
@@ -48,6 +49,7 @@ namespace MoG.App_Start
                 kernel.Bind<IHttpModule>().To<HttpApplicationInitializationHttpModule>();
 
                 RegisterServices(kernel);
+
                 return kernel;
             }
             catch
@@ -55,6 +57,9 @@ namespace MoG.App_Start
                 kernel.Dispose();
                 throw;
             }
+
+
+         
         }
 
         public static IKernel CreatePublicKernel()
@@ -68,12 +73,15 @@ namespace MoG.App_Start
             return kernel;
         }
 
+
         /// <summary>
         /// Load your modules or register your services here!
         /// </summary>
         /// <param name="kernel">The kernel.</param>
         private static void RegisterServices(IKernel kernel)
         {
+            
+
             kernel.Bind<IProjectService>().To<ProjectService>();
             kernel.Bind<IFileService>().To<FileService>();
             kernel.Bind<IUserService>().To<UserService>();
@@ -82,9 +90,16 @@ namespace MoG.App_Start
             kernel.Bind<IActivityService>().To<ActivityService>();
             kernel.Bind<ITempFileService>().To<TempFileService>();
             kernel.Bind<IWaveformService>().To<WaveformService>();
-            kernel.Bind<IDropBoxService>().To<DropBoxService>();
             kernel.Bind<IDownloadCartService>().To<DownloadCartService>();
+#if NOFILEUPLOAD
+            kernel.Bind<ILocalStorageService>().To<FakeAzureStorageService>();
+            kernel.Bind<IDropBoxService>().To<FakeDropboxService>();
+#else
+
             kernel.Bind<ILocalStorageService>().To<AzureStorageService>();
+            kernel.Bind<IDropBoxService>().To<DropBoxService>();
+#endif
+            
             kernel.Bind<IThumbnailService>().To<ThumbnailService>();
             kernel.Bind<ILikeService>().To<LikeService>();
             kernel.Bind<ILogService>().To<LogService>();
@@ -101,7 +116,7 @@ namespace MoG.App_Start
             kernel.Bind<IMailService>().To<MailService>();
             kernel.Bind<IUserStatisticsService>().To<UserStatisticsService>();
             kernel.Bind<ICacheService>().To<InMemoryCache>();
-            
+
 
             kernel.Bind<IProjectRepository>().To<ProjectRepository>();
             kernel.Bind<IActivityRepository>().To<ActivityRepository>();
@@ -121,10 +136,9 @@ namespace MoG.App_Start
             kernel.Bind<IRegistrationCodeRepository>().To<RegistrationCodeRepository>();
             kernel.Bind<IInviteMeRepository>().To<InviteMeRepository>();
             kernel.Bind<IParameterRepository>().To<ParameterRepository>();
+            kernel.Bind<INotificationRepository>().To<NotificationRepository>();
 
             kernel.Bind<IdbContextProvider>().To<dbContextProvider>();
-
-
         }        
     }
 }

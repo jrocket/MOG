@@ -13,6 +13,15 @@ namespace MoG
         {
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
+            //routes.MapRoute("Offline", "{controller}/{action}/{id}",
+            //    new
+            //    {
+            //        action = "Offline",
+            //        controller = "Home",
+            //        id = UrlParameter.Optional
+            //    }
+            //   );
+
             routes.MapRoute(
                 name: "Default",
                 url: "{controller}/{action}/{id}",

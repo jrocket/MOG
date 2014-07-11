@@ -8,6 +8,7 @@ using System.Web.Optimization;
 using System.Web.Routing;
 using Ninject;
 using MoG.Domain.Service;
+using MoG.Domain.Models;
 
 namespace MoG
 {

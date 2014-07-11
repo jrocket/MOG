@@ -29,24 +29,21 @@ namespace MoG.Domain.Service
             var query = repoAuthCredential.GetByUserId(user.Id);
             List<AuthCredential> existingCredentials = null;
             if (query != null)
-            {
+            {//TODO : gerer le cas des accounts multiples
                 existingCredentials = query.Where(a => a.CloudService == CloudStorageServices.Dropbox).ToList();
+                foreach (var credential in existingCredentials)
+                {
+                    repoAuthCredential.Delete(credential);
+                }
             }
-            if (existingCredentials != null && existingCredentials.Count > 0)
-            {//TODO : gerer le cas du multi account dropbox
-                // on en a déja un
-                tempCredentialId = existingCredentials[0].Id;
-            }
-            else
-            {
-                AuthCredential newCredential = new AuthCredential();
-                newCredential.Token = login.Token;
-                newCredential.Secret = login.Secret;
-                newCredential.UserId = user.Id;
-                newCredential.CloudService = CloudStorageServices.Dropbox;
-                this.repoAuthCredential.Create(newCredential);
-                tempCredentialId = newCredential.Id;
-            }
+
+            AuthCredential newCredential = new AuthCredential();
+            newCredential.Token = login.Token;
+            newCredential.Secret = login.Secret;
+            newCredential.UserId = user.Id;
+            newCredential.CloudService = CloudStorageServices.Dropbox;
+            this.repoAuthCredential.Create(newCredential);
+            tempCredentialId = newCredential.Id;
 
             return url;
         }
@@ -56,16 +53,24 @@ namespace MoG.Domain.Service
         {
             AuthCredential partialCredential = this.repoAuthCredential.GetById(tempCredentialId);
 
+            try
+            {
+                UserLogin lg = new UserLogin { Token = partialCredential.Token, Secret = partialCredential.Secret };
+                DropNetClient client = new DropNetClient(MogConstants.DROPBOX_KEY, MogConstants.DROPBOX_SECRET);
+                client.UserLogin = lg;
+                UserLogin accessToken = client.GetAccessToken();
 
-            UserLogin lg = new UserLogin { Token = partialCredential.Token, Secret = partialCredential.Secret };
-            DropNetClient client = new DropNetClient(MogConstants.DROPBOX_KEY, MogConstants.DROPBOX_SECRET);
-            client.UserLogin = lg;
-            UserLogin accessToken = client.GetAccessToken();
-
-            partialCredential.Token = accessToken.Token;
-            partialCredential.Secret = accessToken.Secret;
-            partialCredential.Status = CredentialStatus.Approved;
-            this.repoAuthCredential.SaveChanges(partialCredential);
+                partialCredential.Token = accessToken.Token;
+                partialCredential.Secret = accessToken.Secret;
+                partialCredential.Status = CredentialStatus.Approved;
+                this.repoAuthCredential.SaveChanges(partialCredential);
+            }
+            catch (DropNet.Exceptions.DropboxException exc)
+            {//
+                this.repoAuthCredential.Delete(partialCredential);
+                throw new Exception("failed to register accoutn", exc);
+            }
+           
         }
 
 
@@ -110,7 +115,7 @@ namespace MoG.Domain.Service
         {
             byte[] buffer = ms.ToArray();
             return UploadFile(buffer, internalName, authCredential, path);
-           
+
 
         }
         private MetaData Upload(byte[] data, string filename, AuthCredential credential, string remotePath = null)
@@ -168,13 +173,13 @@ namespace MoG.Domain.Service
 
         public String RefreshFile(ProjectFile file)
         {
-            if (file==null)
+            if (file == null)
             {
                 return null;
             }
-            string refreshedUrl = GetMedialUrl(file.Path,file.StorageCredential);
+            string refreshedUrl = GetMedialUrl(file.Path, file.StorageCredential);
             return refreshedUrl;
-            
+
         }
     }
 

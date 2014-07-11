@@ -29,5 +29,16 @@ namespace MoG.Domain.Models
             }
         }
 
+        public string ModifiedOnAsString
+        {
+            get
+            {
+                if (CreatedOn == ModifiedOn || ModifiedOn == null)
+                    return String.Empty;
+                return ModifiedOn.Value.ToString("MM/dd/yyyy hh:mm:ss");
+            }
+        }
+
+        public DateTime? ModifiedOn { get; set; }
     }
 }

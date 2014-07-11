@@ -13,7 +13,7 @@ using MoG.Domain.Service;
 namespace MoG.Controllers
 {
     [MogAuthAttribut]
-    public class DownloadCartController : MogController
+    public class DownloadCartController : FlabbitController
     {
         private IDownloadCartService serviceDownloadCart = null;
         public DownloadCartController(

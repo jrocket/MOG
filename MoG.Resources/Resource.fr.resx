@@ -268,7 +268,7 @@
     <value>Projet</value>
   </data>
   <data name="MAINMENU_Projects" xml:space="preserve">
-    <value>Projets</value>
+    <value>Mes projets</value>
   </data>
   <data name="MAINMENU_Random" xml:space="preserve">
     <value>Au hasard</value>
@@ -429,7 +429,7 @@
     <value>Envoyer</value>
   </data>
   <data name="MAIL_SendError" xml:space="preserve">
-    <value>Oups, y'a eu une erreur</value>
+    <value>Oups, y\'a eu une erreur</value>
   </data>
   <data name="PROFILE_ActivityFeed" xml:space="preserve">
     <value>Activités</value>
@@ -448,5 +448,107 @@
   </data>
   <data name="COMMON_PermissionDenied" xml:space="preserve">
     <value>Mmm.... je pense que vous n'avez pas le droit de faire ca.</value>
+  </data>
+  <data name="PROJECT_ClickToPlay" xml:space="preserve">
+    <value>Cliquer pour écouter</value>
+  </data>
+  <data name="PROJECT_Detail" xml:space="preserve">
+    <value>Détails du projet</value>
+  </data>
+  <data name="PROJECT_Licence" xml:space="preserve">
+    <value>Licence</value>
+  </data>
+  <data name="PROJECT_LastModification" xml:space="preserve">
+    <value>Dernière modification</value>
+  </data>
+  <data name="PROJECT_liked" xml:space="preserve">
+    <value>Ce projet a été liké</value>
+  </data>
+  <data name="PROJECT_Times" xml:space="preserve">
+    <value>fois</value>
+  </data>
+  <data name="PROJECT_Tags" xml:space="preserve">
+    <value>Tags</value>
+  </data>
+  <data name="FILE_ModifiedOn" xml:space="preserve">
+    <value>modifié le</value>
+  </data>
+  <data name="FILE_PostedOn" xml:space="preserve">
+    <value>posté le </value>
+  </data>
+  <data name="PROJECT_Description" xml:space="preserve">
+    <value>Description du projet</value>
+  </data>
+  <data name="ACTIViTY_HereIsWhatHappened" xml:space="preserve">
+    <value>Voici ce qui est arrivé dans {0}</value>
+  </data>
+  <data name="ACTIVITY_ClickOnTheLeftOrRigthArrow" xml:space="preserve">
+    <value>Cliquer sur la flèche de gauche ou droite pour voir les événements suivants</value>
+  </data>
+  <data name="FILE_Reset" xml:space="preserve">
+    <value>Réinitialiser</value>
+  </data>
+  <data name="STORAGE_RegisterDropboxFailed" xml:space="preserve">
+    <value>L'enregistrement du compte Dropbox a échoué</value>
+  </data>
+  <data name="PROFILE_TheFridge" xml:space="preserve">
+    <value>Le fridge</value>
+  </data>
+  <data name="DASHBOARD_PageTitle" xml:space="preserve">
+    <value>Tableau de bord</value>
+  </data>
+  <data name="DASHBOARD_LatestNotifications" xml:space="preserve">
+    <value>Dernieres news</value>
+  </data>
+  <data name="ACTIVITY_SeeAll" xml:space="preserve">
+    <value>Voir tout</value>
+  </data>
+  <data name="PROFILE_Notifications" xml:space="preserve">
+    <value>Notifications</value>
+  </data>
+  <data name="NOTIFICATION_Never" xml:space="preserve">
+    <value>Jamais</value>
+  </data>
+  <data name="NOTIFICATION_OnceADay" xml:space="preserve">
+    <value>Une fois par jour</value>
+  </data>
+  <data name="NOTIFICATION_OnceAnHour" xml:space="preserve">
+    <value>Une fois par heure</value>
+  </data>
+  <data name="HOME_WelcomeHeader" xml:space="preserve">
+    <value>Bienvenue sur Flabbit.&lt;br /&gt; Encore un autre site de musique collaborative en ligne</value>
+  </data>
+  <data name="HOME_WelcomeLead" xml:space="preserve">
+    <value>Pour le moment c'est une béta privée</value>
+  </data>
+  <data name="HOME_IfYouAreInterested" xml:space="preserve">
+    <value>Si tu es intéressé, laisse ton email</value>
+  </data>
+  <data name="HOME_FeedbackThx" xml:space="preserve">
+    <value>Merci, on se tient au jus :)</value>
+  </data>
+  <data name="HOME_Email" xml:space="preserve">
+    <value>Ca, c'est pour l'email</value>
+  </data>
+  <data name="HOME_InvitMe" xml:space="preserve">
+    <value>Invite moi!</value>
+  </data>
+  <data name="HOME_RecentWork" xml:space="preserve">
+    <value>Projets recents</value>
+  </data>
+  <data name="HOME_ThisIsHappening" xml:space="preserve">
+    <value>... ca se passe en ce moment</value>
+  </data>
+  <data name="HOME_ViewAllRecent" xml:space="preserve">
+    <value>Voir tous les récents</value>
+  </data>
+  <data name="HOME_NewMembers" xml:space="preserve">
+    <value>Nouveaux inscrits</value>
+  </data>
+  <data name="HOME_ThanksJoining" xml:space="preserve">
+    <value>... merci pour eux</value>
+  </data>
+  <data name="HOME_ViewAllMembers" xml:space="preserve">
+    <value>Voir tous</value>
   </data>
 </root>

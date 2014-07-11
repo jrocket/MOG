@@ -71,7 +71,18 @@ namespace MoG.Domain.Repository
 
         public Models.Comment GetById(int id)
         {
-            return this.dbContext.Comments.Find(id);
+            return this.dbContext.Comments
+            .Include(c => c.File)
+            .Where(c => c.Id == id)
+            .FirstOrDefault();
+        }
+
+
+        public Models.Comment SaveChanges(Models.Comment comment)
+        {
+            dbContext.Entry(comment).State = System.Data.Entity.EntityState.Modified;
+            dbContext.SaveChanges();
+            return comment;
         }
     }
 
@@ -89,5 +100,7 @@ namespace MoG.Domain.Repository
         bool DeleteById(int id);
 
         Models.Comment GetById(int id);
+
+        Models.Comment SaveChanges(Models.Comment comment);
     }
 }

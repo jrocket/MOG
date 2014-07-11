@@ -1,8 +1,10 @@
-﻿@{
+﻿@model MoG.Domain.Models.HomeVM
+@{
     ViewBag.Title = "Home Page";
 }
 
-
+<link href="~/Content/css/prettyPhoto.css" rel="stylesheet" />
+<link href="~/Content/css/flexslider.css" rel="stylesheet" />
 
 <div class="row headline">
     <!-- Begin Headline -->
@@ -11,8 +13,16 @@
     <div class="col-md-8">
         <div class="flexslider">
             <ul class="slides">
-                <li><a href="#"><img src="@Url.Content("~/Content/img/gallery/slider-img-1.jpg")" alt="slider" /></a></li>
-                <li><a href="#"><img src="@Url.Content("~/Content/img/gallery/slider-img-2.jpg")" alt="slider" /></a></li>
+                <li>
+                    <a href="#">
+                        <img src="@Url.Content("~/Content/Images/jumbo1.jpg")" alt="slider" />
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <img src="@Url.Content("~/Content/Images/jumbo2.jpg")" alt="slider" />
+                    </a>
+                </li>
             </ul>
         </div>
     </div>
@@ -21,26 +31,24 @@
     ================================================== -->
     <div class="col-md-4">
         <h3>
-            Welcome to Flabbit. <br />
-            Yet another online music collaboration site.
+            @Html.Raw(Resource.HOME_WelcomeHeader)
         </h3>
-        <p class="lead">Right now we're in a private beta</p>
+        <p class="lead">@Html.Raw(Resource.HOME_WelcomeLead)</p>
         <form class="form-inline" role="form">
             <p>
 
                 <span data-bind="visible : !registered()">
-                   If you are interested, drop us your email. 
+                    @Resource.HOME_IfYouAreInterested
                 </span>
                 <span data-bind="visible : registered">
-                    thanks :) <br />
-                    we'll keep in touch soon.
+                    @Resource.HOME_FeedbackThx
                 </span>
                 <div data-bind="visible : !registered()">
 
                     <div class="form-group">
-                        <input type="email" class="form-control" id="exampleInputEmail1" data-bind="value:email" placeholder="Enter your email address">
+                        <input type="email" class="form-control" id="exampleInputEmail1" data-bind="value:email" placeholder="@Resource.HOME_Email">
                     </div>
-                    <button data-bind="click : btnInviteMeClicked,enable : !isLoading()" class="btn btn-warning btn-sm">Invite Me!</button>
+                    <button data-bind="click : btnInviteMeClicked,enable : !isLoading()" class="btn btn-warning btn-sm">@Resource.HOME_InvitMe</button>
 
                 </div>
             </p>
@@ -49,249 +57,580 @@
     </div>
 </div><!-- End Headline -->
 
-@*<div class="row gallery-row">
+<div class="row gallery-row">
     <!-- Begin Gallery Row -->
 
-    <div class="col-md-12">
+    <div class="span12">
         <h5 class="title-bg">
-            Recent projects
-            <small>That were started out there</small>
-            <button class="btn btn-xs btn-inverse hidden-phone" type="button">View all projects</button>
+            @Resource.HOME_RecentWork
+            <small>  @Resource.HOME_ThisIsHappening</small>
+            <a class="btn btn-xs btn-inverse hidden-phone right" href="@Url.Action("New","Project")">@Resource.HOME_ViewAllRecent</a>
         </h5>
 
         <!-- Gallery Thumbnails
         ================================================== -->
-        <div class="row clearfix no-margin">
-            <ul class="gallery-post-grid holder">
-                <!-- Gallery Item 1 -->
-                <li class="col-md-3 gallery-item" data-id="id-1" data-type="illustration">
-                    <span class="gallery-hover-4col hidden-phone hidden-tablet">
-                        <span class="gallery-icons">
-                            <a href="@Url.Content("~/Content/img/gallery/gallery-img-1-full.jpg")" class="item-zoom-link lightbox" title="Custom Illustration" data-rel="prettyPhoto"></a>
-                            <a href="gallery-single.htm" class="item-details-link"></a>
-                        </span>
-                    </span>
-                    <a href="gallery-single.htm"><img src="@Url.Content("~/Content/img/gallery//gallery-img-1-4col.jpg")" alt="Gallery"></a>
-                    <span class="project-details"><a href="gallery-single.htm">Custom Illustration</a>For an international ad campaign.</span>
-                </li>
-                <!-- Gallery Item 2 -->
-                <li class="col-md-3 gallery-item" data-id="id-2" data-type="illustration">
-                    <span class="gallery-hover-4col hidden-phone hidden-tablet">
-                        <span class="gallery-icons">
-                            <a href="@Url.Content("~/Content/img/gallery/gallery-img-1-full.jpg")" class="item-zoom-link lightbox" title="Custom Illustration" data-rel="prettyPhoto"></a>
-                            <a href="gallery-single.htm" class="item-details-link"></a>
-                        </span>
-                    </span>
-                    <a href="gallery-single.htm"><img src="@Url.Content("~/Content/img/gallery//gallery-img-1-4col.jpg")" alt="Gallery"></a>
-                    <span class="project-details"><a href="gallery-single.htm">3 Color Poster Design</a>For a regional festival event.</span>
-                </li>
-                <!-- Gallery Item 3 -->
-                <li class="col-md-3 gallery-item" data-id="id-3" data-type="web">
-                    <span class="gallery-hover-4col hidden-phone hidden-tablet">
-                        <span class="gallery-icons">
-                            <a href="@Url.Content("~/Content/img/gallery/gallery-img-1-full.jpg")" class="item-zoom-link lightbox" title="Custom Illustration" data-rel="prettyPhoto"></a>
-                            <a href="#" class="item-details-link"></a>
-                        </span>
-                    </span>
-                    <a href="gallery-single.htm"><img src="@Url.Content("~/Content/img/gallery//gallery-img-1-4col.jpg")" alt="Gallery"></a>
-                    <span class="project-details"><a href="gallery-single.htm">Ink Pen Illustration</a>Created for a best selling children's book.</span>
-                </li>
-                <!-- Gallery Item 4 -->
-                <li class="col-md-3 gallery-item" data-id="id-4" data-type="video">
-                    <span class="gallery-hover-4col hidden-phone hidden-tablet">
-                        <span class="gallery-icons">
-                            <a href="@Url.Content("~/Content/img/gallery/gallery-img-1-full.jpg")" class="item-zoom-link lightbox" title="Custom Illustration" data-rel="prettyPhoto"></a>
-                            <a href="gallery-single.htm" class="item-details-link"></a>
-                        </span>
-                    </span>
-                    <a href="gallery-single.htm"><img src="@Url.Content("~/Content/img/gallery//gallery-img-1-4col.jpg")" alt="Gallery"></a>
-                    <span class="project-details"><a href="gallery-single.htm">Custom Illustration</a>For an international add campaign.</span>
-                </li>
-                <!-- Gallery Item 5 -->
-                <li class="col-md-3 gallery-item" data-id="id-5" data-type="web illustration">
-                    <span class="gallery-hover-4col hidden-phone hidden-tablet">
-                        <span class="gallery-icons">
-                            <a href="@Url.Content("~/Content/img/gallery/gallery-img-1-full.jpg")" class="item-zoom-link lightbox" title="Custom Illustration" data-rel="prettyPhoto"></a>
-                            <a href="gallery-single.htm" class="item-details-link"></a>
-                        </span>
-                    </span>
-                    <a href="gallery-single.htm"><img src="@Url.Content("~/Content/img/gallery//gallery-img-1-4col.jpg")" alt="Gallery"></a>
-                    <span class="project-details"><a href="gallery-single.htm">Icon Design</a>Classic retro style illustration.</span>
-                </li>
-                <!-- Gallery Item 6 -->
-                <li class="col-md-3 gallery-item" data-id="id-6" data-type="illustration design">
-                    <span class="gallery-hover-4col hidden-phone hidden-tablet">
-                        <span class="gallery-icons">
-                            <a href="@Url.Content("~/Content/img/gallery/gallery-img-1-full.jpg")" class="item-zoom-link lightbox" title="Custom Illustration" data-rel="prettyPhoto"></a>
-                            <a href="gallery-single.htm" class="item-details-link"></a>
-                        </span>
-                    </span>
-                    <a href="gallery-single.htm"><img src="@Url.Content("~/Content/img/gallery//gallery-img-1-4col.jpg")" alt="Gallery"></a>
-                    <span class="project-details"><a href="gallery-single.htm">Animation Cell</a>Creative storyboard illustration</span>
-                </li>
-                <!-- Gallery Item 7 -->
-                <li class="col-md-3 gallery-item" data-id="id-7" data-type="design">
-                    <span class="gallery-hover-4col hidden-phone hidden-tablet">
-                        <span class="gallery-icons">
-                            <a href="@Url.Content("~/Content/img/gallery/gallery-img-1-full.jpg")" class="item-zoom-link lightbox" title="Custom Illustration" data-rel="prettyPhoto"></a>
-                            <a href="gallery-single.htm" class="item-details-link"></a>
-                        </span>
-                    </span>
-                    <a href="gallery-single.htm"><img src="@Url.Content("~/Content/img/gallery//gallery-img-1-4col.jpg")" alt="Gallery"></a>
-                    <span class="project-details"><a href="gallery-single.htm">Poster Ad Campaign</a>Regional ad for a local company.</span>
-                </li>
-                <!-- Gallery Item 8 -->
-                <li class="col-md-3 gallery-item" data-id="id-8" data-type="web video">
-                    <span class="gallery-hover-4col hidden-phone hidden-tablet">
-                        <span class="gallery-icons">
-                            <a href="@Url.Content("~/Content/img/gallery/gallery-img-1-full.jpg")" class="item-zoom-link lightbox" title="Custom Illustration" data-rel="prettyPhoto"></a>
-                            <a href="gallery-single.htm" class="item-details-link"></a>
-                        </span>
-                    </span>
-                    <a href="gallery-single.htm"><img src="@Url.Content("~/Content/img/gallery//gallery-img-1-4col.jpg")" alt="Gallery"></a>
-                    <span class="project-details"><a href="gallery-single.htm">Magazine Ad</a>For an international add campaign.</span>
-                </li>
-                <!-- Gallery Item 9 -->
-                <li class="col-md-3 gallery-item" data-id="id-9" data-type="design">
-                    <span class="gallery-hover-4col hidden-phone hidden-tablet">
-                        <span class="gallery-icons">
-                            <a href="@Url.Content("~/Content/img/gallery/gallery-img-1-full.jpg")" class="item-zoom-link lightbox" title="Custom Illustration" data-rel="prettyPhoto"></a>
-                            <a href="gallery-single.htm" class="item-details-link"></a>
-                        </span>
-                    </span>
-                    <a href="gallery-single.htm"><img src="@Url.Content("~/Content/img/gallery//gallery-img-1-4col.jpg")" alt="Gallery"></a>
-                    <span class="project-details"><a href="gallery-single.htm">Character Designs</a>For a feature film.</span>
-                </li>
-                <!-- Gallery Item 10 -->
-                <li class="col-md-3 gallery-item" data-id="id-10" data-type="web design">
-                    <span class="gallery-hover-4col hidden-phone hidden-tablet">
-                        <span class="gallery-icons">
-                            <a href="@Url.Content("~/Content/img/gallery/gallery-img-1-full.jpg")" class="item-zoom-link lightbox" title="Custom Illustration" data-rel="prettyPhoto"></a>
-                            <a href="gallery-single.htm" class="item-details-link"></a>
-                        </span>
-                    </span>
-                    <a href="gallery-single.htm"><img src="@Url.Content("~/Content/img/gallery//gallery-img-1-4col.jpg")" alt="Gallery"></a>
-                    <span class="project-details"><a href="gallery-single.htm">Poster and Ad Design</a>For an international add campaign.</span>
-                </li>
-                <!-- Gallery Item 11 -->
-                <li class="col-md-3 gallery-item" data-id="id-11" data-type="illustration">
-                    <span class="gallery-hover-4col hidden-phone hidden-tablet">
-                        <span class="gallery-icons">
-                            <a href="@Url.Content("~/Content/img/gallery/gallery-img-1-full.jpg")" class="item-zoom-link lightbox" title="Custom Illustration" data-rel="prettyPhoto"></a>
-                            <a href="gallery-single.htm" class="item-details-link"></a>
-                        </span>
-                    </span>
-                    <a href="gallery-single.htm"><img src="@Url.Content("~/Content/img/gallery//gallery-img-1-4col.jpg")" alt="Gallery"></a>
-                    <span class="project-details"><a href="gallery-single.htm">Website and Animation</a>For a local business.</span>
-                </li>
-                <!-- Gallery Item 12 -->
-                <li class="col-md-3 gallery-item" data-id="id-12" data-type="illustration video">
-                    <span class="gallery-hover-4col hidden-phone hidden-tablet">
-                        <span class="gallery-icons">
-                            <a href="@Url.Content("~/Content/img/gallery/gallery-img-1-full.jpg")" class="item-zoom-link lightbox" title="Custom Illustration" data-rel="prettyPhoto"></a>
-                            <a href="gallery-single.htm" class="item-details-link"></a>
-                        </span>
-                    </span>
-                    <a href="gallery-single.htm"><img src="@Url.Content("~/Content/img/gallery//gallery-img-1-4col.jpg")" alt="Gallery"></a>
-                    <span class="project-details"><a href="gallery-single.htm">Branding Design</a>For an international add campaign.</span>
-                </li>
-            </ul>
-        </div>
+        @if (Model.Projects != null && Model.Projects.Count() > 0)
+        {
+            <div class="row clearfix no-margin">
+                <ul class="gallery-post-grid holder">
+                    @foreach (var project in Model.Projects)
+                    {
+                        
+                        <li class="col-lg-3 gallery-item" data-id="id-1" data-type="illustration">
+                            <span class="gallery-hover-4col hidden-phone hidden-tablet">
+                                <span class="gallery-icons">
+
+                                    @if (project.PromotedId.HasValue)
+                                    {
+                                         var file = Model.Files.Where(x => x.Id == project.PromotedId.Value).FirstOrDefault() ;
+                                        var url = file != null ? file.PublicUrl : "";
+                                        <a href="@url" class="item-play-link lightbox sm2_button" title="preview" data-rel="prettyPhoto"></a>
+                                    }
+                                    <a href="@Url.Action("Detail", "Project", new { id = project.Id})" class="item-zoom-link"></a>
+                                </span>
+                            </span>
+                            <a href="@Url.Action("Display", "Project", new { id = project.Id})"><img src="@Url.Content(project.ImageUrlThumb1)" alt="Project detail"  class="img-responsive"></a>
+                            <span class="project-details"><a href="#">@project.Name</a>@project.Creator.DisplayName</span>
+                        </li>
+                    }
+
+                </ul>
+            </div>
+        }
     </div>
 
-</div><!-- End Gallery Row -->*@
-@*<div id="headerwrap">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-6">
-                    <h1 data-bind="visible : !registered()">
-                        Hi there ! <br />
-                        How are you?
-                    </h1>
-                    <h1 data-bind="visible : registered">
-                        thank you :) <br />
-                        We'll keep in touch soon.
-                    </h1>
-                    <div data-bind="visible : !registered()">
-                        <form class="form-inline" role="form">
-                            <div class="form-group">
-                                <input type="email" class="form-control" id="exampleInputEmail1" data-bind="value:email" placeholder="Enter your email address">
-                            </div>
-                            <button data-bind="click : btnInviteMeClicked,enable : !isLoading()" class="btn btn-warning btn-lg">Invite Me!</button>
-                        </form>
+</div><!-- End Gallery Row -->
+
+
+<div class="row gallery-row">
+    <!-- Begin recently joined -->
+
+    <div class="span12">
+        <h5 class="title-bg">
+            @Resource.HOME_NewMembers
+            <small>@Resource.HOME_ThanksJoining</small>
+            <a class="btn btn-xs btn-inverse hidden-phone right" href="@Url.Action("New","Project")">@Resource.HOME_ViewAllMembers</a>
+        </h5>
+
+        <!-- Gallery Thumbnails
+        ================================================== -->
+        @if (Model.Users != null && Model.Users.Count() > 0)
+        {
+            <div class="row clearfix no-margin">
+                <ul class="gallery-post-grid holder">
+                    @foreach (var user in Model.Users)
+                    {
+                        var profileUrl = Url.Action("Profile", "Social", new { id = user.Id });
+                        <li class="col-lg-3 gallery-item" data-id="id-1" data-type="illustration">
+                            <span class="gallery-hover-4col hidden-phone hidden-tablet">
+                                <span class="gallery-icons">
+                                    <a href="@profileUrl" class="item-details-link lightbox" title="preview" data-rel="prettyPhoto" target="_blank"></a>
+                                 
+                                </span>
+                            </span>
+                            <a href="@profileUrl"><img src="@Url.Action("GetPicture", "Profile", new { id = user.Id })" alt="Project detail" class="img-responsive"></a>
+                            <span class="project-details">
+                                <a href="@profileUrl">@user.DisplayName</a>
+                                @if (user.DisplayName != user.Login)
+                                {
+                                    @user.Login
+                                }
+                                else
+                                {
+                                    <text>&nbsp;</text>
+                                }
+                            </span>
+                        </li>
+                    }
+
+                </ul>
+            </div>
+        }
+    </div>
+
+</div><!-- End  recently joined -->
+@section Footer
+{
+    <div class="container">
+        <div class="row footer-row">
+            <div class="col-sm-4 footer-col">
+                <h5>About Us</h5>
+                <img src="@Url.Content("~/Content/img/flabbit-logo-footer.png")" alt="Flabbit" width="80" />
+                <address>
+                    by <strong>Johnny ROCKET</strong><br />
+                    Somewhere in France
+                </address>
+                <ul class="social-icons">
+                    <li><a href="https://www.facebook.com/pages/Flabbit/760936367292438?ref_type=bookmark#" target="_blank" class="social-icon facebook"></a></li>
+                    <li><a href="https://twitter.com/flabbit" target="_blank" class="social-icon twitter"></a></li>
+                    <li><a href="https://github.com/jrocket/MOG" target="_blank" class="social-icon github"></a></li>
+                </ul>
+            </div>
+            <div class="col-sm-4 footer-col">
+                <h5>Latest Tweets</h5>
+                <a class="twitter-timeline" data-dnt="true" href="https://twitter.com/flabbit_" data-tweet-limit="3" data-widget-id="481909397031907329" data-chrome="nofooter transparent noheader"></a>
+                <script>!function (d, s, id) { var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/.test(d.location) ? 'http' : 'https'; if (!d.getElementById(id)) { js = d.createElement(s); js.id = id; js.src = p + "://platform.twitter.com/widgets.js"; fjs.parentNode.insertBefore(js, fjs); } }(document, "script", "twitter-wjs");</script>
+
+            </div>
+            <div class="col-sm-4 footer-col">
+                <h5>Latest Open Issues</h5>
+                <ul class="post-list" data-bind="foreach : issues">
+                    <li><a href="#"><span data-bind="text : title"></span></a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Begin Sub Footer -->
+            <div class="col-lg-12 footer-col footer-sub">
+                <div class="row no-margin">
+                    <div class="col-lg-6"><span class="left">&copy; @DateTime.Now.Year - Flabbit All rights reserved / Design by Nathan Brown (@@graphicmonkee)</span></div>
+                    <div class="col-lg-6">
+                        <span class="right">
+                            @*<a href="#">Home</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="#">Features</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="#">Gallery</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="#">Blog</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="#">Contact</a>*@
+                        </span>
                     </div>
+                </div>
+            </div>
+        </div><!-- End Sub Footer -->
+
+    </div>
 
 
-                </div><!-- /col-lg-6 -->
-                <div class="col-lg-6">
-                    <img class="img-responsive" src="@Url.Content("~/Content/Images/ipad-hand1.png")" alt="">
-                </div><!-- /col-lg-6 -->
 
-            </div><!-- /row -->
-        </div><!-- /container -->
-    </div><!-- /headerwrap -->*@
+
+}
+@*<div class="row gallery-row">
+        <!-- Begin Gallery Row -->
+
+        <div class="col-md-12">
+            <h5 class="title-bg">
+                Recent projects
+                <small>That were started out there</small>
+                <button class="btn btn-xs btn-inverse hidden-phone" type="button">View all projects</button>
+            </h5>
+
+            <!-- Gallery Thumbnails
+            ================================================== -->
+            <div class="row clearfix no-margin">
+                <ul class="gallery-post-grid holder">
+                    <!-- Gallery Item 1 -->
+                    <li class="col-md-3 gallery-item" data-id="id-1" data-type="illustration">
+                        <span class="gallery-hover-4col hidden-phone hidden-tablet">
+                            <span class="gallery-icons">
+                                <a href="@Url.Content("~/Content/img/gallery/gallery-img-1-full.jpg")" class="item-zoom-link lightbox" title="Custom Illustration" data-rel="prettyPhoto"></a>
+                                <a href="gallery-single.htm" class="item-details-link"></a>
+                            </span>
+                        </span>
+                        <a href="gallery-single.htm"><img src="@Url.Content("~/Content/img/gallery//gallery-img-1-4col.jpg")" alt="Gallery"></a>
+                        <span class="project-details"><a href="gallery-single.htm">Custom Illustration</a>For an international ad campaign.</span>
+                    </li>
+                    <!-- Gallery Item 2 -->
+                    <li class="col-md-3 gallery-item" data-id="id-2" data-type="illustration">
+                        <span class="gallery-hover-4col hidden-phone hidden-tablet">
+                            <span class="gallery-icons">
+                                <a href="@Url.Content("~/Content/img/gallery/gallery-img-1-full.jpg")" class="item-zoom-link lightbox" title="Custom Illustration" data-rel="prettyPhoto"></a>
+                                <a href="gallery-single.htm" class="item-details-link"></a>
+                            </span>
+                        </span>
+                        <a href="gallery-single.htm"><img src="@Url.Content("~/Content/img/gallery//gallery-img-1-4col.jpg")" alt="Gallery"></a>
+                        <span class="project-details"><a href="gallery-single.htm">3 Color Poster Design</a>For a regional festival event.</span>
+                    </li>
+                    <!-- Gallery Item 3 -->
+                    <li class="col-md-3 gallery-item" data-id="id-3" data-type="web">
+                        <span class="gallery-hover-4col hidden-phone hidden-tablet">
+                            <span class="gallery-icons">
+                                <a href="@Url.Content("~/Content/img/gallery/gallery-img-1-full.jpg")" class="item-zoom-link lightbox" title="Custom Illustration" data-rel="prettyPhoto"></a>
+                                <a href="#" class="item-details-link"></a>
+                            </span>
+                        </span>
+                        <a href="gallery-single.htm"><img src="@Url.Content("~/Content/img/gallery//gallery-img-1-4col.jpg")" alt="Gallery"></a>
+                        <span class="project-details"><a href="gallery-single.htm">Ink Pen Illustration</a>Created for a best selling children's book.</span>
+                    </li>
+                    <!-- Gallery Item 4 -->
+                    <li class="col-md-3 gallery-item" data-id="id-4" data-type="video">
+                        <span class="gallery-hover-4col hidden-phone hidden-tablet">
+                            <span class="gallery-icons">
+                                <a href="@Url.Content("~/Content/img/gallery/gallery-img-1-full.jpg")" class="item-zoom-link lightbox" title="Custom Illustration" data-rel="prettyPhoto"></a>
+                                <a href="gallery-single.htm" class="item-details-link"></a>
+                            </span>
+                        </span>
+                        <a href="gallery-single.htm"><img src="@Url.Content("~/Content/img/gallery//gallery-img-1-4col.jpg")" alt="Gallery"></a>
+                        <span class="project-details"><a href="gallery-single.htm">Custom Illustration</a>For an international add campaign.</span>
+                    </li>
+                    <!-- Gallery Item 5 -->
+                    <li class="col-md-3 gallery-item" data-id="id-5" data-type="web illustration">
+                        <span class="gallery-hover-4col hidden-phone hidden-tablet">
+                            <span class="gallery-icons">
+                                <a href="@Url.Content("~/Content/img/gallery/gallery-img-1-full.jpg")" class="item-zoom-link lightbox" title="Custom Illustration" data-rel="prettyPhoto"></a>
+                                <a href="gallery-single.htm" class="item-details-link"></a>
+                            </span>
+                        </span>
+                        <a href="gallery-single.htm"><img src="@Url.Content("~/Content/img/gallery//gallery-img-1-4col.jpg")" alt="Gallery"></a>
+                        <span class="project-details"><a href="gallery-single.htm">Icon Design</a>Classic retro style illustration.</span>
+                    </li>
+                    <!-- Gallery Item 6 -->
+                    <li class="col-md-3 gallery-item" data-id="id-6" data-type="illustration design">
+                        <span class="gallery-hover-4col hidden-phone hidden-tablet">
+                            <span class="gallery-icons">
+                                <a href="@Url.Content("~/Content/img/gallery/gallery-img-1-full.jpg")" class="item-zoom-link lightbox" title="Custom Illustration" data-rel="prettyPhoto"></a>
+                                <a href="gallery-single.htm" class="item-details-link"></a>
+                            </span>
+                        </span>
+                        <a href="gallery-single.htm"><img src="@Url.Content("~/Content/img/gallery//gallery-img-1-4col.jpg")" alt="Gallery"></a>
+                        <span class="project-details"><a href="gallery-single.htm">Animation Cell</a>Creative storyboard illustration</span>
+                    </li>
+                    <!-- Gallery Item 7 -->
+                    <li class="col-md-3 gallery-item" data-id="id-7" data-type="design">
+                        <span class="gallery-hover-4col hidden-phone hidden-tablet">
+                            <span class="gallery-icons">
+                                <a href="@Url.Content("~/Content/img/gallery/gallery-img-1-full.jpg")" class="item-zoom-link lightbox" title="Custom Illustration" data-rel="prettyPhoto"></a>
+                                <a href="gallery-single.htm" class="item-details-link"></a>
+                            </span>
+                        </span>
+                        <a href="gallery-single.htm"><img src="@Url.Content("~/Content/img/gallery//gallery-img-1-4col.jpg")" alt="Gallery"></a>
+                        <span class="project-details"><a href="gallery-single.htm">Poster Ad Campaign</a>Regional ad for a local company.</span>
+                    </li>
+                    <!-- Gallery Item 8 -->
+                    <li class="col-md-3 gallery-item" data-id="id-8" data-type="web video">
+                        <span class="gallery-hover-4col hidden-phone hidden-tablet">
+                            <span class="gallery-icons">
+                                <a href="@Url.Content("~/Content/img/gallery/gallery-img-1-full.jpg")" class="item-zoom-link lightbox" title="Custom Illustration" data-rel="prettyPhoto"></a>
+                                <a href="gallery-single.htm" class="item-details-link"></a>
+                            </span>
+                        </span>
+                        <a href="gallery-single.htm"><img src="@Url.Content("~/Content/img/gallery//gallery-img-1-4col.jpg")" alt="Gallery"></a>
+                        <span class="project-details"><a href="gallery-single.htm">Magazine Ad</a>For an international add campaign.</span>
+                    </li>
+                    <!-- Gallery Item 9 -->
+                    <li class="col-md-3 gallery-item" data-id="id-9" data-type="design">
+                        <span class="gallery-hover-4col hidden-phone hidden-tablet">
+                            <span class="gallery-icons">
+                                <a href="@Url.Content("~/Content/img/gallery/gallery-img-1-full.jpg")" class="item-zoom-link lightbox" title="Custom Illustration" data-rel="prettyPhoto"></a>
+                                <a href="gallery-single.htm" class="item-details-link"></a>
+                            </span>
+                        </span>
+                        <a href="gallery-single.htm"><img src="@Url.Content("~/Content/img/gallery//gallery-img-1-4col.jpg")" alt="Gallery"></a>
+                        <span class="project-details"><a href="gallery-single.htm">Character Designs</a>For a feature film.</span>
+                    </li>
+                    <!-- Gallery Item 10 -->
+                    <li class="col-md-3 gallery-item" data-id="id-10" data-type="web design">
+                        <span class="gallery-hover-4col hidden-phone hidden-tablet">
+                            <span class="gallery-icons">
+                                <a href="@Url.Content("~/Content/img/gallery/gallery-img-1-full.jpg")" class="item-zoom-link lightbox" title="Custom Illustration" data-rel="prettyPhoto"></a>
+                                <a href="gallery-single.htm" class="item-details-link"></a>
+                            </span>
+                        </span>
+                        <a href="gallery-single.htm"><img src="@Url.Content("~/Content/img/gallery//gallery-img-1-4col.jpg")" alt="Gallery"></a>
+                        <span class="project-details"><a href="gallery-single.htm">Poster and Ad Design</a>For an international add campaign.</span>
+                    </li>
+                    <!-- Gallery Item 11 -->
+                    <li class="col-md-3 gallery-item" data-id="id-11" data-type="illustration">
+                        <span class="gallery-hover-4col hidden-phone hidden-tablet">
+                            <span class="gallery-icons">
+                                <a href="@Url.Content("~/Content/img/gallery/gallery-img-1-full.jpg")" class="item-zoom-link lightbox" title="Custom Illustration" data-rel="prettyPhoto"></a>
+                                <a href="gallery-single.htm" class="item-details-link"></a>
+                            </span>
+                        </span>
+                        <a href="gallery-single.htm"><img src="@Url.Content("~/Content/img/gallery//gallery-img-1-4col.jpg")" alt="Gallery"></a>
+                        <span class="project-details"><a href="gallery-single.htm">Website and Animation</a>For a local business.</span>
+                    </li>
+                    <!-- Gallery Item 12 -->
+                    <li class="col-md-3 gallery-item" data-id="id-12" data-type="illustration video">
+                        <span class="gallery-hover-4col hidden-phone hidden-tablet">
+                            <span class="gallery-icons">
+                                <a href="@Url.Content("~/Content/img/gallery/gallery-img-1-full.jpg")" class="item-zoom-link lightbox" title="Custom Illustration" data-rel="prettyPhoto"></a>
+                                <a href="gallery-single.htm" class="item-details-link"></a>
+                            </span>
+                        </span>
+                        <a href="gallery-single.htm"><img src="@Url.Content("~/Content/img/gallery//gallery-img-1-4col.jpg")" alt="Gallery"></a>
+                        <span class="project-details"><a href="gallery-single.htm">Branding Design</a>For an international add campaign.</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+    </div><!-- End Gallery Row -->*@
 
 
 @section Scripts
 {
-    @Scripts.Render("~/bundles/knockout")
 
+    <script src="~/Scripts/Views/Layout/jquery.prettyPhoto.js"></script>
+    <script src="~/Scripts/Views/Layout/jquery.flexslider.js"></script>
+    <script src="~/Scripts/Views/Layout/jquery.custom.js"></script>
+
+    @Scripts.Render("~/bundles/knockout")
+    <script src="~/Content/SoundManager/script/soundmanager2-jsmin.js"></script>
+    <script src="~/Scripts/Views/Home/Index.js"></script>
+    @*<script src="~/Scripts/Views/Home/soundplayer.js"></script>*@
     <script>
 
+        /**
+ * SoundManager 2 Demo: Play MP3 links via button
+ * ----------------------------------------------
+ *
+ * http://schillmania.com/projects/soundmanager2/
+ *
+ * A simple demo making MP3s playable "inline"
+ * and easily styled/customizable via CSS.
+ *
+ * A variation of the "play mp3 links" demo.
+ *
+ * Requires SoundManager 2 Javascript API.
+ */
 
-        $(window).load(function () {
+        /*jslint white: false, onevar: true, undef: true, nomen: false, eqeqeq: true, plusplus: false, bitwise: true, regexp: false, newcap: true, immed: true */
+        /*global document, window, soundManager, navigator */
 
-            $('.flexslider').flexslider({
-                animation: "slide",
-                slideshow: true,
-                start: function (slider) {
-                    $('body').removeClass('loading');
-                }
-            });
+        soundManager.setup({
+            useFlashBlock: true, // optional - if used, required flashblock.css
+            url: '/Content/SoundManager/swf/' // required: path to directory containing SM2 SWF files
         });
 
-        function HomeVM() {
-            var self = this;
-            self.email = ko.observable();
-            self.registered = ko.observable();
-            self.isLoading = ko.observable(false)
 
-            self.btnInviteMeClicked = function () {
-                self.isLoading(true);
+        function BasicMP3Player() {
+            var self = this,
+                pl = this,
+                sm = soundManager, // soundManager instance
+                isTouchDevice = (navigator.userAgent.match(/ipad|iphone/i)),
+                isIE = (navigator.userAgent.match(/msie/i));
+            this.excludeClass = 'button-exclude'; // CSS class for ignoring MP3 links
+            this.links = [];
+            this.sounds = [];
+            this.soundsByURL = {};
+            this.indexByURL = {};
+            this.lastSound = null;
+            this.soundCount = 0;
 
-                if (self.email() && self.validateEmail(self.email())) {
-                    var url = '/Home/InviteMe';
-                    var data = { email: self.email() };
+            this.config = {
+                // configuration options
+                playNext: false, // stop after one sound, or play through list until end
+                autoPlay: false  // start playing the first sound right away
+            };
 
+            this.css = {
+                // CSS class names appended to link during various states
+                sDefault: 'sm2_button', // default state
+                sLoading: 'sm2_loading',
+                sPlaying: 'sm2_playing',
+                sPaused: 'sm2_paused'
+            };
 
-                    $.ajax(url,
-                        {
-                            type: 'POST',
-                            data: JSON.stringify(data),
-                            contentType: "application/json",
-                            dataType: 'json',
-                            error: function (data) { alert(data); },
-                            success: function (data) {
-                                if (data) {
-                                    self.registered(true);
-                                }
-                            }
-                        }
-                   );
+            // event + DOM utils
 
+            this.includeClass = this.css.sDefault;
 
+            this.addEventHandler = (typeof window.addEventListener !== 'undefined' ? function (o, evtName, evtHandler) {
+                return o.addEventListener(evtName, evtHandler, false);
+            } : function (o, evtName, evtHandler) {
+                o.attachEvent('on' + evtName, evtHandler);
+            });
+
+            this.removeEventHandler = (typeof window.removeEventListener !== 'undefined' ? function (o, evtName, evtHandler) {
+                return o.removeEventListener(evtName, evtHandler, false);
+            } : function (o, evtName, evtHandler) {
+                return o.detachEvent('on' + evtName, evtHandler);
+            });
+
+            this.classContains = function (o, cStr) {
+                return (typeof (o.className) !== 'undefined' ? o.className.match(new RegExp('(\\s|^)' + cStr + '(\\s|$)')) : false);
+            };
+
+            this.addClass = function (o, cStr) {
+                if (!o || !cStr || self.classContains(o, cStr)) {
+                    return false;
                 }
-                self.isLoading(false);
-            }
-            self.validateEmail = function (email) {
+                o.className = (o.className ? o.className + ' ' : '') + cStr;
+            };
 
-                var filter = /^([a-zA-Z0-9_\.\-])+\@@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+            this.removeClass = function (o, cStr) {
+                if (!o || !cStr || !self.classContains(o, cStr)) {
+                    return false;
+                }
+                o.className = o.className.replace(new RegExp('( ' + cStr + ')|(' + cStr + ')', 'g'), '');
+            };
 
-                return filter.test(email);
-            }
+            this.getSoundByURL = function (sURL) {
+                return (typeof self.soundsByURL[sURL] !== 'undefined' ? self.soundsByURL[sURL] : null);
+            };
+
+            this.isChildOfNode = function (o, sNodeName) {
+                if (!o || !o.parentNode) {
+                    return false;
+                }
+                sNodeName = sNodeName.toLowerCase();
+                do {
+                    o = o.parentNode;
+                } while (o && o.parentNode && o.nodeName.toLowerCase() !== sNodeName);
+                return (o.nodeName.toLowerCase() === sNodeName ? o : null);
+            };
+
+            this.events = {
+
+                // handlers for sound events as they're started/stopped/played
+
+                play: function () {
+                    pl.removeClass(this._data.oLink, this._data.className);
+                    this._data.className = pl.css.sPlaying;
+                    pl.addClass(this._data.oLink, this._data.className);
+                },
+
+                stop: function () {
+                    pl.removeClass(this._data.oLink, this._data.className);
+                    this._data.className = '';
+                },
+
+                pause: function () {
+                    pl.removeClass(this._data.oLink, this._data.className);
+                    this._data.className = pl.css.sPaused;
+                    pl.addClass(this._data.oLink, this._data.className);
+                },
+
+                resume: function () {
+                    pl.removeClass(this._data.oLink, this._data.className);
+                    this._data.className = pl.css.sPlaying;
+                    pl.addClass(this._data.oLink, this._data.className);
+                },
+
+                finish: function () {
+                    pl.removeClass(this._data.oLink, this._data.className);
+                    this._data.className = '';
+                    if (pl.config.playNext) {
+                        var nextLink = (pl.indexByURL[this._data.oLink.href] + 1);
+                        if (nextLink < pl.links.length) {
+                            pl.handleClick({ 'target': pl.links[nextLink] });
+                        }
+                    }
+                }
+
+            };
+
+            this.stopEvent = function (e) {
+                if (typeof e !== 'undefined' && typeof e.preventDefault !== 'undefined') {
+                    e.preventDefault();
+                } else if (typeof window.event !== 'undefined') {
+                    window.event.returnValue = false;
+                }
+                return false;
+            };
+
+            this.getTheDamnLink = (isIE) ? function (e) {
+                // I really didn't want to have to do this.
+                return (e && e.target ? e.target : window.event.srcElement);
+            } : function (e) {
+                return e.target;
+            };
+
+            this.handleClick = function (e) {
+                // a sound link was clicked
+                if (typeof e.button !== 'undefined' && e.button > 1) {
+                    // ignore right-click
+                    return true;
+                }
+                var o = self.getTheDamnLink(e),
+                    sURL,
+                    soundURL,
+                    thisSound;
+                if (o.nodeName.toLowerCase() !== 'a') {
+                    o = self.isChildOfNode(o, 'a');
+                    if (!o) {
+                        return true;
+                    }
+                }
+                sURL = o.getAttribute('href');
+                if (!o.href || !soundManager.canPlayLink(o) || self.classContains(o, self.excludeClass)) {
+                    return true; // pass-thru for non-MP3/non-links
+                }
+                if (!self.classContains(o, self.includeClass)) {
+                    return true;
+                }
+                sm._writeDebug('handleClick()');
+                soundURL = (o.href);
+                thisSound = self.getSoundByURL(soundURL);
+                if (thisSound) {
+                    // already exists
+                    if (thisSound === self.lastSound) {
+                        // and was playing (or paused)
+                        thisSound.togglePause();
+                    } else {
+                        // different sound
+                        thisSound.togglePause(); // start playing current
+                        sm._writeDebug('sound different than last sound: ' + self.lastSound.id);
+                        if (self.lastSound) {
+                            self.stopSound(self.lastSound);
+                        }
+                    }
+                } else {
+                    // create sound
+                    thisSound = sm.createSound({
+                        id: 'basicMP3Sound' + (self.soundCount++),
+                        url: soundURL,
+                        onplay: self.events.play,
+                        onstop: self.events.stop,
+                        onpause: self.events.pause,
+                        onresume: self.events.resume,
+                        onfinish: self.events.finish,
+                        type: (o.type || null)
+                    });
+                    // tack on some custom data
+                    thisSound._data = {
+                        oLink: o, // DOM node for reference within SM2 object event handlers
+                        className: self.css.sPlaying
+                    };
+                    self.soundsByURL[soundURL] = thisSound;
+                    self.sounds.push(thisSound);
+                    if (self.lastSound) {
+                        // stop last sound
+                        self.stopSound(self.lastSound);
+                    }
+                    thisSound.play();
+                }
+                self.lastSound = thisSound; // reference for next call
+                return self.stopEvent(e);
+            };
+
+            this.stopSound = function (oSound) {
+                soundManager.stop(oSound.id);
+                if (!isTouchDevice) { // iOS 4.2+ security blocks onfinish() -> playNext() if we set a .src in-between(?)
+                    soundManager.unload(oSound.id);
+                }
+            };
+
+            this.init = function () {
+                sm._writeDebug('basicMP3Player.init()');
+                var i, j,
+                    foundItems = 0,
+                    oLinks = document.getElementsByTagName('a');
+                // grab all links, look for .mp3
+                for (i = 0, j = oLinks.length; i < j; i++) {
+                    if (self.classContains(oLinks[i], self.css.sDefault) && !self.classContains(oLinks[i], self.excludeClass)) {
+                        // self.addClass(oLinks[i],self.css.sDefault); // add default CSS decoration - good if you're lazy and want ALL MP3/playable links to do this
+                        self.links[foundItems] = (oLinks[i]);
+                        self.indexByURL[oLinks[i].href] = foundItems; // hack for indexing
+                        foundItems++;
+                    }
+                }
+                if (foundItems > 0) {
+                    self.addEventHandler(document, 'click', self.handleClick);
+                    if (self.config.autoPlay) {
+                        self.handleClick({ target: self.links[0], preventDefault: function () { } });
+                    }
+                }
+                sm._writeDebug('basicMP3Player.init(): Found ' + foundItems + ' relevant items.');
+            };
+
+            this.init();
 
         }
 
-        ko.applyBindings(new HomeVM());
+        var basicMP3Player = null;
+
+        soundManager.setup({
+            preferFlash: false,
+            onready: function () {
+                basicMP3Player = new BasicMP3Player();
+            }
+        });
     </script>
 }

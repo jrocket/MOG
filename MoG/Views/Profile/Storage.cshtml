@@ -1,6 +1,6 @@
-﻿
+﻿@model MoG.Domain.Models.UserStorageVM
 @{
-    ViewBag.Title =@Resource.PROFILE_Storage;
+    ViewBag.Title = @Resource.PROFILE_Storage;
 }
 
 <div class="row">
@@ -12,10 +12,100 @@
 </div>
 
 
+
 <div class="row">
     @Html.Partial("_LeftMenu")
 
     <div class="col-lg-10">
+        <div class="row">
+
+
+            @{
+                var values = from MoG.Domain.Models.CloudStorageServices e in Enum.GetValues(typeof(MoG.Domain.Models.CloudStorageServices))
+                             select new { Id = e, Name = e.ToString() };
+
+                foreach (var value in values)
+                {
+                    <div class="col-sm-6 col-md-4">
+                        <div class="thumbnail">
+                            <img src="@Url.Content(Model.CloudLogos[value.Id])" alt="@value.Name" />
+                            <div class="caption" style="text-align:center">
+                                @{
+                    var storages = Model.CloudStorages.Where(m => m.CloudService == value.Id);
+
+                    foreach (var storage in storages)
+                    {
+                        <h3>@storage.Status</h3>
+                        switch (storage.Status)
+                        {
+                            case MoG.Domain.Models.CredentialStatus.Approved:
+                                <p>Your account is successfully linked !</p>
+                                <p> <a href="#" class="btn btn-danger cancelRegistration" role="button" data-id="@storage.Id" name="cancel_@storage.Id">Cancel registration</a></p>
+                                break;
+                            case MoG.Domain.Models.CredentialStatus.Pending:
+                            <p>Pending validation  !</p>
+                                <p><a href="#" class="btn btn-primary" role="button">Retry</a> <a href="#" class="btn btn-danger cancelRegistration" role="button" data-id="@storage.Id" name="cancel_@storage.Id">Cancel registration</a></p>
+                                break;
+                            case MoG.Domain.Models.CredentialStatus.NotRegistered:
+                            <p>Your account is not registred</p>
+                                <p><a href="@Url.Action("RegisterStorage", new { service = MoG.Domain.Models.CloudStorageServices.Dropbox })" class="btn btn-primary" role="button">Register !</a></p>
+
+                                break;
+                            default:
+
+                                break;
+                        }
+
+                    }
+                                }
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+
+
+
+
+        </div>
 
     </div>
 </div>
+
+@section scripts
+{
+    <script>
+        function Storage() {
+            var self = this;
+
+            $(".cancelRegistration").each(function () {
+                var btnId = ($(this).data('id'));
+                $("[name='cancel_" + btnId + "']").click(function () {
+                    if (!confirm("Are you sure")){
+                        return false;
+                    }
+                    var urlAction = '@Url.Action("CancelRegistration")';
+                    $.post(urlAction,
+                        { 'id': btnId },
+                        function (data) {
+                            if (data.result === true) {
+                                window.location.href = data.redirectUrl;
+                            }
+                            else {
+                                console.dir(data);
+                            }
+
+                        });
+
+                });
+
+            });
+
+
+        }
+
+        new Storage();
+
+    </script>
+
+}

@@ -31,7 +31,7 @@ namespace MoG.Domain.Models.TimeLine
             get
             {
 
-                return _startDate.ToString("yyyy,MM,dd");
+                return _startDate.ToString("yyyy,MM,dd,hh,mm");
             }
         }
         private DateTime _endDate;
@@ -47,7 +47,7 @@ namespace MoG.Domain.Models.TimeLine
             get
             {
 
-                return _endDate.ToString("yyyy,MM,dd");
+                return _endDate.ToString("yyyy,MM,dd,hh,mm");
             }
         }
         public string headline { get; set; }

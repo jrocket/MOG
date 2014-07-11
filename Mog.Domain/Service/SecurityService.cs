@@ -22,6 +22,8 @@ namespace MoG.Domain.Service
         MessageCreate,
         MessageDelete,
         MessageEdit,
+        CommentEdit,
+        ViewUserDashboard,
     }
 
     public class SecurityService : ISecurityService
@@ -40,9 +42,31 @@ namespace MoG.Domain.Service
             hasRightMethods.Add(SecureActivity.ProjectDelete, CanDeleteProject);
             hasRightMethods.Add(SecureActivity.TrackEdit, CanEditTrack);
             hasRightMethods.Add(SecureActivity.TrackDelete, CanDeleteTrack);
+            hasRightMethods.Add(SecureActivity.CommentEdit, CanEditComment);
+            hasRightMethods.Add(SecureActivity.ViewUserDashboard, CanViewUserDashboard);
 
             this.serviceProject = projectService;
             this.serviceInvit = invitService;
+        }
+
+    
+
+
+        private bool CanEditComment(UserProfileInfo user, object context)
+        {
+            bool result = false;
+            Comment comment = context as Comment;
+            if (comment != null)
+            {
+                result = comment.Creator.Id == user.Id;
+            }
+            return result;
+        }
+
+        private bool CanViewUserDashboard(UserProfileInfo user, object context)
+        {
+            int userId = (int)context;
+            return user.Id == userId;
         }
 
         private bool CanDeleteTrack(UserProfileInfo user, object context)
@@ -99,6 +123,10 @@ namespace MoG.Domain.Service
 
         public bool HasRight(SecureActivity activity, UserProfileInfo user, object context)
         {
+            if (user == null)
+            {
+                return false;
+            }
             if (this.hasRightMethods.ContainsKey(activity))
             {
                 return this.hasRightMethods[activity](user, context);

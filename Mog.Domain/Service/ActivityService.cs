@@ -12,18 +12,31 @@ namespace MoG.Domain.Service
     {
 
         private IActivityRepository repoActivity;
-      
+
         private IFollowService serviceFollow;
 
         private IInvitService serviceInvit;
-        public IProjectService ServiceProject {get;set;}
-      
-        public ActivityService(IActivityRepository _repo,IFollowService _followService, IInvitService _invitService)
+
+        private IUserService serviceUser { get; set; }
+
+        public IProjectService ServiceProject { get; set; }
+
+        private INotificationRepository repoNotification;
+
+        public ActivityService(IActivityRepository _repo, IFollowService _followService
+            , IInvitService _invitService
+            , INotificationRepository _notificationRepo
+            , IUserService _userService
+                )
         {
             this.repoActivity = _repo;
             this.serviceFollow = _followService;
             this.serviceInvit = _invitService;
+            this.repoNotification = _notificationRepo;
+            this.serviceUser = _userService;
         }
+
+        #region Actions
 
         public void LogProjectCreation(Project project)
         {
@@ -33,7 +46,12 @@ namespace MoG.Domain.Service
             act.When = DateTime.Now;
             act.Type = ActivityType.Create | ActivityType.Project;
             repoActivity.Create(act);
+
+            notifyProjectCreation(project);
+
         }
+
+
 
         public void LogFileCreation(ProjectFile file)
         {
@@ -44,9 +62,10 @@ namespace MoG.Domain.Service
             act.When = DateTime.Now;
             act.Type = ActivityType.Create | ActivityType.File;
             repoActivity.Create(act);
+
+            notifyFileCreation(file);
+
         }
-
-
 
 
         public void LogCommentCreation(Comment newComment)
@@ -59,8 +78,145 @@ namespace MoG.Domain.Service
             act.When = DateTime.Now;
             act.Type = ActivityType.Create | ActivityType.Comment;
             repoActivity.Create(act);
+
+            notifyCommentCreation(newComment);
+
         }
 
+        #endregion Actions
+
+
+        #region Notifications
+
+        private void notifyFileCreation(ProjectFile file)
+        {
+            List<Notification> notifications = new List<Notification>();
+            string message = String.Format("a new file was uploaded by {0} in {1} ",
+                file.Creator.DisplayName
+                , file.Project.Name);
+
+            // get all the followers of the uploader
+            var followers = serviceFollow.GetFollowerUsers(file.Creator.Id);
+
+            foreach (var follower in followers)
+            {
+                //TODO : message translation + Url management
+                Notification n = new Notification()
+                {
+                    Message = message,
+                    UserId = follower.Id,
+                    PictureUrl = file.Creator.PictureUrl,
+                    Url = "/File/Display/" + file.Id
+                };
+                notifications.Add(n);
+            }
+
+            //get all the followers of the project
+            var interrestedPeoples = serviceFollow.GetFollowsByProject(file.ProjectId);
+            foreach (var follower in interrestedPeoples)
+            {
+                // do not add the notification if it was already added
+                if (notifications.Where(n => n.UserId == follower.FollowerId).FirstOrDefault() == null)
+                {
+                    //TODO : message translation + Url management
+                    Notification n = new Notification()
+                    {
+                        Message = message,
+                        UserId = follower.Id,
+                        PictureUrl = file.Creator.PictureUrl,
+                        Url = "/File/Display/" + file.Id
+                    };
+                    notifications.Add(n);
+                }
+            }
+
+            //Notify the project owner
+            if (notifications.Where(n => n.UserId == file.Project.Creator.Id).FirstOrDefault() != null)
+            {
+                //TODO : message translation + Url management
+                Notification n = new Notification()
+                {
+                    Message = message,
+                    UserId = file.Project.Creator.Id,
+                    PictureUrl = file.Creator.PictureUrl,
+                    Url = "/File/Display/" + file.Id
+                };
+            }
+
+
+            repoNotification.Create(notifications);
+        }
+
+
+
+        private void notifyProjectCreation(Project project)
+        {
+
+            var followers = serviceFollow.GetFollowerUsers(project.Creator.Id);
+            List<Notification> notifications = new List<Notification>();
+            foreach (var follower in followers)
+            {
+                //TODO : message translation + Url management
+                Notification n = new Notification()
+                {
+                    Message = "a new project was created by " + project.Creator.DisplayName,
+                    UserId = follower.Id,
+                    PictureUrl = project.Creator.PictureUrl,
+                    Url = "/Project/Detail/" + project.Id
+                };
+                notifications.Add(n);
+            }
+            repoNotification.Create(notifications);
+        }
+
+        private void notifyCommentCreation(Comment newComment)
+        {
+            List<Notification> notifications = new List<Notification>();
+
+
+            string message = String.Format("a new comment was posted by {0} on {1} ",
+                newComment.Creator.DisplayName
+                , newComment.File.DisplayName);
+            // get all the followers of the uploader
+            var followers = serviceFollow.GetFollowerUsers(newComment.Creator.Id);
+
+            foreach (var follower in followers)
+            {
+                //TODO : message translation + Url management
+                Notification n = new Notification()
+                {
+                    Message = message,
+                    UserId = follower.Id,
+                    PictureUrl = newComment.Creator.PictureUrl,
+                    Url = "/File/Display/" + newComment.FileId
+                };
+                notifications.Add(n);
+            }
+
+            //get all the followers of the project
+            var interrestedPeoples = serviceFollow.GetFollowsByProject(newComment.File.ProjectId);
+            foreach (var follower in interrestedPeoples)
+            {
+                // do not add the notification if it was already added
+                if (!notifications.Any(n => n.UserId == follower.FollowerId))
+                {
+                    //TODO : message translation + Url management
+                    Notification n = new Notification()
+                    {
+                        Message = message,
+                        UserId = follower.FollowerId,
+                        PictureUrl = newComment.Creator.PictureUrl,
+                        Url = "/File/Display/" + newComment.FileId
+                    };
+                    notifications.Add(n);
+                }
+            }
+
+
+
+            repoNotification.Create(notifications);
+        }
+        #endregion Notifications
 
         public IList<Activity> GetByProjectId(int projectId)
         {
@@ -89,6 +245,17 @@ namespace MoG.Domain.Service
         }
 
 
+
+        public List<Notification> GetNotificationByUserId(int userId, int count = -1)
+        {
+            IQueryable<Notification> data = this.repoNotification.GetByUserId(userId);
+            if (count > 0)
+            {
+                data = data.Take(count);
+            }
+            return data.ToList();
+        }
+
         /// <summary>
         /// Notifications for activities
         ///  - on project I created
@@ -100,7 +267,7 @@ namespace MoG.Domain.Service
         /// <param name="userId"></param>
         /// <param name="count"></param>
         /// <returns></returns>
-        public List<Activity> GetNotificationForUserId(int userId, int count = -1)
+        public List<Activity> GetActivitiesByUserId(int userId, int count = -1)
         {
             if (ServiceProject == null)
             {
@@ -120,7 +287,7 @@ namespace MoG.Domain.Service
             //find the people I follow
             //Todo : find the people a user follows
 
-            var result = this.repoActivity.GetNotificationsByProjectIds( projectIds, userId);
+            var result = this.repoActivity.GetNotificationsByProjectIds(projectIds, userId);
 
             if (count > 0)
             {
@@ -128,6 +295,95 @@ namespace MoG.Domain.Service
             }
             return result.ToList();
         }
+
+
+
+
+        public List<Activity> GetLatest(Visibility visibility, int pageIndex, int pageSize)
+        {
+            if (ServiceProject == null)
+            {
+                throw new Exception("you must inject manually the serviceproject when you instanciate the ActivityService. Do something like activityServiceObject.serviceProject = ... ");
+
+            }
+
+            int skip = (pageIndex - 1) * pageSize;
+
+            IQueryable<Activity> result = this.repoActivity.GetLatest(visibility)
+                .Skip(skip)
+                .Take(pageSize);
+
+
+            return result.ToList();
+        }
+
+
+        public int GetUnreadCount(int userId)
+        {
+            IQueryable<Notification> unread = this.repoNotification.GetUnRead(userId);
+
+            return unread.Count();
+        }
+
+        public void MarkNotificationsAsRead(int userId)
+        {
+            this.repoNotification.MarkAsRead(userId, DateTime.Now);
+        }
+
+
+        public List<SendNotificationVM> GetNotificationsToSend()
+        {
+            List<SendNotificationVM> result = new List<SendNotificationVM>();
+            var notifs = this.repoNotification.GetUnSent().ToList();
+            var userIds = notifs.Select(n => n.UserId).Distinct();
+            var users = this.serviceUser.GetByIds(userIds);
+            foreach (var user in users)
+            {
+                bool isNotificationToSend = false;
+                switch (user.NotificationFrequency)
+                {
+                    case NotificationFrequency.Never:
+                        break;
+                    case NotificationFrequency.OnceADay:
+                        isNotificationToSend = user.LastNotificationDate < DateTime.Now.AddDays(-1);
+                        break;
+                    case NotificationFrequency.OnceAnHour:
+                        isNotificationToSend = user.LastNotificationDate < DateTime.Now.AddHours(-1);
+                        break;
+                    default:
+                        break;
+                }
+                if (isNotificationToSend)
+                {
+                    result.Add(this.sendNotification(user, notifs));
+                }
+
+            }
+
+
+
+
+            this.repoNotification.SetSent(notifs.Select(n => n.Id));
+
+            foreach (var notif in result)
+            {
+                DateTime latestNotificationDate = notif.Notifications
+             .OrderByDescending(n => n.CreatedOn)
+             .First().CreatedOn;
+                notif.User.LastNotificationDate = latestNotificationDate;
+                this.serviceUser.SaveChanges(notif.User);
+            }
+            return result;
+        }
+
+        private SendNotificationVM sendNotification(UserProfileInfo user, List<Notification> notifs)
+        {
+            SendNotificationVM result = new SendNotificationVM();
+            result.User = user;
+            result.Notifications = notifs.Where(n => n.UserId == user.Id).ToList();
+            return result;
+        }
+
 
 
     }
@@ -147,6 +403,17 @@ namespace MoG.Domain.Service
 
         bool DeleteByCommentId(int id);
 
-        List<Activity> GetNotificationForUserId(int userId, int count = -1);
+        List<Notification> GetNotificationByUserId(int userId, int count = -1);
+
+        List<Activity> GetActivitiesByUserId(int userId, int count = -1);
+        List<Activity> GetLatest(Visibility visibility, int pageIndex, int pageSize);
+
+        int GetUnreadCount(int userId);
+
+
+
+        void MarkNotificationsAsRead(int userId);
+
+        List<SendNotificationVM> GetNotificationsToSend();
     }
 }

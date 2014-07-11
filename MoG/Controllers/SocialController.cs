@@ -9,19 +9,23 @@ using System.Web.Mvc;
 using System.Web.Script.Serialization;
 using System.Web.Caching;
 using MoG.Code;
+using Postal;
 
 namespace MoG.Controllers
 {
     [MogAuthAttribut]
-    public class SocialController : MogController
+    public class SocialController : FlabbitController
     {
         private ISocialService serviceSocial = null;
         private IInvitService serviceInvit = null;
         private IProjectService serviceProject = null;
         private IActivityService serviceActivity = null;
         private IUserStatisticsService serviceStatistics = null;
+        private IMailService serviceMail = null;
 
         private ICacheService serviceCache = null;
+
+        private ISecurityService serviceSecurity = null;
 
         public SocialController(ISocialService socialService
             , IInvitService invitService
@@ -30,10 +34,13 @@ namespace MoG.Controllers
             , IUserStatisticsService statService
             , IUserService userService
              , ILogService logService
-            ,ICacheService cacheService
+            , ICacheService cacheService
+             , ISecurityService security
+            , IMailService mail
             )
             : base(userService, logService)
         {
+            this.serviceSecurity = security;
             this.serviceSocial = socialService;
             this.serviceInvit = invitService;
             this.serviceProject = projectService;
@@ -41,7 +48,8 @@ namespace MoG.Controllers
             this.serviceActivity.ServiceProject = projectService;
             this.serviceStatistics = statService;
             this.serviceCache = cacheService;
-            
+            this.serviceMail = mail;
+
         }
 
         // GET: /Social/
@@ -51,7 +59,7 @@ namespace MoG.Controllers
             return View();
         }
 
-        public ActionResult Profile(string id)
+        public new ActionResult Profile(string id)
         {
             UserProfileInfo user = null;
             int userId = -1;
@@ -111,6 +119,7 @@ namespace MoG.Controllers
         }
         public ActionResult GetActivity(int id = -1)
         {
+            ViewBag.Title = Resources.Resource.PROFILE_ActivityFeed;
             List<Activity> data = null;
             if (id > 0)
             {
@@ -122,31 +131,81 @@ namespace MoG.Controllers
             return PartialView("_activityPartial", model);
         }
 
-
-        public ActionResult GetNotificationsPartial()
+        public ActionResult TheFridge()
         {
-
-            var model = serviceCache.Get("catalog.products", () => getNoticiationsFromCache());
-            
-            //return new JsonResult() { Data = model, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
-
-            return View("_GetNotificationsPartial",model);
+            ViewBag.Title = Resources.Resource.PROFILE_TheFridge;
+            List<Activity> data = null;
+            data = this.serviceActivity.GetLatest(Visibility.Public, 1, 50);
+            List<VMActivity> model = new Mapper().MapActivities(data);
+            return View(model);
         }
 
-        private List<VMActivity> getNoticiationsFromCache()
+        public PartialViewResult GetNotificationsPartial()
         {
-            List<Activity> data = null;
+            IList<VMNotification> model = null;
+            if (CurrentUser != null)
+            {
+                string cacheKey = String.Format("Notification#{0}", CurrentUser.Id);
+                model = serviceCache.Get(cacheKey, () => getNoticiationsFromCache());
+            }
+
+
+            //return new JsonResult() { Data = model, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
+
+            return PartialView("_GetNotificationsPartial", model);
+        }
+
+        private List<VMNotification> getNoticiationsFromCache()
+        {
+            List<Notification> data = null;
 
             if (CurrentUser != null)
             {
-                data = this.serviceActivity.GetNotificationForUserId(CurrentUser.Id, 20);
+                data = this.serviceActivity.GetNotificationByUserId(CurrentUser.Id, 10);
             }
             //Todo : use automapper
-            List<VMActivity> model = new Mapper().MapActivities(data);
+            List<VMNotification> model = new Mapper().MapActivities(data);
             return model;
         }
 
-      
+        public JsonResult GetUnreadNotificationCount()
+        {
+            int count = 0;
+            if (CurrentUser != null)
+            {
+                count = this.serviceActivity.GetUnreadCount(CurrentUser.Id);
+            }
+            return new JsonResult() { JsonRequestBehavior = JsonRequestBehavior.AllowGet, Data = count };
+
+        }
+
+        public ActionResult GetMyPendingInvitCount()
+        {
+            if (CurrentUser != null)
+            {
+
+                referenceInt count = null;
+                string cacheKey = String.Format("InvitCount#{0}", CurrentUser.Id);
+
+                count = this.serviceCache.Get(cacheKey, () => GetPendingInvitCountForCurrentUser());
+
+                return PartialView("_GetMyPendingInvitCount", count.value);
+            }
+            else
+            {
+                return PartialView("_GetMyPendingInvitCount", 0);
+            }
+
+        }
+
+        private referenceInt GetPendingInvitCountForCurrentUser()
+        {
+
+
+            referenceInt result = new referenceInt();
+            result.value = this.serviceInvit.GetPendingInvitByUserId(CurrentUser.Id);
+            return result;
+        }
 
         public JsonResult GetMyInvits()
         {
@@ -174,7 +233,7 @@ namespace MoG.Controllers
 
         public JsonResult GetInvitsByProjectId(int id)
         {
-            var invits = this.serviceInvit.GetInvitsByProjectId(id,CurrentUser.Id);
+            var invits = this.serviceInvit.GetInvitsByProjectId(id, CurrentUser.Id);
             List<VMInvit> data = new List<VMInvit>();
             foreach (var invit in invits)
             {
@@ -274,6 +333,38 @@ Thanks,
             return new JsonResult() { Data = result > 0 };
         }
 
+        public JsonResult SendNotificationMails()
+        {
+            var notifsToSend = this.serviceActivity.GetNotificationsToSend();
+            foreach (var notif in notifsToSend)
+            {
+                if (notif.Notifications != null && notif.Notifications.Count > 0)
+                {
+                    dynamic email = new Email("Worn");
+                    email.To = notif.User.Email;
+                    email.Username = notif.User.DisplayName;
+                    email.ServerUrl = string.Format("{0}://{1}{2}", Request.Url.Scheme, Request.Url.Authority, Url.Content("~"));
+                    email.Notifications = notif.Notifications;
+
+                    var emailService = new Postal.EmailService();
+                    var message = emailService.CreateMailMessage(email);
+                    //email.Send();
+                    this.serviceMail.SendMail(message);
+
+                }
+
+
+            }
+            return new JsonResult() { Data = true, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
+        }
+
+
+        private class referenceInt
+        {
+            public int value;
+        }
 
     }
+
+
 }

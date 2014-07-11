@@ -1,0 +1,20 @@
+﻿@model List<MoG.Domain.Models.VMActivity>
+
+<div class="container">
+    
+   
+        @Html.Partial("_activityPartial",Model)
+   
+
+
+</div> <!--container-->
+@section scripts{
+<script>
+    $(".js_date").each(function () {
+        var date = $(this).html();
+        var timespan = moment(date, "YYYYMMDD  HH:mm:ss").fromNow();
+        $(this).html(timespan);
+    });
+</script>
+
+}

@@ -1,0 +1,11 @@
+﻿@model int
+
+@if (Model > 0)
+{
+     <li><a href="@Url.Action("Invits", "Social")"><span class="badge alert-danger">@Model</span></a></li>
+   
+}
+else
+{
+    
+}

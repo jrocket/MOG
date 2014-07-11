@@ -9,11 +9,7 @@
     @Html.Partial("_TopNavigationTab", Model.Project)
 
 
-    <div class="row">
-        <div class="col-md-12">
-            &nbsp;
-        </div>
-    </div>
+    
     <div class="row">
         <div class="col-md-2 col-sm-4">
             <div class="bs-sidebar">
@@ -30,51 +26,41 @@
             }
             else
             {
-                <div class="row center-block">
-                    <div class="col-md-1 center-block">
+               
 
-                        <span class="glyphicon glyphicon-time "></span>
-                    </div>
-                    <div class="col-md-2">
-
-                    </div>
-                    <div class="col-md-4">
-                    </div>
-                    <div class="col-md-1 center-block"><span class="glyphicon glyphicon-cloud-download"></span> </div>
-                    <div class="col-md-1 center-block"><span class="glyphicon glyphicon-info-sign"></span></div>
-                    @*<div class="col-md-1"><span class="glyphicon glyphicon-tags"></span></div>*@
-                    @*<div class="col-md-1"><span class="glyphicon glyphicon-heart"></span></div>*@
-                    <div class="col-md-1 center-block"><span class="glyphicon glyphicon-play-circle"></span></div>
-                </div>
-              
                 int counter = 0;
-                foreach (var file in Model.FilteredFiles.ToList())
-                {
-                    <div class="row">
-                        <div class="col-md-1">
-
-                            <p>@Html.DisplayFor(model => model.FilteredFiles[counter].CreatedOn) </p>
-                        </div>
-                        <div class="col-md-2">
-                            <a href="@Url.Action("Display","File",new { id=file.Id})"><img src="http://placehold.it/100x100" class="img-responsive"></a>
-                        </div>
-                        <div class="col-md-4">
-                            <h3><a href="@Url.Action("Display","File",new { id=file.Id})">@file.DisplayName</a></h3>
-                            <small>@Resource.PROJECT_By <a href="@Url.Action("Profile", "Social", new { id = file.Creator.Id})">@file.Creator.DisplayName</a></small>
-                            <p>@file.Tags</p>
-
-
-                        </div>
-                        <div class="col-md-1">@file.DownloadCount</div>
-                        <div class="col-md-1">@file.FileStatus</div>
-                        @*<div class="col-md-1"></div>*@
-                        @*<div class="col-md-1">@file.Likes</div>*@
-                        <div class="col-md-1">@file.PlayCount</div>
-                    </div>
-
-                    <hr>
-                    counter++;
-                }
+                <table class="table fileList">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>Title</th>
+                            <th>Date</th>
+                            <th>Status</th>
+                            <th>Owner</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var file in Model.FilteredFiles.ToList())
+                        {
+                            <tr>
+                                <td><a href="@Url.Action("Display","File",new { id=file.Id})" class="hidden-xs hidden-sm" ><img src="@Url.Content(MoG.Code.FileIconPng.GetIconPath(file.Path))" class="img-responsive"></a></td>
+                                <td>
+                                   
+                                    <a href="@Url.Action("Display","File",new { id=file.Id})">@file.DisplayName</a>
+                                </td>
+                                <td>@Html.DisplayFor(model => model.FilteredFiles[counter].CreatedOn) </td>
+                                <td>@file.FileStatus</td>
+                                <td>
+                                    <img src="@file.Creator.PictureUrl" class="img-responsive img-circle left hidden-xs hidden-sm" />
+                                <a href="@Url.Action("Profile", "Social", new { id = file.Creator.Id})">@file.Creator.DisplayName</a></td>
+                                <td><a href="@Url.Action("Display","File",new { id=file.Id})" class="btn btn-default">@Resource.FILE_DetailTitle</a></td>
+                            </tr>
+                            counter++;
+                        }
+                    </tbody>
+                </table>
+             
                
             }
         </div>

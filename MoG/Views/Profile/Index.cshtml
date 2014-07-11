@@ -1,4 +1,5 @@
-﻿@{
+﻿@model MoG.Domain.Models.UserProfileInfo
+@{
     ViewBag.Title = @Resource.PROFILE_PageTitle;
     var culture = System.Threading.Thread.CurrentThread.CurrentUICulture.Name.ToLowerInvariant();
 }
@@ -19,7 +20,22 @@
 
     </div>
 </div>
+<style>
+    .glyphicon {
+        margin-bottom: 10px;
+        margin-right: 10px;
+    }
 
+    small {
+        display: block;
+        line-height: 1.428571429;
+        color: #999;
+    }
+    ul {
+        list-style-type : none;
+    }
+
+</style>
 
 <div class="row">
     @Html.Partial("_LeftMenu")
@@ -27,22 +43,80 @@
     <div class="col-lg-10">
         @using (Html.BeginForm("SetLanguage", "Profile"))
         {
-            <fieldset>
-                <div class="control-group">
-                    <div class="controls">
-                        <label for="en-us">
-                            <input name="culture" id="en-us" value="en-us" type="radio" @selected("en-us", culture) /> English
-                        </label>
+            <div class="container">
+                <div class="row">
+                    <div class="col-xs-12 col-sm-12 col-md-12">
+                       
+                            <div class="row">
+                                <div class="col-sm-6 col-md-4">
+                                    <img src="@Model.PictureUrl" alt="" class="img-rounded img-responsive" />
+                                    <a href="@Url.Action("Avatar")">@Resource.PROFILE_ChangeAvatar</a>
+                                </div>
+                                <div class="col-sm-6 col-md-8">
+                                    <h4>
+                                        @Model.DisplayName
+                                    </h4>
+                                    <small>
+                                        <cite title="@Model.Login">
+                                            @Model.Login @*<i class="glyphicon glyphicon-map-marker"></i>*@
+                                        </cite>
+                                    </small>
+                                    <p>
+                                        @*<i class="glyphicon glyphicon-envelope"></i>email@example.com
+                                        <br />
+                                        <i class="glyphicon glyphicon-globe"></i><a href="http://www.jquery2dotnet.com">www.jquery2dotnet.com</a>*@
+                                        <br />
+                                        <i class="glyphicon glyphicon-gift"></i> @Resource.PROFILE_JoinedOn : @Model.CreatedOn
+                                    </p>
+                                    <hr />
+                                    <p>
+                                        <i class="glyphicon glyphicon-globe"></i>@Resource.PROFILE_Language
+                                      <ul>
+                                          <li>
+                                              <label for="en-us">
+                                                  <input name="culture" id="en-us" value="en-us" type="radio" @selected("en-us", culture) /> English
+                                              </label>
+                                          </li>
+                                          <li>
+                                              <label for="fr">
+                                                  <input name="culture" id="fr" value="fr" type="radio" @selected("fr", culture) /> Français
+                                              </label>
+                                          </li>
+                                      </ul>  
+                                               
+                                        <div class="control-group">
+                                            <div class="controls">
+                                               
+                                            </div>
+                                        </div>
+                                    </p>
+                                    
+                                    <!-- Split button -->
+                                    @*<div class="btn-group">
+                                        <button type="button" class="btn btn-primary">
+                                            Social
+                                        </button>
+                                        <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+                                            <span class="caret"></span><span class="sr-only">Social</span>
+                                        </button>
+                                        <ul class="dropdown-menu" role="menu">
+                                            <li><a href="#">Twitter</a></li>
+                                            <li><a href="https://plus.google.com/+Jquery2dotnet/posts">Google +</a></li>
+                                            <li><a href="https://www.facebook.com/jquery2dotnet">Facebook</a></li>
+                                            <li class="divider"></li>
+                                            <li><a href="#">Github</a></li>
+                                        </ul>
+                                    </div>*@
+                                </div>
+                          
+                        </div>
                     </div>
                 </div>
-                <div class="control-group">
-                    <div class="controls">
-                        <label for="fr">
-                            <input name="culture" id="fr" value="fr" type="radio" @selected("fr", culture) /> Français
-                        </label>
-                    </div>
-                </div>
-            </fieldset>
+            </div>
+
+
+
+
 
 
 

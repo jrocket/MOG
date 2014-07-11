@@ -33,13 +33,9 @@ namespace MoG.Domain.Service
             return repoFile.GetByProjectId(projectId).ToList();
         }
 
-        public ProjectFile GetById(int id)
+        private ProjectFile RefreshIfNeeded(ProjectFile file)
         {
-            ProjectFile file = repoFile.GetById(id);
-            if (file == null)
-                return null;
-            
-            if (file.StorageCredential != null )
+            if (file.StorageCredential != null)
             {
                 string refreshedUrl = String.Empty;
                 if (!this.CheckIfFileExists(file.PublicUrl))
@@ -74,16 +70,26 @@ namespace MoG.Domain.Service
                     }
                     catch (Exception exc)
                     {//toDO : file does not exists anymore
-                       // mark it for deletion
-                        
+                        // mark it for deletion
+
                     }
-                   
-                   
+
+
                 }
 
             }
-
             return file;
+        }
+
+        public ProjectFile GetById(int id)
+        {
+            ProjectFile file = repoFile.GetById(id);
+            if (file == null)
+                return null;
+            
+           
+
+            return RefreshIfNeeded(file);
         }
 
 
@@ -113,6 +119,7 @@ namespace MoG.Domain.Service
 
             if (this.repoFile.Create(file))
             {
+                file = this.repoFile.GetById(file.Id);
                 serviceActivity.LogFileCreation(file);
 
                 return file.Id;
@@ -255,6 +262,15 @@ namespace MoG.Domain.Service
             this.repoFile.Save(file);
             return true;
         }
+
+
+        public List<ProjectFile> GetByIds(IEnumerable<int?> fileIds)
+        {
+            return this.repoFile.GetAll(false,false).Where(f => fileIds.Contains(f.Id)).ToList();
+        }
+
+
+       
     }
 
     public interface IFileService
@@ -296,5 +312,9 @@ namespace MoG.Domain.Service
         bool IncrementPlayCount(int fileId);
 
         bool IncrementDownloadCount(int fileId);
+
+        List<ProjectFile> GetByIds(IEnumerable<int?> fileIds);
+
+     
     }
 }

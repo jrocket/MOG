@@ -9,7 +9,7 @@ using System.Web.Mvc;
 namespace MoG.Controllers
 {
     [MogAuthAttribut]
-    public class MessageController : MogController
+    public class MessageController : FlabbitController
     {
       
         private IMessageService serviceMessage;

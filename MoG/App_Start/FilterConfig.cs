@@ -1,4 +1,5 @@
-﻿using System.Web;
+﻿using MoG.Code;
+using System.Web;
 using System.Web.Mvc;
 
 namespace MoG
@@ -7,7 +8,15 @@ namespace MoG
     {
         public static void RegisterGlobalFilters(GlobalFilterCollection filters)
         {
-            filters.Add(new HandleErrorAttribute());
+
+            //filters.Add(new HandleErrorAttribute());
+            filters.Add(
+                new MogErrorHandler(
+                    new MoG.Domain.Service.LogService(
+                        new MoG.Domain.Repository.LogRepository(new MoG.Domain.Repository.dbContextProvider())
+                        )
+                        )
+                        );
         }
     }
 }

@@ -22,8 +22,8 @@
                 <button type="button" class="btn btn-default" data-bind="visible : isAddToCartVisible, click:btnAddToCart">@Resource.FILE_AddToDownloadCart</button>
                 if (Model.Permissions[MoG.Domain.Service.SecureActivity.ProjectEdit])
                 {
-                    <button type="button" class="btn btn-success btn-sucess2"  data-bind="visible : isBtnAcceptVisible, click:btnAcceptClicked">@Resource.FILE_Accept</button>
-    <button type="button" class="btn btn-warning" data-bind="visible : isBtnRejectVisible, click:btnRejectClicked">@Resource.FILE_Reject</button>
+                    <button type="button" class="btn btn-success btn-sucess2" data-bind="visible : isBtnAcceptVisible, click:btnAcceptClicked">@Resource.FILE_Accept</button>
+                    <button type="button" class="btn btn-warning" data-bind="visible : isBtnRejectVisible, click:btnRejectClicked">@Resource.FILE_Reject</button>
 
                     <button type="button" class="btn btn-success" data-bind="visible : isPromoteVisible, click : btnPromoteClicked">@Resource.FILE_Promote</button>
                 }
@@ -59,16 +59,28 @@
     <div data-bind="foreach: comments">
         <div class="row">
             <div class="col-md-1">
-                <img data-bind="attr : {src:Creator.PictureUrl}" class="img-responsive" />
+                <a href="#" data-bind="attr : {href : '@Url.Action("Profile","Social")'+ '/'+Creator.Id}"><img data-bind="attr : {src:Creator.PictureUrl}" class="img-responsive" /></a>
             </div>
             <div class="col-md-7">
                 <div class="panel panel-default">
                     <div class="panel-body">
                         <p>
                             <h4 data-bind="text: CreatorName"></h4>
-                            <span style="white-space: pre-wrap" data-bind="text: Body"></span>
-                            <br /><small data-bind="text: CreatedOnAsString" class="js_date"></small>
-                            <div class="pull-right"><a href="javascript:void(0)" data-bind="click: $root.btnDeleteComment, visible : DeleteUrl"><span class="glyphicon glyphicon-trash"></span></a></div>
+                            <span style="white-space: pre-wrap" data-bind="text: Body, visible : !isEdit()"></span>
+                            <textarea class="form-control" data-bind="value:Body, visible : isEdit" rows="6"></textarea>
+                            <br />
+                            <small>@Resource.FILE_PostedOn
+                                <span data-bind="text: CreatedOnAsString" class="js_date"></span>
+                                <span data-bind="visible: ModifiedOnAsString != '' "> | @Resource.FILE_ModifiedOn
+                                    <span data-bind="text: ModifiedOnAsString" class="js_date"></span>
+                                </span>
+                            </small>
+                            <div class="pull-right">
+                                <a href="javascript:void(0)" data-bind="click: $root.btnDeleteComment, visible : DeleteUrl"><span class="glyphicon glyphicon-trash"></span></a>
+                                <a href="javascript:void(0)" data-bind="click: btnEditClicked, visible : DeleteUrl && !isEdit() "><span class="glyphicon glyphicon-edit"></span></a>
+                                <a href="javascript:void(0)" data-bind="click: btnSaveClicked, visible : isEdit"><span class="glyphicon glyphicon-floppy-disk"></span></a>
+                                <img src="@Url.Content("~/Content/Images/tinyloader.gif")" alt="" data-bind="visible:isLoading" />
+                            </div>
                         </p>
                     </div>
                 </div>

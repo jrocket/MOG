@@ -1,16 +1,25 @@
-﻿@model List<MoG.Domain.Models.VMActivity>
+﻿@model List<MoG.Domain.Models.VMNotification>
 @{
     Layout = null;
 }
 
 
-
-@foreach (var activity in Model)
+@if (Model != null)
 {
+    foreach (var activity in Model)
+    {
+        <li>
+            <a href="@activity.url">
+                @if (activity.isRead != "true")
+                {
+                    <span class="glyphicon glyphicon-star"></span>
+                }
+              
+                @activity.when.ToShortDateString() -  @Html.Raw(activity.message)
+            </a>
+        </li>
+    }
     <li>
-        <a href="@activity.Url">
-                @activity.When.ToShortDateString() -  @Html.Raw(activity.Description)
-        </a>
+        <a href="@Url.Action("dashboard", "Account")" class="btn  btn-small" >@Resource.ACTIVITY_SeeAll</a>
     </li>
-
 }

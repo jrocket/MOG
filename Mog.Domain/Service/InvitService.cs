@@ -113,6 +113,11 @@ namespace MoG.Domain.Service
             }
             return result;
         }
+
+        public int GetPendingInvitByUserId(int userId)
+        {
+            return this.repoInvit.Get(userId, InvitStatus.Pending).Count();
+        }
     }
 
     public interface IInvitService
@@ -132,5 +137,7 @@ namespace MoG.Domain.Service
         IEnumerable<int> GetAcceptedInvitsProjectIds(int userId);
 
         IList<Invit> GetInvitsByProjectId(int projectId, int userId);
+
+        int GetPendingInvitByUserId(int userId);
     }
 }

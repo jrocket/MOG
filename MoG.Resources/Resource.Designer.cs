@@ -61,6 +61,15 @@ namespace MoG.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Click on the left or right arrow to see the next event.
+        /// </summary>
+        public static string ACTIVITY_ClickOnTheLeftOrRigthArrow {
+            get {
+                return ResourceManager.GetString("ACTIVITY_ClickOnTheLeftOrRigthArrow", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to commented file.
         /// </summary>
         public static string ACTIVITY_CommentedFile {
@@ -84,6 +93,24 @@ namespace MoG.Resources {
         public static string ACTIVITY_CreatedProject {
             get {
                 return ResourceManager.GetString("ACTIVITY_CreatedProject", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Here is what happened in {0}.
+        /// </summary>
+        public static string ACTIViTY_HereIsWhatHappened {
+            get {
+                return ResourceManager.GetString("ACTIViTY_HereIsWhatHappened", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to See all.
+        /// </summary>
+        public static string ACTIVITY_SeeAll {
+            get {
+                return ResourceManager.GetString("ACTIVITY_SeeAll", resourceCulture);
             }
         }
         
@@ -246,6 +273,24 @@ namespace MoG.Resources {
         public static string COMMON_Tags {
             get {
                 return ResourceManager.GetString("COMMON_Tags", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Latest notifications.
+        /// </summary>
+        public static string DASHBOARD_LatestNotifications {
+            get {
+                return ResourceManager.GetString("DASHBOARD_LatestNotifications", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Dashboard.
+        /// </summary>
+        public static string DASHBOARD_PageTitle {
+            get {
+                return ResourceManager.GetString("DASHBOARD_PageTitle", resourceCulture);
             }
         }
         
@@ -421,11 +466,29 @@ namespace MoG.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to last update.
+        /// </summary>
+        public static string FILE_ModifiedOn {
+            get {
+                return ResourceManager.GetString("FILE_ModifiedOn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Played.
         /// </summary>
         public static string FILE_Played {
             get {
                 return ResourceManager.GetString("FILE_Played", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to posted on .
+        /// </summary>
+        public static string FILE_PostedOn {
+            get {
+                return ResourceManager.GetString("FILE_PostedOn", resourceCulture);
             }
         }
         
@@ -462,6 +525,15 @@ namespace MoG.Resources {
         public static string FILE_Reject {
             get {
                 return ResourceManager.GetString("FILE_Reject", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Reset.
+        /// </summary>
+        public static string FILE_Reset {
+            get {
+                return ResourceManager.GetString("FILE_Reset", resourceCulture);
             }
         }
         
@@ -516,6 +588,114 @@ namespace MoG.Resources {
         public static string HOME_CAROUSEL_3 {
             get {
                 return ResourceManager.GetString("HOME_CAROUSEL_3", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enter your email address.
+        /// </summary>
+        public static string HOME_Email {
+            get {
+                return ResourceManager.GetString("HOME_Email", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to  thanks :) &lt;br /&gt; we&apos;ll keep in touch soon..
+        /// </summary>
+        public static string HOME_FeedbackThx {
+            get {
+                return ResourceManager.GetString("HOME_FeedbackThx", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to If you are interested, drop us your email..
+        /// </summary>
+        public static string HOME_IfYouAreInterested {
+            get {
+                return ResourceManager.GetString("HOME_IfYouAreInterested", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invite Me!.
+        /// </summary>
+        public static string HOME_InvitMe {
+            get {
+                return ResourceManager.GetString("HOME_InvitMe", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to New members.
+        /// </summary>
+        public static string HOME_NewMembers {
+            get {
+                return ResourceManager.GetString("HOME_NewMembers", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Recent Work.
+        /// </summary>
+        public static string HOME_RecentWork {
+            get {
+                return ResourceManager.GetString("HOME_RecentWork", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ... thanks for joining in.
+        /// </summary>
+        public static string HOME_ThanksJoining {
+            get {
+                return ResourceManager.GetString("HOME_ThanksJoining", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ... this is happening right now.
+        /// </summary>
+        public static string HOME_ThisIsHappening {
+            get {
+                return ResourceManager.GetString("HOME_ThisIsHappening", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to View all members.
+        /// </summary>
+        public static string HOME_ViewAllMembers {
+            get {
+                return ResourceManager.GetString("HOME_ViewAllMembers", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to View all recents.
+        /// </summary>
+        public static string HOME_ViewAllRecent {
+            get {
+                return ResourceManager.GetString("HOME_ViewAllRecent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to  Welcome to Flabbit. &lt;br /&gt; Yet another online music collaboration site..
+        /// </summary>
+        public static string HOME_WelcomeHeader {
+            get {
+                return ResourceManager.GetString("HOME_WelcomeHeader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to We&apos;re in a private beta.
+        /// </summary>
+        public static string HOME_WelcomeLead {
+            get {
+                return ResourceManager.GetString("HOME_WelcomeLead", resourceCulture);
             }
         }
         
@@ -673,7 +853,7 @@ namespace MoG.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Projects.
+        ///   Looks up a localized string similar to My projects.
         /// </summary>
         public static string MAINMENU_Projects {
             get {
@@ -687,6 +867,33 @@ namespace MoG.Resources {
         public static string MAINMENU_Random {
             get {
                 return ResourceManager.GetString("MAINMENU_Random", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Never.
+        /// </summary>
+        public static string NOTIFICATION_Never {
+            get {
+                return ResourceManager.GetString("NOTIFICATION_Never", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Once a day.
+        /// </summary>
+        public static string NOTIFICATION_OnceADay {
+            get {
+                return ResourceManager.GetString("NOTIFICATION_OnceADay", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Once an hour.
+        /// </summary>
+        public static string NOTIFICATION_OnceAnHour {
+            get {
+                return ResourceManager.GetString("NOTIFICATION_OnceAnHour", resourceCulture);
             }
         }
         
@@ -781,6 +988,15 @@ namespace MoG.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Notifications.
+        /// </summary>
+        public static string PROFILE_Notifications {
+            get {
+                return ResourceManager.GetString("PROFILE_Notifications", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Profile.
         /// </summary>
         public static string PROFILE_PageTitle {
@@ -804,6 +1020,15 @@ namespace MoG.Resources {
         public static string PROFILE_Storage {
             get {
                 return ResourceManager.GetString("PROFILE_Storage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The fridge.
+        /// </summary>
+        public static string PROFILE_TheFridge {
+            get {
+                return ResourceManager.GetString("PROFILE_TheFridge", resourceCulture);
             }
         }
         
@@ -916,6 +1141,15 @@ namespace MoG.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Click to listen.
+        /// </summary>
+        public static string PROJECT_ClickToPlay {
+            get {
+                return ResourceManager.GetString("PROJECT_ClickToPlay", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Licence.
         /// </summary>
         public static string PROJECT_Create_Licence {
@@ -935,7 +1169,7 @@ namespace MoG.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Below is an explaination of the licences.....
+        ///   Looks up a localized string similar to Below is an explanation of the licences.....
         /// </summary>
         public static string PROJECT_Create_LicenceExplain {
             get {
@@ -944,11 +1178,29 @@ namespace MoG.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Explaination....
+        ///   Looks up a localized string similar to Explanation....
         /// </summary>
         public static string PROJECT_Create_Title {
             get {
                 return ResourceManager.GetString("PROJECT_Create_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Project description.
+        /// </summary>
+        public static string PROJECT_Description {
+            get {
+                return ResourceManager.GetString("PROJECT_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Project Details.
+        /// </summary>
+        public static string PROJECT_Detail {
+            get {
+                return ResourceManager.GetString("PROJECT_Detail", resourceCulture);
             }
         }
         
@@ -989,6 +1241,33 @@ namespace MoG.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Last Modification.
+        /// </summary>
+        public static string PROJECT_LastModification {
+            get {
+                return ResourceManager.GetString("PROJECT_LastModification", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Licence.
+        /// </summary>
+        public static string PROJECT_Licence {
+            get {
+                return ResourceManager.GetString("PROJECT_Licence", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This project was liked.
+        /// </summary>
+        public static string PROJECT_liked {
+            get {
+                return ResourceManager.GetString("PROJECT_liked", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to New project.
         /// </summary>
         public static string PROJECT_NewProject {
@@ -1025,6 +1304,24 @@ namespace MoG.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Tags.
+        /// </summary>
+        public static string PROJECT_Tags {
+            get {
+                return ResourceManager.GetString("PROJECT_Tags", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to time(s).
+        /// </summary>
+        public static string PROJECT_Times {
+            get {
+                return ResourceManager.GetString("PROJECT_Times", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Upload file.
         /// </summary>
         public static string PROJECT_UploadFile {
@@ -1048,6 +1345,15 @@ namespace MoG.Resources {
         public static string SOCIAL_Invits {
             get {
                 return ResourceManager.GetString("SOCIAL_Invits", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Dropbox registration failed.
+        /// </summary>
+        public static string STORAGE_RegisterDropboxFailed {
+            get {
+                return ResourceManager.GetString("STORAGE_RegisterDropboxFailed", resourceCulture);
             }
         }
     }

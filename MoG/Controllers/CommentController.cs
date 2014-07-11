@@ -9,18 +9,20 @@ using System.Web.Mvc;
 namespace MoG.Controllers
 {
      [MogAuthAttribut]
-    public class CommentController : MogController
+    public class CommentController : FlabbitController
     {
 
-       
+         private ISecurityService serviceSecurity = null;
         private ICommentService serviceComment = null;
 
         public CommentController(IUserService _userService, ICommentService _commentService
+            ,ISecurityService _securityService
              , ILogService logService
             )
             : base(_userService, logService)
         {
             serviceComment = _commentService;
+            serviceSecurity = _securityService;
           
         }
         
@@ -67,7 +69,8 @@ namespace MoG.Controllers
                 CreatedOn = x.CreatedOn.ToString(),
                 TargetName = x.File.DisplayName,
                 Id = x.Id,
-                Url = Url.Action("Display", "File", new { id = x.FileId })
+                Url = Url.Action("Display", "File", new { id = x.FileId }),
+                ModifiedOn = (x.ModifiedOn !=  x.CreatedOn ? x.ModifiedOn.ToString() : "")
             }
 
             );
@@ -83,6 +86,30 @@ namespace MoG.Controllers
             JsonResult result = new JsonResult() { Data = bflag };
             return result;
         }
+
+         [HttpPost]
+         public JsonResult Edit(VMComment model)
+         {
+             JsonResult result = new JsonResult();
+             if (model==null)
+             {
+                 result.Data = new {message = "No data?"};
+                 return result;
+             }
+
+             Comment comment = this.serviceComment.GetById(model.Id);
+             if (!this.serviceSecurity.HasRight(SecureActivity.CommentEdit, CurrentUser, comment))
+             {
+                 result.Data = new { message = "No, I don't want to :)" };
+                 return result;
+             }
+             comment.Body = model.Body;
+             bool bflag = this.serviceComment.Edit(comment);
+             result.Data = new { data = bflag };
+             return result;
+         }
+
+
 
 	}
 }

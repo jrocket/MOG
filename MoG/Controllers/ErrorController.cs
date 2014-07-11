@@ -7,20 +7,22 @@ using System.Web.Mvc;
 
 namespace MoG.Controllers
 {
-   
-    public class ErrorController : MogController
+
+    public partial class ErrorController : FlabbitController
     {
-        public ErrorController (IUserService userService
+         public ErrorController (IUserService userService
              , ILogService logService
             )
             : base(userService, logService)
         { }
+        //
+        // GET: /Error/Internal
 
-        public ViewResult Index()
+        public virtual ActionResult Internal()
         {
-            DisplayErrorMessage(TempData[MogConstants.TEMPDATA_ERRORMESSAGE] as string);
-            return View("Error");
+            return View();
         }
+
         public ViewResult NotFound()
         {
             Response.StatusCode = 404;  //you may want to set this to 200
@@ -31,5 +33,49 @@ namespace MoG.Controllers
         {
             return View();
         }
+
+         public ViewResult Index()
+        {
+           
+            return View();
+        }
+         public ViewResult Error()
+         {
+             DisplayErrorMessage(TempData[MogConstants.TEMPDATA_ERRORMESSAGE] as string);
+             return View();
+         }
+
     }
+
+    //public class ErrorController : MogController
+    //{
+    //    public ErrorController (IUserService userService
+    //         , ILogService logService
+    //        )
+    //        : base(userService, logService)
+    //    { }
+
+    //    public ViewResult Index()
+    //    {
+    //        DisplayErrorMessage(TempData[MogConstants.TEMPDATA_ERRORMESSAGE] as string);
+    //        return View();
+    //    }
+    //    public ViewResult NotFound()
+    //    {
+    //        Response.StatusCode = 404;  //you may want to set this to 200
+    //        return View("NotFound");
+    //    }
+
+    //    public ViewResult ComingSoon()
+    //    {
+    //        return View();
+    //    }
+
+
+
+      
+
+
+
+    //}
 }

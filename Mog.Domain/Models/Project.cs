@@ -32,9 +32,11 @@ namespace MoG.Domain.Models
         [DisplayName("Tags")]
         public String Tags { get; set; }
 
+        [Range(1, int.MaxValue, ErrorMessage = "Select a correct Visibility")]
         [DisplayName("Visiblity")]
         public Visibility VisibilityType { get; set; }
 
+         [Range(1, int.MaxValue, ErrorMessage = "Select a correct Licence")]
          [DisplayName("Licence")]
         public Licence LicenceType { get; set; }
 

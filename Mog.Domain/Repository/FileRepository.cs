@@ -33,7 +33,9 @@ namespace MoG.Domain.Repository
 
         public ProjectFile GetById(int id)
         {
-            return dbContext.Files.Find(id);
+            return dbContext.Files.Include("Project")
+                .Where(x => x.Id ==id)
+                .FirstOrDefault();
         }
 
 

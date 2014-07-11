@@ -12,7 +12,7 @@ using System.Web.Mvc;
 namespace MoG.Controllers
 {
     [MogAuthAttribut]
-    public class ProjectController : MogController
+    public class ProjectController : FlabbitController
     {
         private IProjectService serviceProject = null;
         private ISecurityService serviceSecurity = null;
@@ -67,7 +67,7 @@ namespace MoG.Controllers
                 item.Name = project.Name;
                 item.IsPrivate = project.VisibilityType == Visibility.Private;
                 item.ProjectUrl = Url.Action("Detail", new { id = project.Id });
-                item.OwnerName = project.Creator.DisplayName;
+                item.OwnerName = project.Creator != null ? project.Creator.DisplayName : String.Empty ;
                 viewmodel.Add(item);
             }
             return viewmodel;
@@ -193,7 +193,7 @@ namespace MoG.Controllers
             if (ModelState.IsValid)
             {
                 int newId = serviceProject.Create(project, CurrentUser);
-
+                serviceFollow.Follow(newId, CurrentUser.Id);
 
                 return RedirectToAction("Detail", new { id = newId });
             }
@@ -277,9 +277,9 @@ namespace MoG.Controllers
             //todo : use automapper
             Root data = new Root();
             data.timeline = new Timeline();
-            data.timeline.headline = String.Format("Here is what happened in {0}", project.Name);
+            data.timeline.headline = String.Format(Resources.Resource.ACTIViTY_HereIsWhatHappened, project.Name);
             data.timeline.type = "default";
-            data.timeline.text = "<p>Click on the left or right arrow to see the next event</p>";
+            data.timeline.text = String.Format("<p>{0}</p>",Resources.Resource.ACTIVITY_ClickOnTheLeftOrRigthArrow);
             data.timeline.asset = new Asset()
             {
                 credit = "Credit Name Goes Here",

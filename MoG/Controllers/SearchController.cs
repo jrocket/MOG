@@ -9,7 +9,7 @@ using System.Web.Mvc;
 namespace MoG.Controllers
 {
     [MogAuthAttribut]
-    public class SearchController : MogController
+    public class SearchController : FlabbitController
     {
         private IProjectService serviceProject = null;
         public SearchController(IUserService _userService,IProjectService projectService

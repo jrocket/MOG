@@ -27,7 +27,6 @@
 
             <input type="hidden" data-bind="value:Project().Id">
             <button type="button" class="btn btn-default" data-bind="click: btnSaveClicked">Save</button>
-            <span data-bind="text : message(), visible : isMessageVisible"></span>
         </div>
     </form>
 </div>
@@ -44,7 +43,8 @@
         this.availableLicence = ko.observableArray([
    new SelectItem("CC BY", 1),
    new SelectItem("CC BY-ND", 2),
-   new SelectItem("CC BY-ND-NC", 3)
+   new SelectItem("CC BY-ND-NC", 3),
+   new SelectItem("Copyright",4)
         ]);
 
 

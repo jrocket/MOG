@@ -15,10 +15,18 @@ namespace MoG
         }
         public void OnAuthenticationChallenge(AuthenticationChallengeContext filterContext)
         {
-            var user = filterContext.HttpContext.User;
-            if (user == null || !user.Identity.IsAuthenticated)
+            var skipAuthorization = filterContext.ActionDescriptor.IsDefined(typeof(AllowAnonymousAttribute), true) ||
+                                filterContext.ActionDescriptor.ControllerDescriptor.IsDefined(
+                                    typeof(AllowAnonymousAttribute), true);
+            if (!skipAuthorization)
             {
-                filterContext.Result = new HttpUnauthorizedResult();
+
+
+                var user = filterContext.HttpContext.User;
+                if (user == null || !user.Identity.IsAuthenticated)
+                {
+                    filterContext.Result = new HttpUnauthorizedResult();
+                }
             }
         }
         

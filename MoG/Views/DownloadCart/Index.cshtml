@@ -6,7 +6,7 @@
 <div class="row">
     <div class="col-md-12">
 
-        <h1 class="page-header">@Resource.COMMON_DownloadCart</h1>
+        <h1 class="page-header">@Resource.PROFILE_PageTitle</h1>
 
     </div>
 </div>
@@ -18,11 +18,17 @@
 
         <div class="row" data-bind="visible: (IsThereAnyRow() == false)">
             <div class="col-lg-12">
+                <h4>@Resource.COMMON_DownloadCart</h4>
+            </div>
+            <div class="col-lg-12">
                <p>@Resource.PROFILE_NoFileInCart</p>
             </div>
         </div>
 
-        <div class="row" data-bind="visible:IsThereAnyRow">
+        <div class="row" data-bind="visible:IsThereAnyRow" >
+            <div class="col-lg-12">
+                <h4>@Resource.COMMON_DownloadCart</h4>
+            </div>
             <div class="col-lg-12">
                 <a href="#" data-bind="click:btnClearCartClicked" class="btn-danger btn">Clear Cart</a>
             </div>

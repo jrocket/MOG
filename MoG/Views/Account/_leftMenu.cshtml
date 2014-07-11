@@ -3,11 +3,11 @@
 
 <div class="col-md-2">
     <ul class="nav nav-pills nav-stacked">
+        @Html.MenuItem(@Resource.DASHBOARD_PageTitle, "dashboard", "Account")
         @Html.MenuItem(@Resource.PROFILE_MySettings, "manage", "Account")
         @Html.MenuItem(@Resource.PROFILE_Storage, "storage", "Account")
         @Html.MenuItem(@Resource.PROFILE_Avatar, "avatar", "Account")
         @*@Html.MenuItem(@Resource.PROFILE_Alerts, "alert", "Account")*@
-        @*@Html.MenuItem(@Resource.PROFILE_Dashboard, "dashboard", "Account")*@
         @Html.MenuItem(@Resource.PROFILE_FOLLOWED, "followed", "Account")
         @Html.MenuItem(@Resource.COMMON_DownloadCart, "index", "downloadcart")
     </ul>

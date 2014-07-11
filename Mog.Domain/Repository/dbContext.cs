@@ -52,6 +52,7 @@ namespace MoG.Domain.Repository
 
         public DbSet<Invit> Invits { get; set; }
         public DbSet<Follow> Follows { get; set; }
+        public DbSet<FollowUser> FollowUsers { get; set; }
 
         public DbSet<Note> Notes { get; set; }
 
@@ -60,6 +61,8 @@ namespace MoG.Domain.Repository
         public DbSet<InviteMe> InviteMes { get; set; }
 
         public DbSet<Parameter> Parameters { get; set; }
+
+        public DbSet<Notification> Notifications { get; set; }
 
     
     }

@@ -3,12 +3,13 @@
     self.followed = ko.observableArray();
 
     self.btnUnfollowClicked = function (data) {
-        console.dir(data);
-        var url = urlUnfollow.urlUnfollow;
+        
+        var url = options.urlUnfollow;
         var data = { id: data.ProjectId };
         $.post(url, data, function (result) {
             if (result) {
-                alert("successfully unfollowed");
+                ns_MOG.displayModal("Success", "successfully unfollowed");
+                
                 self.getData();
             }
         });

@@ -8,7 +8,7 @@ using System.Web.Mvc;
 namespace MoG.Controllers
 {
     [MogAuthAttribut]
-    public class FollowController : MogController
+    public class FollowController : FlabbitController
     {
         private IFollowService serviceFollow = null;
 

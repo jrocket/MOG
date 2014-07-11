@@ -89,7 +89,9 @@ function MessageVM() {
             cache: false,
             success: function (result) {
                 self.Loading(false);
-                $('.TypeaheadInput').tagsinput('add', result.ReplyToLogin);
+                //$('.TypeaheadInput').tagsinput('add', result.ReplyToLogin);
+                tagApi.tagsManager("pushTag", result.ReplyToLogin);
+
                 self.title("RE:" + result.Title);
                 var newBody = "\n------------\n";
                 newBody = newBody + "From : " + result.Sender + "\n"
@@ -144,7 +146,8 @@ function MessageVM() {
                 self.to("");
                 self.title("");
                 self.body("");
-                $('.TypeaheadInput').tagsinput('removeAll');
+                tagApi.tagsManager('empty');
+               // $('.TypeaheadInput').tagsinput('removeAll');
                 var currentFolder = self.chosenFolderId();
 
 
@@ -164,7 +167,8 @@ function MessageVM() {
             },
             error: function (data) {
                 self.Loading(false);
-                alert(i8n.MAIL_SendError);
+                ns_MOG.displayModal("Error", i8n.MAIL_SendError);
+              
             }
         });
     }
@@ -173,17 +177,21 @@ function MessageVM() {
 };
 
 ko.applyBindings(new MessageVM());
+var tagApi = null;
 
+$(document).ready(function () {
+    tagApi = $('.tm-input').tagsManager({ output: '#tagInputHidden', maxTags: 1 });
+});
 
 //TYPEAHEAD
-var elt = $('.TypeaheadInput');
+//var elt = $('.TypeaheadInput');
 
-elt.tagsinput();
-elt.tagsinput('input').typeahead({
-    prefetch: '/Message/GetFriends/1'
-}).bind('typeahead:selected', $.proxy(function (obj, datum) {
-    this.tagsinput('add', datum.value);
-    this.tagsinput('input').typeahead('setQuery', '');
-}, elt));
+//elt.tagsinput();
+//elt.tagsinput('input').typeahead({
+//    prefetch: '/Message/GetFriends/1'
+//}).bind('typeahead:selected', $.proxy(function (obj, datum) {
+//    this.tagsinput('add', datum.value);
+//    this.tagsinput('input').typeahead('setQuery', '');
+//}, elt));
 //ENDOF TYPEAHEAD
 

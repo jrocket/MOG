@@ -11,8 +11,8 @@
         $.post(self.urlFollow, { id: self.id }, function (data) {
 
             if (data) {
-
-                alert('you follow this project :)');
+                ns_MOG.displayModal("Success", 'you now follow this project :)');
+               
                 self.isFollowed(true);
             }
         });
@@ -24,8 +24,8 @@
         $.post(self.urlUnFollow, { id: self.id }, function (data) {
 
             if (data) {
-
-                alert('you unfollow this project :)');
+                ns_MOG.displayModal("Success", 'you now unfollow this project :/');
+                
                 self.isFollowed(false);
             }
         });

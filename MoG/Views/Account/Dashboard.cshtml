@@ -1,12 +1,13 @@
-﻿
-@{
-    ViewBag.Title = @Resource.PROFILE_Dashboard;
+﻿@{
+    ViewBag.Title = @Resource.DASHBOARD_PageTitle;
 }
+
+
 
 <div class="row">
     <div class="col-md-12">
 
-        <h1 class="page-header">@Resource.PROFILE_PageTitle</h1>
+        <h1 class="page-header">@Resource.MAINMENU_Profile</h1>
 
     </div>
 </div>
@@ -17,5 +18,53 @@
 
     <div class="col-lg-10">
 
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-10">
+                    <h2><span class="glyphicon glyphicon-bell"></span> @Resource.DASHBOARD_LatestNotifications</h2>
+                    <table class="table">
+                        <tbody data-bind="foreach: notifications">
+                            <tr >
+                                <td style="vertical-align:middle">
+                                    <span data-bind=" if :isRead === 'false'"><span class="glyphicon glyphicon-fire"></span></span>
+                                </td>
+                                <td style="vertical-align:middle"><img class="img-responsive img-circle" data-bind="attr : {src : pictureUrl}" width="50" /></td>
+
+                                <td style="vertical-align:middle">
+                                    <span data-bind="text :message"></span>
+                                    <br />
+                                    <small><span data-bind="text: moment(when).format('MMMM Do YYYY, h:mm:ss a')"></span> <a data-bind="attr : {href : url}">@Resource.PROFILE_SeeDetail</a></small>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/knockout")
+    <script type="text/javascript">
+        function NotificationVM(options) {
+            var self = this;
+            self.notifications = ko.observableArray();
+
+            self.getData = function () {
+                $.post("/account/GetNotifications", null, function (data) {
+                    self.notifications(data);
+                    console.dir(data);
+                });
+            };
+            self.getData();
+        }
+        var notificationbinding = new NotificationVM({
+        });
+
+
+
+        ko.applyBindings(notificationbinding);
+
+    </script>
+}

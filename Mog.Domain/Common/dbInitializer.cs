@@ -10,7 +10,7 @@ using System.Web;
 
 namespace MoG
 {
-    public class MyDataContextDbInitializer : DropCreateDatabaseIfModelChanges<MogDbContext>
+    public class MyDataContextDbInitializer : CreateDatabaseIfNotExists<MogDbContext>
     {
 
         public MyDataContextDbInitializer()
